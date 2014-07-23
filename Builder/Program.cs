@@ -36,15 +36,17 @@ namespace Bridge.Builder
             bool rebuild = false;
             bool extractCore = true;
             bool changeCase = true;
+            string cfg = null;
 
             if (args.Length == 0)
             {
                 Console.WriteLine("Bridge.Builder commands:");
-                Console.WriteLine("-p or -project     Path to csproj file (required)");
-                Console.WriteLine("-o or -output      Output file name of generated script");
-                Console.WriteLine("-r or -rebuild     Force assembly rebuilding");
-                Console.WriteLine("-nocore            Do not extract core javascript files");
-                Console.WriteLine("-c or -case        Do not change case of members");
+                Console.WriteLine("-p or -project           Path to csproj file (required)");
+                Console.WriteLine("-o or -output            Output file name of generated script");
+                Console.WriteLine("-cfg or -configuration    Configuration name, typically Debug/Release");
+                Console.WriteLine("-r or -rebuild           Force assembly rebuilding");
+                Console.WriteLine("-nocore                  Do not extract core javascript files");
+                Console.WriteLine("-c or -case              Do not change case of members");
                 Console.WriteLine("");
                 return;
             }
@@ -61,6 +63,10 @@ namespace Bridge.Builder
                     case "-o":
                     case "-output":
                         outputLocation = args[++i];
+                        break;
+                    case "-cfg":
+                    case "-configuration":
+                        cfg = args[++i];
                         break;
                     case "-rebuild":
                     case "-r":
@@ -106,22 +112,27 @@ namespace Bridge.Builder
                 translator.Rebuild = rebuild;
                 translator.ChangeCase = changeCase;
                 translator.Log = LogMessage;
+                translator.Configuration = cfg;
                 translator.Translate();
 
                 string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
+                string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
+                                        Path.Combine(Path.GetDirectoryName(projectLocation), translator.AssemblyInfo.OutputDir) :
+                                        path;
+
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(outputLocation);
+                    translator.SaveToFile(outputDir, Path.GetFileName(outputLocation));
                 }
                 else
                 {
-                    translator.SaveTo(path, outputLocation);                    
+                    translator.SaveTo(outputDir, Path.GetFileName(outputLocation));                    
                 }
 
                 if (extractCore)
                 {
                     Console.WriteLine("Extracting core scripts...");
-                    Bridge.NET.Translator.ExtractCore(translator.CLRLocation, path);
+                    Bridge.NET.Translator.ExtractCore(translator.CLRLocation, outputDir);
                 }
 
                 Console.WriteLine("Done.");

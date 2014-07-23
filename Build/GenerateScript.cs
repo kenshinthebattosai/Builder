@@ -55,6 +55,12 @@ namespace Bridge.Build
             set;
         }
 
+        public string Configuration
+        {
+            get;
+            set;
+        }
+
         protected virtual void LogMessage(string level, string message)
         {
             level = level ?? "message";
@@ -80,27 +86,31 @@ namespace Bridge.Build
             try
             {
                 var translator = new Bridge.NET.Translator(this.ProjectPath);
-                
+                translator.Configuration = this.Configuration;
                 translator.CLRLocation = Path.Combine(this.AssemliesPath, "Bridge.CLR.dll");                
                 translator.Rebuild = false;
                 translator.ChangeCase = this.ChangeCase;
                 translator.Log = this.LogMessage;
                 translator.Translate();
 
-                string fileName = Path.Combine(this.OutputPath, Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js");
+                string fileName = Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
+
+                string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
+                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.OutputDir) :
+                                        this.OutputPath;
                 
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(fileName);
+                    translator.SaveToFile(outputDir, fileName);
                 }
                 else
                 {
-                    translator.SaveTo(this.OutputPath, fileName);
+                    translator.SaveTo(outputDir, fileName);
                 }
 
                 if (!this.NoCore)
                 {
-                    Bridge.NET.Translator.ExtractCore(translator.CLRLocation, this.OutputPath);
+                    Bridge.NET.Translator.ExtractCore(translator.CLRLocation, outputDir);
                 }
             }
             catch (Exception e)
