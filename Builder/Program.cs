@@ -38,7 +38,7 @@ namespace Bridge.Builder
             bool changeCase = true;
             string cfg = null;
 
-            if (args.Length == 0)
+            if (args.Length == 0 && false)
             {
                 Console.WriteLine("Bridge.Builder commands:");
                 Console.WriteLine("-p or -project           Path to csproj file (required)");
@@ -135,7 +135,7 @@ namespace Bridge.Builder
                     Bridge.NET.Translator.ExtractCore(translator.CLRLocation, outputDir);
                 }
 
-                Console.WriteLine("Done.");
+                Console.WriteLine("Done.");                
             }
             catch (Exception e)
             {
