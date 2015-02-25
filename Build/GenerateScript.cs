@@ -93,7 +93,9 @@ namespace Bridge.Build
                 translator.Log = this.LogMessage;
                 translator.Translate();
 
-                string fileName = Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
+                string fileName = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.FileName) ?
+                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.FileName) :
+                                        Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
 
                 string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
                                         Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.OutputDir) :

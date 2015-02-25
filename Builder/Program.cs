@@ -116,17 +116,22 @@ namespace Bridge.Builder
                 translator.Translate();
 
                 string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
+
+                string fileName = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.FileName) ?
+                                        Path.Combine(Path.GetDirectoryName(projectLocation), translator.AssemblyInfo.FileName) :
+                                        Path.GetFileName(outputLocation);
+
                 string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
                                         Path.Combine(Path.GetDirectoryName(projectLocation), translator.AssemblyInfo.OutputDir) :
                                         path;
 
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(outputDir, Path.GetFileName(outputLocation));
+                    translator.SaveToFile(outputDir, fileName);
                 }
                 else
                 {
-                    translator.SaveTo(outputDir, Path.GetFileName(outputLocation));                    
+                    translator.SaveTo(outputDir, fileName);
                 }
 
                 if (extractCore)
