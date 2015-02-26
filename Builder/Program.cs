@@ -38,12 +38,12 @@ namespace Bridge.Builder
             bool changeCase = true;
             string cfg = null;
 
-            if (args.Length == 0 && false)
+            if (args.Length == 0)
             {
                 Console.WriteLine("Bridge.Builder commands:");
                 Console.WriteLine("-p or -project           Path to csproj file (required)");
-                Console.WriteLine("-o or -output            Output file name of generated script");
-                Console.WriteLine("-cfg or -configuration    Configuration name, typically Debug/Release");
+                Console.WriteLine("-o or -output            Output directory for generated script");
+                Console.WriteLine("-cfg or -configuration   Configuration name, typically Debug/Release");
                 Console.WriteLine("-r or -rebuild           Force assembly rebuilding");
                 Console.WriteLine("-nocore                  Do not extract core javascript files");
                 Console.WriteLine("-c or -case              Do not change case of members");
@@ -116,22 +116,15 @@ namespace Bridge.Builder
                 translator.Translate();
 
                 string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
-
-                string fileName = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.FileName) ?
-                                        Path.Combine(Path.GetDirectoryName(projectLocation), translator.AssemblyInfo.FileName) :
-                                        Path.GetFileName(outputLocation);
-
-                string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
-                                        Path.Combine(Path.GetDirectoryName(projectLocation), translator.AssemblyInfo.OutputDir) :
-                                        path;
+                string outputDir = Path.Combine(Path.GetDirectoryName(projectLocation), !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ? translator.AssemblyInfo.OutputDir : path);
 
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(outputDir, fileName);
+                    translator.SaveToFile(outputDir, Path.GetFileName(outputLocation));
                 }
                 else
                 {
-                    translator.SaveTo(outputDir, fileName);
+                    translator.SaveTo(outputDir, Path.GetFileName(outputLocation));                    
                 }
 
                 if (extractCore)
@@ -140,7 +133,12 @@ namespace Bridge.Builder
                     Bridge.NET.Translator.ExtractCore(translator.CLRLocation, outputDir);
                 }
 
-                Console.WriteLine("Done.");                
+                Console.WriteLine("Done.");
+
+                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterEvent))
+                {
+                    translator.RunEvent(translator.AssemblyInfo.AfterEvent);
+                }
             }
             catch (Exception e)
             {

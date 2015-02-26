@@ -93,9 +93,7 @@ namespace Bridge.Build
                 translator.Log = this.LogMessage;
                 translator.Translate();
 
-                string fileName = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.FileName) ?
-                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.FileName) :
-                                        Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
+                string fileName = Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
 
                 string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
                                         Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.OutputDir) :
@@ -113,6 +111,11 @@ namespace Bridge.Build
                 if (!this.NoCore)
                 {
                     Bridge.NET.Translator.ExtractCore(translator.CLRLocation, outputDir);
+                }
+
+                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterEvent))
+                {
+                    translator.RunEvent(translator.AssemblyInfo.AfterEvent);
                 }
             }
             catch (Exception e)
