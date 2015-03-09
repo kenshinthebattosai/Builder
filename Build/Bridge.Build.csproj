@@ -49,13 +49,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Bridge.NET\Core\Contract\Bridge.Contract.csproj">
+      <Project>{52ae9e3e-6929-4720-ab7a-f9f22b9a8972}</Project>
+      <Name>Bridge.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Bridge.NET\Core\Translator\Bridge.Translator.csproj">
       <Project>{44124331-c60a-4071-b387-4b8e71324b10}</Project>
       <Name>Bridge.Translator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Bridge.NET\Core\Plugin\Bridge.Plugin.csproj">
-      <Project>{52ae9e3e-6929-4720-ab7a-f9f22b9a8972}</Project>
-      <Name>Bridge.Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
