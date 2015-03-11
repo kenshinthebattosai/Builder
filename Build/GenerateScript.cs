@@ -113,9 +113,9 @@ namespace Bridge.Build
                     Bridge.NET.Translator.ExtractCore(translator.FoundationLocation, outputDir);
                 }
 
-                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterEvent))
+                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))
                 {
-                    translator.RunEvent(translator.AssemblyInfo.AfterEvent);
+                    translator.RunEvent(translator.AssemblyInfo.AfterBuild);
                 }
             }
             catch (Exception e)
