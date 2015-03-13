@@ -29,7 +29,7 @@ namespace Bridge.Build
         }
 
         [Required]
-        public string AssemliesPath
+        public string AssembliesPath
         {
             get;
             set;
@@ -87,7 +87,7 @@ namespace Bridge.Build
             {
                 var translator = new Bridge.NET.Translator(this.ProjectPath);
                 translator.Configuration = this.Configuration;
-                translator.FoundationLocation = Path.Combine(this.AssemliesPath, "Bridge.Foundation.dll");                
+                translator.FoundationLocation = Path.Combine(this.AssembliesPath, "Bridge.Foundation.dll");
                 translator.Rebuild = false;
                 translator.ChangeCase = this.ChangeCase;
                 translator.Log = this.LogMessage;
