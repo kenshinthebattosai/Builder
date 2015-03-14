@@ -87,7 +87,7 @@ namespace Bridge.Build
             {
                 var translator = new Bridge.NET.Translator(this.ProjectPath);
                 translator.Configuration = this.Configuration;
-                translator.FoundationLocation = Path.Combine(this.AssembliesPath, "Bridge.Foundation.dll");
+                translator.BridgeLocation = Path.Combine(this.AssembliesPath, "Bridge.dll");
                 translator.Rebuild = false;
                 translator.ChangeCase = this.ChangeCase;
                 translator.Log = this.LogMessage;
@@ -110,7 +110,7 @@ namespace Bridge.Build
 
                 if (!this.NoCore)
                 {
-                    Bridge.NET.Translator.ExtractCore(translator.FoundationLocation, outputDir);
+                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputDir);
                 }
 
                 if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))

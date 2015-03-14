@@ -108,7 +108,7 @@ namespace Bridge.Builder
             {
                 Console.WriteLine("Generating script...");
                 var translator = new Bridge.NET.Translator(projectLocation);
-                translator.FoundationLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.Foundation.dll");
+                translator.BridgeLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll");
                 translator.Rebuild = rebuild;
                 translator.ChangeCase = changeCase;
                 translator.Log = LogMessage;
@@ -130,7 +130,7 @@ namespace Bridge.Builder
                 if (extractCore)
                 {
                     Console.WriteLine("Extracting core scripts...");
-                    Bridge.NET.Translator.ExtractCore(translator.FoundationLocation, outputDir);
+                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputDir);
                 }
 
                 Console.WriteLine("Done.");
