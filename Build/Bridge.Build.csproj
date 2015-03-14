@@ -58,14 +58,10 @@
       <Name>Bridge.Translator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <PostBuildEvent>PowerShell -ExecutionPolicy Unrestricted -file "$(SolutionDir)AssembliesMerger.ps1" "$(SolutionDir)\" "$(ProjectDir)\" "$(OutDir)\" "$(TargetFileName)" "$(ConfigurationName)"
-call "$(SolutionDir)Build\assemblies\deploy.bat" "$(MSBuildProjectName)-bundle" "$(SolutionDir)"</PostBuildEvent>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <PostBuildEvent>call "$(SolutionDir)Build\Assemblies\deploy.bat" "$(MSBuildProjectName)" "$(SolutionDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
