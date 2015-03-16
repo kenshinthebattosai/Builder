@@ -116,21 +116,21 @@ namespace Bridge.Builder
                 translator.Translate();
 
                 string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
-                string outputDir = Path.Combine(Path.GetDirectoryName(projectLocation), !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ? translator.AssemblyInfo.OutputDir : path);
+                string outputPath = Path.Combine(Path.GetDirectoryName(projectLocation), !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ? translator.AssemblyInfo.Output : path);
 
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(outputDir, Path.GetFileName(outputLocation));
+                    translator.SaveToFile(outputPath, Path.GetFileName(outputLocation));
                 }
                 else
                 {
-                    translator.SaveTo(outputDir, Path.GetFileName(outputLocation));                    
+                    translator.SaveTo(outputPath, Path.GetFileName(outputLocation));                    
                 }
 
                 if (extractCore)
                 {
                     Console.WriteLine("Extracting core scripts...");
-                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputDir);
+                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputPath);
                 }
 
                 Console.WriteLine("Done.");

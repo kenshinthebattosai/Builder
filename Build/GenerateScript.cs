@@ -95,22 +95,22 @@ namespace Bridge.Build
 
                 string fileName = Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec) + ".js";
 
-                string outputDir = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.OutputDir) ?
-                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.OutputDir) :
+                string outputPath = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ?
+                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.Output) :
                                         this.OutputPath;
                 
                 if (translator.Outputs.Count == 1)
                 {
-                    translator.SaveToFile(outputDir, fileName);
+                    translator.SaveToFile(outputPath, fileName);
                 }
                 else
                 {
-                    translator.SaveTo(outputDir, fileName);
+                    translator.SaveTo(outputPath, fileName);
                 }
 
                 if (!this.NoCore)
                 {
-                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputDir);
+                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputPath);
                 }
 
                 if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))
