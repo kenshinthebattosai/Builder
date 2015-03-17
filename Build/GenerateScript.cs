@@ -99,14 +99,7 @@ namespace Bridge.Build
                                         Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.Output) :
                                         this.OutputPath;
                 
-                if (translator.Outputs.Count == 1)
-                {
-                    translator.SaveToFile(outputPath, fileName);
-                }
-                else
-                {
-                    translator.SaveTo(outputPath, fileName);
-                }
+                translator.SaveTo(outputPath, fileName);
 
                 if (!this.NoCore)
                 {

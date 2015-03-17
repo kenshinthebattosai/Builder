@@ -118,14 +118,7 @@ namespace Bridge.Builder
                 string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
                 string outputPath = Path.Combine(Path.GetDirectoryName(projectLocation), !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ? translator.AssemblyInfo.Output : path);
 
-                if (translator.Outputs.Count == 1)
-                {
-                    translator.SaveToFile(outputPath, Path.GetFileName(outputLocation));
-                }
-                else
-                {
-                    translator.SaveTo(outputPath, Path.GetFileName(outputLocation));                    
-                }
+                translator.SaveTo(outputPath, Path.GetFileName(outputLocation));
 
                 if (extractCore)
                 {
