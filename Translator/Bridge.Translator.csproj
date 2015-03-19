@@ -35,9 +35,8 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxMin, Version=5.14.5506.26196, Culture=neutral, PublicKeyToken=21ef50ce11b5d80f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll</HintPath>
+    <Reference Include="AjaxMin">
+      <HintPath>..\..\Bridge\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -67,13 +66,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Bridge\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Bridge\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Object.Net.Utilities, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Object.NET.Utilities.2.5.0\lib\Object.Net.Utilities.dll</HintPath>
+    <Reference Include="Object.Net.Utilities">
+      <HintPath>..\..\Bridge\packages\Object.NET.Utilities.2.5.0\lib\Object.Net.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
