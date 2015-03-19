@@ -3,7 +3,7 @@ using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator
     {

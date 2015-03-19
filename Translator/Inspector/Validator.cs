@@ -9,7 +9,7 @@ using ICSharpCode.NRefactory.CSharp;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class Validator : IValidator 
     {
@@ -272,7 +272,7 @@ namespace Bridge.NET
                 
                 if (!method.IsConstructor && method.Name.Contains("."))
                 {
-                    Bridge.NET.Exception.Throw("Explicit interface implementations are not supported: {0}", method);
+                    Bridge.Translator.Exception.Throw("Explicit interface implementations are not supported: {0}", method);
                 }
 
                 this.CheckMethodArguments(method);
@@ -285,7 +285,7 @@ namespace Bridge.NET
 
             if (this.IsObjectLiteral(type) && methodsCount > 0)
             {
-                Bridge.NET.Exception.Throw("ObjectLiteral doesn't support methods: {0}", type);
+                Bridge.Translator.Exception.Throw("ObjectLiteral doesn't support methods: {0}", type);
             }
         }
 
@@ -304,7 +304,7 @@ namespace Bridge.NET
 
                     if (!allTypes.ContainsKey(parentName))
                     {
-                        Bridge.NET.Exception.Throw("Unknown type {0}", parentName);
+                        Bridge.Translator.Exception.Throw("Unknown type {0}", parentName);
                     }
 
                     if (!result.Contains(parentName))
@@ -430,7 +430,7 @@ namespace Bridge.NET
         {
             if (Helpers.IsReservedWord(name))
             {
-                Bridge.NET.Exception.Throw("Cannot use '{0}' as identifier {1}: {2}", name, context.StartLocation, context.ToString());
+                Bridge.Translator.Exception.Throw("Cannot use '{0}' as identifier {1}: {2}", name, context.StartLocation, context.ToString());
             }
         }
     }

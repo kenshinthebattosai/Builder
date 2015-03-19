@@ -10,7 +10,7 @@ using Object.Net.Utilities;
 using ICSharpCode.NRefactory.Semantics;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class MethodBlock : AbstractMethodBlock
     {
@@ -241,7 +241,7 @@ namespace Bridge.NET
             this.WriteDot();
             this.Write(this.Emitter.GetEntityName(e));
             this.Write(" = ");
-            this.Write(Bridge.NET.Emitter.ROOT, ".", add ? Bridge.NET.Emitter.DELEGATE_COMBINE : Bridge.NET.Emitter.DELEGATE_REMOVE);
+            this.Write(Bridge.Translator.Emitter.ROOT, ".", add ? Bridge.Translator.Emitter.DELEGATE_COMBINE : Bridge.Translator.Emitter.DELEGATE_REMOVE);
             this.WriteOpenParentheses();
             this.WriteThis();
             this.WriteDot();

@@ -5,7 +5,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class BinaryOperatorBlock : ConversionBlock
     {
@@ -47,7 +47,7 @@ namespace Bridge.NET
                 {
                     if (orr.IsLiftedOperator)
                     {
-                        this.Write(Bridge.NET.Emitter.ROOT + ".nullable.lift(");
+                        this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.lift(");
                     }
                     
                     this.Write(this.Emitter.ShortenTypeName(method.DeclaringType.FullName));
@@ -122,7 +122,7 @@ namespace Bridge.NET
                 if (this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult) && this.Emitter.Validator.IsDelegateOrLambda(rightResolverResult))
                 {
                     delegateOperator = true;
-                    this.Write(Bridge.NET.Emitter.ROOT + "." + (add ? Bridge.NET.Emitter.DELEGATE_COMBINE : Bridge.NET.Emitter.DELEGATE_REMOVE));
+                    this.Write(Bridge.Translator.Emitter.ROOT + "." + (add ? Bridge.Translator.Emitter.DELEGATE_COMBINE : Bridge.Translator.Emitter.DELEGATE_REMOVE));
                     this.WriteOpenParentheses();
                 }
             }
@@ -130,7 +130,7 @@ namespace Bridge.NET
             bool nullable = NullableType.IsNullable(leftResolverResult.Type) || NullableType.IsNullable(rightResolverResult.Type);
             if (nullable)
             {
-                this.Write(Bridge.NET.Emitter.ROOT + ".nullable.");
+                this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.");
             }
             else
             {

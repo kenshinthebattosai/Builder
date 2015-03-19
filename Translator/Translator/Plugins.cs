@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class Plugins : IPlugins
     {

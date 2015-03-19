@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Emitter : Visitor
     {

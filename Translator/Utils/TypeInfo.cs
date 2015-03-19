@@ -3,7 +3,7 @@ using ICSharpCode.NRefactory.CSharp;
 using System;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class TypeInfo : ITypeInfo
     {

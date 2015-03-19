@@ -1,7 +1,7 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public abstract class AbstractObjectCreateBlock : AbstractEmitterBlock
     {

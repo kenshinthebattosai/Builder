@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.NET 
+namespace Bridge.Translator 
 {
     public partial class Inspector : Visitor 
     {

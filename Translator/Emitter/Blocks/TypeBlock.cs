@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class TypeBlock : AbstractEmitterBlock
     {

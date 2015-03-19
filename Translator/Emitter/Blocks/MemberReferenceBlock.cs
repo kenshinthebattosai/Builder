@@ -7,7 +7,7 @@ using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using Object.Net.Utilities;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class MemberReferenceBlock : ConversionBlock
     {
@@ -186,7 +186,7 @@ namespace Bridge.NET
                     this.Emitter.IsAssignment = false;
                     if (!isStatic)
                     {
-                        this.Write(Bridge.NET.Emitter.ROOT + "." + (isExtensionMethod ? Bridge.NET.Emitter.DELEGATE_BIND_SCOPE : Bridge.NET.Emitter.DELEGATE_BIND) + "(");
+                        this.Write(Bridge.Translator.Emitter.ROOT + "." + (isExtensionMethod ? Bridge.Translator.Emitter.DELEGATE_BIND_SCOPE : Bridge.Translator.Emitter.DELEGATE_BIND) + "(");
                         memberReferenceExpression.Target.AcceptVisitor(this.Emitter);                        
                         this.Write(", ");
                     }

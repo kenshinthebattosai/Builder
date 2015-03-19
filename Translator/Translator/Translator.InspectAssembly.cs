@@ -6,7 +6,7 @@ using System.Linq;
 using System;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator
     {
@@ -121,7 +121,7 @@ namespace Bridge.NET
 
                 if (parser.HasErrors)
                 {
-                    Bridge.NET.Exception.Throw("Parsing error in a file {0}: {1}", fileName, parser.Errors.ToString());
+                    Bridge.Translator.Exception.Throw("Parsing error in a file {0}: {1}", fileName, parser.Errors.ToString());
                 }
                 
                 return syntaxTree;

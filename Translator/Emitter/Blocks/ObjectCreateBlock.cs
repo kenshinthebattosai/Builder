@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class ObjectCreateBlock : ConversionBlock
     {
@@ -91,9 +91,9 @@ namespace Bridge.NET
             {
                 if (hasInitializer)
                 {
-                    this.Write(Bridge.NET.Emitter.ROOT);
+                    this.Write(Bridge.Translator.Emitter.ROOT);
                     this.WriteDot();
-                    this.Write(Bridge.NET.Emitter.MERGE_OBJECT);
+                    this.Write(Bridge.Translator.Emitter.MERGE_OBJECT);
                     this.WriteOpenParentheses();
                 }
 

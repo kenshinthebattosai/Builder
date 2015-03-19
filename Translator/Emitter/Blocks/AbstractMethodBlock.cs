@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public abstract class AbstractMethodBlock : AbstractEmitterBlock
     {
@@ -25,7 +25,7 @@ namespace Bridge.NET
                 }
 
                 needComma = true;
-                this.Write(p.Name.Replace(Bridge.NET.Emitter.FIX_ARGUMENT_NAME, ""));
+                this.Write(p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, ""));
             }
 
             this.WriteCloseParentheses();
@@ -46,7 +46,7 @@ namespace Bridge.NET
                 }
 
                 needComma = true;
-                this.Write(p.Name.Replace(Bridge.NET.Emitter.FIX_ARGUMENT_NAME, ""));
+                this.Write(p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, ""));
             }
 
             this.WriteCloseParentheses();

@@ -4,7 +4,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class ForeachBlock : AbstractEmitterBlock
     {
@@ -81,9 +81,9 @@ namespace Bridge.NET
             this.AddLocal(iteratorName, AstType.Null);
 
             this.WriteVar();
-            this.Write(iteratorName, " = ", Bridge.NET.Emitter.ROOT);
+            this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.ENUMERATOR);
+            this.Write(Bridge.Translator.Emitter.ENUMERATOR);
 
             this.WriteOpenParentheses();
             foreachStatement.InExpression.AcceptVisitor(this.Emitter);
@@ -102,7 +102,7 @@ namespace Bridge.NET
             this.WriteOpenParentheses();
             this.Write(iteratorName);
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.MOVE_NEXT);
+            this.Write(Bridge.Translator.Emitter.MOVE_NEXT);
             this.WriteOpenCloseParentheses();
             this.WriteCloseParentheses();
             this.WriteSpace();
@@ -112,7 +112,7 @@ namespace Bridge.NET
             this.Write(foreachStatement.VariableName, " = ", iteratorName);
 
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.GET_CURRENT);
+            this.Write(Bridge.Translator.Emitter.GET_CURRENT);
 
             this.WriteOpenCloseParentheses();
             this.WriteSemiColon();
@@ -184,9 +184,9 @@ namespace Bridge.NET
             var iteratorName = this.GetNextIteratorName();
 
             this.WriteVar();
-            this.Write(iteratorName, " = ", Bridge.NET.Emitter.ROOT);
+            this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.ENUMERATOR);
+            this.Write(Bridge.Translator.Emitter.ENUMERATOR);
 
             this.WriteOpenParentheses();
             foreachStatement.InExpression.AcceptVisitor(this.Emitter);
@@ -198,7 +198,7 @@ namespace Bridge.NET
             this.WriteOpenParentheses();
             this.Write(iteratorName);
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.MOVE_NEXT);
+            this.Write(Bridge.Translator.Emitter.MOVE_NEXT);
             this.WriteOpenCloseParentheses();
             this.WriteCloseParentheses();
             this.WriteSpace();
@@ -208,7 +208,7 @@ namespace Bridge.NET
             this.Write(foreachStatement.VariableName, " = ", iteratorName);
 
             this.WriteDot();
-            this.Write(Bridge.NET.Emitter.GET_CURRENT);
+            this.Write(Bridge.Translator.Emitter.GET_CURRENT);
 
             this.WriteOpenCloseParentheses();
             this.WriteSemiColon();

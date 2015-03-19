@@ -1,5 +1,5 @@
 ﻿using Bridge.Contract;
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class ModuleDependency : IPluginDependency
     {

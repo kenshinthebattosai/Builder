@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Emitter
     {
@@ -54,7 +54,7 @@ namespace Bridge.NET
 
                     moduleOutput.Append("define(");
 
-                    if (moduleName != Bridge.NET.AssemblyInfo.DEFAULT_FILENAME)
+                    if (moduleName != Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME)
                     {
                         moduleOutput.Append(this.ToJavaScript(moduleName));
                         moduleOutput.Append(", ");

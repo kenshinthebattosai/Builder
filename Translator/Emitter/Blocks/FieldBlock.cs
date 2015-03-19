@@ -4,7 +4,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class FieldBlock : AbstractEmitterBlock
     {
@@ -109,7 +109,7 @@ namespace Bridge.NET
                 else
                 {
                     name = (changeCase && isField) ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(fieldName) : fieldName;
-                    if (Bridge.NET.Emitter.IsReservedStaticName(name) || Helpers.IsReservedWord(name))
+                    if (Bridge.Translator.Emitter.IsReservedStaticName(name) || Helpers.IsReservedWord(name))
                     {
                         name = "$" + name;
                     }

@@ -3,7 +3,7 @@ using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class VariableBlock : AbstractEmitterBlock
     {
@@ -38,7 +38,7 @@ namespace Bridge.NET
                 this.Emitter.Validator.CheckIdentifier(variable.Name, this.VariableDeclarationStatement);
                 this.AddLocal(variable.Name, this.VariableDeclarationStatement.Type);
 
-                if (variable.Initializer != null && !variable.Initializer.IsNull && variable.Initializer.ToString().Contains(Bridge.NET.Emitter.FIX_ARGUMENT_NAME))                {
+                if (variable.Initializer != null && !variable.Initializer.IsNull && variable.Initializer.ToString().Contains(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME))                {
                     continue;
                 }
 
