@@ -49,11 +49,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Bridge\Core\Contract\Bridge.Contract.csproj">
+    <ProjectReference Include="..\Contract\Bridge.Contract.csproj">
       <Project>{52ae9e3e-6929-4720-ab7a-f9f22b9a8972}</Project>
       <Name>Bridge.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Bridge\Core\Translator\Bridge.Translator.csproj">
+    <ProjectReference Include="..\Translator\Bridge.Translator.csproj">
       <Project>{44124331-c60a-4071-b387-4b8e71324b10}</Project>
       <Name>Bridge.Translator</Name>
     </ProjectReference>
@@ -61,7 +61,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <PostBuildEvent>call "$(SolutionDir)Build\Assemblies\deploy.bat" "$(MSBuildProjectName)" "$(SolutionDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
