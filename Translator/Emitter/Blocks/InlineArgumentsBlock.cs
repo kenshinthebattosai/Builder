@@ -6,7 +6,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Text;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class InlineArgumentsBlock : AbstractEmitterBlock
     {

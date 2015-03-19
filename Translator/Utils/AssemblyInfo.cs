@@ -1,7 +1,7 @@
 ﻿using Bridge.Contract;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class AssemblyInfo : IAssemblyInfo
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class TryCatchBlock : AbstractEmitterBlock
     {

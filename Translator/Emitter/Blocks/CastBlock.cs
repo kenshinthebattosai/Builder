@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class CastBlock : ConversionBlock
     {
@@ -93,15 +93,15 @@ namespace Bridge.NET
         {
             if (this.CastExpression != null)
             {
-                this.EmitCastExpression(this.CastExpression.Expression, this.CastExpression.Type, Bridge.NET.Emitter.CAST);
+                this.EmitCastExpression(this.CastExpression.Expression, this.CastExpression.Type, Bridge.Translator.Emitter.CAST);
             }
             else if (this.AsExpression != null)
             {
-                this.EmitCastExpression(this.AsExpression.Expression, this.AsExpression.Type, Bridge.NET.Emitter.AS);
+                this.EmitCastExpression(this.AsExpression.Expression, this.AsExpression.Type, Bridge.Translator.Emitter.AS);
             }
             else if (this.IsExpression != null)
             {
-                this.EmitCastExpression(this.IsExpression.Expression, this.IsExpression.Type, Bridge.NET.Emitter.IS);
+                this.EmitCastExpression(this.IsExpression.Expression, this.IsExpression.Type, Bridge.Translator.Emitter.IS);
             }
             else if (this.IType != null)
             {
@@ -115,7 +115,7 @@ namespace Bridge.NET
 
         protected virtual void EmitCastExpression(Expression expression, AstType type, string method)
         {
-            if (method != Bridge.NET.Emitter.IS && Helpers.IsIgnoreCast(type, this.Emitter))
+            if (method != Bridge.Translator.Emitter.IS && Helpers.IsIgnoreCast(type, this.Emitter))
             {
                 expression.AcceptVisitor(this.Emitter);
                 return;
@@ -130,7 +130,7 @@ namespace Bridge.NET
                 return;
             }
 
-            if (method == Bridge.NET.Emitter.CAST)
+            if (method == Bridge.Translator.Emitter.CAST)
             {
                 var resolveResult = this.Emitter.Resolver.ResolveNode(type, this.Emitter);
                 if (Helpers.IsIntegerType(resolveResult.Type, this.Emitter.Resolver))
@@ -157,19 +157,19 @@ namespace Bridge.NET
 
             if (simpleType != null && simpleType.Identifier == "dynamic")
             {
-                if (method == Bridge.NET.Emitter.CAST || method == Bridge.NET.Emitter.AS)
+                if (method == Bridge.Translator.Emitter.CAST || method == Bridge.Translator.Emitter.AS)
                 {
                     expression.AcceptVisitor(this.Emitter);
                     return;
                 }
-                else if (method == Bridge.NET.Emitter.IS)
+                else if (method == Bridge.Translator.Emitter.IS)
                 {
                     hasValue = true;
                     method = "hasValue";
                 }
             }
 
-            this.Write(Bridge.NET.Emitter.ROOT);
+            this.Write(Bridge.Translator.Emitter.ROOT);
             this.WriteDot();
             this.Write(method);
             this.WriteOpenParentheses();

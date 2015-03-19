@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator
     {        
@@ -12,7 +12,7 @@ namespace Bridge.NET
                 case PlatformID.Win32NT:
                     return String.Format("{0}\\Microsoft.NET\\Framework\\v{1}\\msbuild", Environment.GetEnvironmentVariable("windir"), this.MSBuildVersion);
                 default:
-                    throw (Exception)Bridge.NET.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
+                    throw (Exception)Bridge.Translator.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
             }
         }
 
@@ -23,7 +23,7 @@ namespace Bridge.NET
                 case PlatformID.Win32NT:
                     return String.Format(" \"{0}\" /t:Rebuild /p:Configuation={1}", Location, this.Configuration);
                 default:
-                    throw (Exception)Bridge.NET.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
+                    throw (Exception)Bridge.Translator.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
             }
         }
 
@@ -41,7 +41,7 @@ namespace Bridge.NET
 
                 if (p.ExitCode != 0)
                 {
-                    Bridge.NET.Exception.Throw("Compilation was not successful, exit code - " + p.ExitCode);
+                    Bridge.Translator.Exception.Throw("Compilation was not successful, exit code - " + p.ExitCode);
                 }
             }
         }        

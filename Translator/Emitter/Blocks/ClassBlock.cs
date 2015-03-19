@@ -9,7 +9,7 @@ using Mono.Cecil;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class ClassBlock : AbstractEmitterBlock
     {
@@ -56,7 +56,7 @@ namespace Bridge.NET
                 this.WriteGenericHeader(name, typeDef);
             }
 
-            this.Write(Bridge.NET.Emitter.ROOT + ".Class.define");
+            this.Write(Bridge.Translator.Emitter.ROOT + ".Class.define");
             this.WriteOpenParentheses();
 
             if (this.IsGeneric)

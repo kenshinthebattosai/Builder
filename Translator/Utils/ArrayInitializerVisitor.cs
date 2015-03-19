@@ -1,7 +1,7 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {    
     public class ArrayInitializerVisitor : Visitor
     {

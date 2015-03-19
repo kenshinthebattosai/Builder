@@ -10,7 +10,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Reflection;
 using Microsoft.Ajax.Utilities;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator : ITranslator
     {
@@ -24,7 +24,7 @@ namespace Bridge.NET
 
         public Dictionary<string, string> Translate()
         {
-            this.Plugins = Bridge.NET.Plugins.GetPlugins(this);
+            this.Plugins = Bridge.Translator.Plugins.GetPlugins(this);
             var config = this.ReadConfig();
 
             if (config != null && !string.IsNullOrWhiteSpace(config.BeforeBuild))
@@ -82,14 +82,14 @@ namespace Bridge.NET
                 string fileName = item.Key;
                 string code = item.Value;
 
-                if (fileName.Contains(Bridge.NET.AssemblyInfo.DEFAULT_FILENAME))
+                if (fileName.Contains(Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME))
                 {
-                    fileName = fileName.Replace(Bridge.NET.AssemblyInfo.DEFAULT_FILENAME, defaultFileName);
+                    fileName = fileName.Replace(Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME, defaultFileName);
                 }
 
-                if (!fileName.ToLower().EndsWith("." + Bridge.NET.AssemblyInfo.JAVASCRIPT_EXTENSION))
+                if (!fileName.ToLower().EndsWith("." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION))
                 {
-                    fileName += "." + Bridge.NET.AssemblyInfo.JAVASCRIPT_EXTENSION;
+                    fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
                 }
 
                 // Ensure filename contains no ":". It could be used like "c:/absolute/path"

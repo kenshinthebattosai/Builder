@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class AbstractEmitterBlock
     {
@@ -36,7 +36,7 @@ namespace Bridge.NET
 
                 if (item.ParameterModifier == ParameterModifier.Out || item.ParameterModifier == ParameterModifier.Ref)
                 {
-                    var name = item.Name.StartsWith(Bridge.NET.Emitter.FIX_ARGUMENT_NAME) ? item.Name.Substring(Bridge.NET.Emitter.FIX_ARGUMENT_NAME.Length) : item.Name;
+                    var name = item.Name.StartsWith(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME) ? item.Name.Substring(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME.Length) : item.Name;
                     
                     if (!this.Emitter.LocalsMap.ContainsKey(name))
                     {

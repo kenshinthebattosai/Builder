@@ -7,7 +7,7 @@ using Bridge.Contract;
 using ICSharpCode.NRefactory.Semantics;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class VisitorPropertyBlock : AbstractMethodBlock
     {

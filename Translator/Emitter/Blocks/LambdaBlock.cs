@@ -10,7 +10,7 @@ using Object.Net.Utilities;
 using ICSharpCode.NRefactory.Semantics;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class LambdaBlock : AbstractMethodBlock
     {
@@ -168,7 +168,7 @@ namespace Bridge.NET
 
             if (this.Emitter.ThisRefCounter > savedThisCount)
             {
-                this.Emitter.Output.Insert(savedPos, Bridge.NET.Emitter.ROOT + "." + Bridge.NET.Emitter.DELEGATE_BIND + "(this, ");
+                this.Emitter.Output.Insert(savedPos, Bridge.Translator.Emitter.ROOT + "." + Bridge.Translator.Emitter.DELEGATE_BIND + "(this, ");
                 this.WriteCloseParentheses();
             }
 

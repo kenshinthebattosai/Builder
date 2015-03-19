@@ -5,7 +5,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class UnaryOperatorBlock : ConversionBlock
     {
@@ -47,7 +47,7 @@ namespace Bridge.NET
                 {
                     if (orr.IsLiftedOperator)
                     {
-                        this.Write(Bridge.NET.Emitter.ROOT + ".nullable.lift(");
+                        this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.lift(");
                     }
 
                     this.Write(this.Emitter.ShortenTypeName(method.DeclaringType.FullName));
@@ -102,7 +102,7 @@ namespace Bridge.NET
                     op != UnaryOperatorType.PostIncrement &&
                     op != UnaryOperatorType.PostDecrement)
                 {
-                    this.Write(Bridge.NET.Emitter.ROOT + ".nullable.");
+                    this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.");
                 }                
             }
 

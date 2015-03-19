@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class IdentifierBlock : ConversionBlock
     {
@@ -180,7 +180,7 @@ namespace Bridge.NET
                         if (!isStatic)
                         {
                             var isExtensionMethod = resolvedMethod.IsExtensionMethod;
-                            this.Write(Bridge.NET.Emitter.ROOT + "." + (isExtensionMethod ? Bridge.NET.Emitter.DELEGATE_BIND_SCOPE : Bridge.NET.Emitter.DELEGATE_BIND) + "(");
+                            this.Write(Bridge.Translator.Emitter.ROOT + "." + (isExtensionMethod ? Bridge.Translator.Emitter.DELEGATE_BIND_SCOPE : Bridge.Translator.Emitter.DELEGATE_BIND) + "(");
                             this.WriteThis();
                             this.Write(", ");
                             appendAdditionalCode = ")";

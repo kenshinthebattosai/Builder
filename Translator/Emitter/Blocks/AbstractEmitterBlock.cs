@@ -2,7 +2,7 @@
 using ICSharpCode.NRefactory.CSharp;
 using System;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public abstract partial class AbstractEmitterBlock : IAbstractEmitterBlock
     {        

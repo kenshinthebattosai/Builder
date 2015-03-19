@@ -5,7 +5,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class AssignmentBlock : AbstractEmitterBlock
     {
@@ -61,7 +61,7 @@ namespace Bridge.NET
                         assignmentExpression.Left.AcceptVisitor(this.Emitter);
                         this.Emitter.IsAssignment = false;
                         this.Write(" = ");
-                        this.Write(Bridge.NET.Emitter.ROOT + "." + (add ? Bridge.NET.Emitter.DELEGATE_COMBINE : Bridge.NET.Emitter.DELEGATE_REMOVE));
+                        this.Write(Bridge.Translator.Emitter.ROOT + "." + (add ? Bridge.Translator.Emitter.DELEGATE_COMBINE : Bridge.Translator.Emitter.DELEGATE_REMOVE));
                         this.WriteOpenParentheses();
                     }                    
                 }

@@ -4,7 +4,7 @@ using Bridge.Contract;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator
     {
@@ -65,7 +65,7 @@ namespace Bridge.NET
 
                 if (p.ExitCode != 0)
                 {
-                    Bridge.NET.Exception.Throw("Event (" + e + ") was not successful, exit code - " + p.ExitCode);
+                    Bridge.Translator.Exception.Throw("Event (" + e + ") was not successful, exit code - " + p.ExitCode);
                 }
             }
         }

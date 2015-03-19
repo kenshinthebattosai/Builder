@@ -6,7 +6,7 @@ using Object.Net.Utilities;
 using ICSharpCode.NRefactory;
 using Bridge.Contract;
 
-namespace Bridge.NET 
+namespace Bridge.Translator 
 {
     public partial class Inspector : Visitor
     {

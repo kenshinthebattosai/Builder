@@ -8,7 +8,7 @@ using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class ArgumentsInfo
     {

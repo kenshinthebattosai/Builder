@@ -5,7 +5,7 @@ using Mono.Cecil;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class OperatorBlock : AbstractMethodBlock
     {

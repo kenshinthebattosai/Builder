@@ -6,7 +6,7 @@ using System.Text;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class EmitBlock : AbstractEmitterBlock
     {
@@ -108,7 +108,7 @@ namespace Bridge.NET
 
             if (module == "")
             {
-                module = Bridge.NET.AssemblyInfo.DEFAULT_FILENAME;
+                module = Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME;
             }
 
             if (output.ModuleOutput.ContainsKey(module))

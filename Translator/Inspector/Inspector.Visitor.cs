@@ -7,7 +7,7 @@ using System.Linq;
 using ICSharpCode.NRefactory.Semantics;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Inspector : Visitor
     {

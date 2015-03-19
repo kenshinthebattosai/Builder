@@ -85,7 +85,7 @@ namespace Bridge.Build
 
             try
             {
-                var translator = new Bridge.NET.Translator(this.ProjectPath);
+                var translator = new Bridge.Translator.Translator(this.ProjectPath);
                 translator.Configuration = this.Configuration;
                 translator.BridgeLocation = Path.Combine(this.AssembliesPath, "Bridge.dll");
                 translator.Rebuild = false;
@@ -103,7 +103,7 @@ namespace Bridge.Build
 
                 if (!this.NoCore)
                 {
-                    Bridge.NET.Translator.ExtractCore(translator.BridgeLocation, outputPath);
+                    Bridge.Translator.Translator.ExtractCore(translator.BridgeLocation, outputPath);
                 }
 
                 if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))

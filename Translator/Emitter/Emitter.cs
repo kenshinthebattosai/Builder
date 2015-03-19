@@ -2,7 +2,7 @@
 using Mono.Cecil;
 using System.Collections.Generic;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Emitter : Visitor, IEmitter
     {

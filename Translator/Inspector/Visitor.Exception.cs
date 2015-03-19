@@ -3,7 +3,7 @@ using ICSharpCode.NRefactory.CSharp;
 using System.Linq;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public abstract partial class Visitor : IAstVisitor 
     {

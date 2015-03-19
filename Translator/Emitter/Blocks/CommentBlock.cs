@@ -4,7 +4,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class CommentBlock : AbstractEmitterBlock
     {

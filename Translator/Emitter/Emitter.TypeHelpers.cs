@@ -11,7 +11,7 @@ using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using Bridge.Contract;
 using ICSharpCode.NRefactory.TypeSystem;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Emitter
     {

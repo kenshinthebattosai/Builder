@@ -4,7 +4,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class IfElseBlock : AbstractEmitterBlock
     {

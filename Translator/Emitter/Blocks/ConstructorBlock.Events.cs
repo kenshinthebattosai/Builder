@@ -10,7 +10,7 @@ using Object.Net.Utilities;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class ConstructorBlock
     {

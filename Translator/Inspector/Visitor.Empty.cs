@@ -1,6 +1,6 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public abstract partial class Visitor : IAstVisitor 
     {

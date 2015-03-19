@@ -7,7 +7,7 @@ using System.Text;
 using System.Linq;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class AsyncBlock : AbstractEmitterBlock, IAsyncBlock
     {

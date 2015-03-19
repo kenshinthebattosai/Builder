@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public partial class Translator
     {   
@@ -46,7 +46,7 @@ namespace Bridge.NET
             var nodes = doc.SelectNodes("//my:PropertyGroup[contains(@Condition,'" + configuration + "')]/my:OutputPath", manager);
             if (nodes.Count != 1)
             {
-                Bridge.NET.Exception.Throw("Unable to determine output path");
+                Bridge.Translator.Exception.Throw("Unable to determine output path");
             }
 
             var path = nodes[0].InnerText;
@@ -77,7 +77,7 @@ namespace Bridge.NET
             
             if (nodes.Count != 1)
             {
-                Bridge.NET.Exception.Throw("Unable to determine assembly name");
+                Bridge.Translator.Exception.Throw("Unable to determine assembly name");
             }
             
             return nodes[0].InnerText;

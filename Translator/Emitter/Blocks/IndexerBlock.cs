@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Bridge.Contract;
 
-namespace Bridge.NET
+namespace Bridge.Translator
 {
     public class IndexerBlock : AbstractEmitterBlock
     {
