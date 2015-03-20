@@ -92,18 +92,22 @@ namespace Bridge.Translator
                     fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
                 }
 
-                // Ensure filename contains no ":". It could be used like "c:/absolute/path"
-                fileName = fileName.Replace(":", "_");
-
-                // Trim heading slash/backslash off file names until it does not start/end with slash.
-                int count = 0;
+                // Trim heading slash/backslash off file names until it does not start with slash.
+                var oldFNlen = fileName.Length;
                 while (Path.IsPathRooted(fileName))
                 {
                     fileName = fileName.TrimStart('/', '\\');
-                    count++;
-                    if (count > 1000) throw new InvalidDataException("Provided file path '" + item.Key + "' can't be translated into a valid file name.");
+
+                    // Trimming didn't change the path. This way, it will just loop indefinitely.
+                    // Also, this means the absolute path specifies a fully-qualified DOS PathName with drive letter.
+                    if (fileName.Length == oldFNlen)
+                    {
+                        break;
+                    }
+                    oldFNlen = fileName.Length;
                 }
 
+                // If 'fileName' is an absolute path, Path.Combine will ignore the 'path' prefix.
                 string filePath = Path.Combine(path, fileName);
 
                 var file = new System.IO.FileInfo(filePath);
