@@ -101,7 +101,7 @@ namespace Bridge.Builder
 
             if (string.IsNullOrEmpty(outputLocation))
             {
-                outputLocation = Path.ChangeExtension(projectLocation, "js");
+                outputLocation = Path.ChangeExtension(projectLocation, Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION);
             }
 
             try
