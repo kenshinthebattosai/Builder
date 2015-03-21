@@ -197,29 +197,21 @@ namespace Bridge.Translator
             sb.Append("[");
 
             var list = new List<string>();
-            var baseType = this.GetBaseTypeDefinition();
+            foreach (var t in this.TypeInfo.TypeDeclaration.BaseTypes)
 
-            if (baseType != null)
             {
-                list.Add(Helpers.GetScriptFullName(baseType));
-            }
+                var name = Helpers.TranslateTypeReference(t, this);
 
-            foreach (Mono.Cecil.TypeReference i in this.GetTypeDefinition().Interfaces)
-            {
-                if (i.FullName == "System.Collections.IEnumerable")
-                {
-                    continue;
+                list.Add(name);
                 }
 
-                if (i.FullName == "System.Collections.IEnumerator")
+            if (list.Count > 0 && list[0] == "Object")
                 {
-                    continue;
-                }
+                list.RemoveAt(0);
 
-                list.Add(Helpers.GetScriptFullName(i));
             }
 
-            if (list.Count == 1 && (baseType.FullName == "System.Object" || baseType.FullName == "System.ValueType"))
+            if (list.Count == 0)
             {
                 return "";
             }
@@ -234,7 +226,7 @@ namespace Bridge.Translator
                 }
 
                 needComma = true;
-                sb.Append(this.ShortenTypeName(item));
+                sb.Append(item);
             }
 
             sb.Append("]");
@@ -339,7 +331,7 @@ namespace Bridge.Translator
                 return this.GetSerializationPriority(baseType);
             }
 
-            return Int32.MinValue;
+            return 0;
         }
     }
 }

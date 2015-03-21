@@ -206,6 +206,11 @@ namespace Bridge.Translator
                         InvocationResolveResult invocationResult = (InvocationResolveResult)resolveResult;
                         this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
                     }
+                    else if (resolveResult is MemberResolveResult)
+                    {
+                        MemberResolveResult memberResolveResult = (MemberResolveResult)resolveResult;
+                        this.Write(OverloadsCollection.Create(this.Emitter, memberResolveResult.Member).GetOverloadName());
+                    }
                     else
                     {
                         this.Write(this.Emitter.GetDefinitionName(method));
@@ -358,10 +363,6 @@ namespace Bridge.Translator
                             this.WriteOpenParentheses();
                             new TypeExpressionListBlock(this.Emitter, this.IdentifierExpression.TypeArguments).Emit();
                             this.WriteCloseParentheses();
-                        }
-                        else
-                        {
-                            this.WriteDot();
                         }
                     }
                     else if (resolveResult is LocalResolveResult)

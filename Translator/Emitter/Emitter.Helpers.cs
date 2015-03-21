@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using ICSharpCode.NRefactory.Semantics;
 using Bridge.Contract;
+using System.Text.RegularExpressions;
 
 namespace Bridge.Translator
 {
@@ -292,6 +293,10 @@ namespace Bridge.Translator
                 changeCase = (bool)value;
             }
 
+            if (name.Contains("."))
+            {
+                name = Object.Net.Utilities.StringUtils.RightOfRightmostOf(name, '.');
+            }
             name = changeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(name) : name;
             if (!isIgnore &&
                 ((isStatic && Emitter.IsReservedStaticName(name)) ||
@@ -303,7 +308,7 @@ namespace Bridge.Translator
             return name;
         }
 
-        public virtual string GetEntityName(IEntity member, bool cancelChangeCase = false)
+        public virtual string GetEntityName(IEntity member, bool cancelChangeCase = false, bool ignoreInterface = false)
         {
             bool changeCase = !this.IsNativeMember(member.FullName) ? this.ChangeCase : true;
             if (member is IMember && this.IsMemberConst((IMember)member))
@@ -344,56 +349,21 @@ namespace Bridge.Translator
             return name;
         }
 
-        public virtual string GetEntityName(EntityDeclaration entity, bool cancelChangeCase = false)
+        public virtual string GetEntityName(EntityDeclaration entity, bool cancelChangeCase = false, bool ignoreInterface = false)
         {
-            bool changeCase = this.ChangeCase;
-            var attr = this.GetAttribute(entity.Attributes, Translator.Bridge_ASSEMBLY + ".Name");
+            var rr = this.Resolver.ResolveNode(entity, this) as MemberResolveResult;
 
-            string name = entity.Name;
-            if (entity is FieldDeclaration)
+
+
+            if (rr != null) 
             {
-                var fieldDec = (FieldDeclaration)entity;
-                if (fieldDec.HasModifier(Modifiers.Const))
-                {
-                    changeCase = false;
-                }
-                name = this.GetFieldName(fieldDec);
-            }
-            else if (entity is EventDeclaration)
-            {
-                name = this.GetEventName((EventDeclaration)entity);
-            }
-            else if (entity is ConstructorDeclaration)
-            {
-                name = "constructor";
+
+
+                return this.GetEntityName(rr.Member, cancelChangeCase, ignoreInterface);
+
             }
 
-            bool isStatic = entity.HasModifier(Modifiers.Static) || entity.HasModifier(Modifiers.Const);            
-
-            if (attr != null)
-            {
-                var expr = (PrimitiveExpression)attr.Arguments.First();
-                if (expr.Value is string)
-                {
-                    name = expr.Value.ToString();
-                    if ((isStatic && Emitter.IsReservedStaticName(name)) || Helpers.IsReservedWord(name))
-                    {
-                        name = "$" + name;
-                    }
-                    return name;
-                }
-
-                changeCase = (bool)expr.Value;
-            }
-
-            name = changeCase && !cancelChangeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(name) : name;
-
-            if ((isStatic && Emitter.IsReservedStaticName(name)) || Helpers.IsReservedWord(name))
-            {
-                name = "$" + name;
-            }
-
-            return name;
+            return null;
         }
 
         public virtual string GetFieldName(FieldDeclaration field)

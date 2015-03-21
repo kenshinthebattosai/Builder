@@ -74,7 +74,7 @@ namespace Bridge.Translator
             }
 
             var injectors = this.GetInjectors();
-            if (this.TypeInfo.StaticFields.Count > 0 || this.TypeInfo.Consts.Count > 0 || this.TypeInfo.StaticEvents.Count > 0 || injectors.Count() > 0)
+            if (this.TypeInfo.StaticConfig.HasMembers || injectors.Count() > 0)
             {
                 this.EnsureComma();
 
@@ -89,7 +89,7 @@ namespace Bridge.Translator
                 this.WriteSpace();
                 this.BeginBlock();
 
-                if (this.TypeInfo.StaticFields.Count > 0 || this.TypeInfo.Consts.Count > 0  || this.TypeInfo.StaticEvents.Count > 0)
+                if (this.TypeInfo.StaticConfig.HasMembers)
                 {
                     new FieldBlock(this.Emitter, this.TypeInfo, true).Emit();
                     this.Emitter.Comma = true;
@@ -123,7 +123,7 @@ namespace Bridge.Translator
         {
             var injectors = this.GetInjectors();
 
-            if (this.TypeInfo.InstanceFields.Count == 0 && this.TypeInfo.Events.Count == 0 && injectors.Count() == 0)
+            if (!this.TypeInfo.InstanceConfig.HasMembers && injectors.Count() == 0)
             {
                 return;
             }
@@ -142,7 +142,7 @@ namespace Bridge.Translator
             var changeCase = this.Emitter.ChangeCase;
             var baseType = this.Emitter.GetBaseTypeDefinition();
 
-            if (this.TypeInfo.InstanceFields.Count > 0 || this.TypeInfo.Events.Count > 0)
+            if (this.TypeInfo.InstanceConfig.HasMembers)
             {
                 new FieldBlock(this.Emitter, this.TypeInfo, false).Emit();
                 this.Emitter.Comma = true;

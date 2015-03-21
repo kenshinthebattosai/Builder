@@ -12,16 +12,10 @@ namespace Bridge.Contract
             set;
         }
 
-        List<EventDeclaration> StaticEvents
+        Dictionary<string, EventDeclaration> EventsDeclarations
         {
             get;
-            set;
-        }
 
-        List<EventDeclaration> Events
-        {
-            get;
-            set;
         }
 
         bool IsStatic 
@@ -81,25 +75,9 @@ namespace Bridge.Contract
             get;
         }
 
-        List<string> AutoProperties
-        {
-            get;
-        }
 
-        Dictionary<string, Expression> StaticFields 
-        { 
-            get; 
-        }
 
-        Dictionary<string, Expression> Consts
-        {
-            get;
-        }
 
-        Dictionary<string, Expression> InstanceFields 
-        { 
-            get; 
-        }
 
         Dictionary<OperatorType, List<OperatorDeclaration>> Operators
         {
@@ -116,12 +94,12 @@ namespace Bridge.Contract
             get; 
         }
 
-        Dictionary<string, EntityDeclaration> StaticProperties
+        Dictionary<string, List<EntityDeclaration>> StaticProperties
         {
             get;
         }
 
-        Dictionary<string, EntityDeclaration> InstanceProperties
+        Dictionary<string, List<EntityDeclaration>> InstanceProperties
         {
             get;
         }
@@ -182,6 +160,16 @@ namespace Bridge.Contract
         }
         
         ITypeInfo ParentType
+        {
+            get;
+            set;
+        }
+        TypeConfigInfo StaticConfig
+        {
+            get;
+            set;
+        }
+        TypeConfigInfo InstanceConfig
         {
             get;
             set;

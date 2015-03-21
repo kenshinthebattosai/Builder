@@ -203,6 +203,49 @@ namespace Bridge.Translator
             return null;
         }
 
+        public virtual string GetCustomTypeName(ICSharpCode.NRefactory.TypeSystem.IType type)
+        {
+            var attrs = type.GetDefinition().Attributes;
+            
+            string name = null;
+            var nameAttr = this.GetAttribute(attrs, Translator.Bridge_ASSEMBLY + ".NameAttribute");
+            if (nameAttr != null)
+            {
+                name = (string)nameAttr.PositionalArguments[0].ConstantValue;
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                return name;
+            }
+
+            var nsAtrr = this.GetAttribute(attrs, Translator.Bridge_ASSEMBLY + ".NamespaceAttribute");
+            if (nsAtrr != null && nsAtrr.PositionalArguments.Count > 0)
+            {
+                var arg = nsAtrr.PositionalArguments[0];
+                name = Helpers.ReplaceSpecialChars(type.Name);
+
+                if (arg.ConstantValue is bool && !((bool)arg.ConstantValue))
+                {
+                    return name;
+                }
+
+                if (arg.ConstantValue is string)
+                {
+                    string ns = arg.ConstantValue.ToString();
+
+                    return (!string.IsNullOrWhiteSpace(ns) ? (ns + ".") : "") + name;
+                }
+            }
+
+            if (this.HasAttribute(attrs, Translator.Bridge_ASSEMBLY + ".ObjectLiteralAttribute"))
+            {
+                return "Object";
+            }
+
+            return null;
+        }
+
         public virtual string GetCustomConstructor(TypeDefinition type) 
         {
             string ctor = this.GetAttributeValue(type.CustomAttributes, Translator.Bridge_ASSEMBLY + ".ConstructorAttribute");
@@ -269,11 +312,11 @@ namespace Bridge.Translator
                 {
                     continue;
                 }
-                
-                if (!method.IsConstructor && method.Name.Contains("."))
+
+                /*if (!method.IsConstructor && method.Name.Contains("."))
                 {
-                    Bridge.Translator.Exception.Throw("Explicit interface implementations are not supported: {0}", method);
-                }
+                    Bridge.NET.Exception.Throw("Explicit interface implementations are not supported: {0}", method);
+                }*/
 
                 this.CheckMethodArguments(method);
 

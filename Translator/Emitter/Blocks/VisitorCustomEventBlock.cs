@@ -36,8 +36,8 @@ namespace Bridge.Translator
                 this.ResetLocals();
 
                 this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
-
-                this.Write((remover ? "remove" : "add") + customEventDeclaration.Name);
+                var overloads = OverloadsCollection.Create(this.Emitter, customEventDeclaration, remover);
+                this.Write((remover ? "remove" : "add") + overloads.GetOverloadName());
                 this.WriteColon();
                 this.WriteFunction();
                 this.WriteOpenParentheses();

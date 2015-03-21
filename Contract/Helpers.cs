@@ -176,13 +176,19 @@ namespace Bridge.Contract
         {
             StringBuilder builder = new StringBuilder(type.Namespace);
 
+            if (type.Namespace == null || type.Namespace.Length == 0)
+            {
+                builder.Append(Helpers.ReplaceSpecialChars(type.FullName));
+            }
+            else
+            {
             if (builder.Length > 0)
             {
                 builder.Append('.');
             }
 
-            var name = type.Name;
-            builder.Append(Helpers.ReplaceSpecialChars(name));
+                builder.Append(Helpers.ReplaceSpecialChars(type.Name));
+            }
 
             if (type.GenericParameters.Count > 0)
             {
@@ -729,86 +735,68 @@ namespace Bridge.Contract
             var propDef = typeDef.Properties.FirstOrDefault(p => p.Name == property.Name);
             return Helpers.IsAutoProperty(propDef);
         }
-        public static string GetPropertyRef(PropertyDeclaration property, IEmitter emitter, bool isSetter = false, bool noOverload = false)
+        public static string GetEventRef(CustomEventDeclaration property, IEmitter emitter, bool remove = false, bool noOverload = false, bool ignoreInterface = false)
         {
-            var name = emitter.GetEntityName(property);
-            if (Helpers.IsFieldProperty(property, emitter))
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
+
+            if (!noOverload)
             {
-                return name;
-            }
-            if (emitter.AssemblyInfo.AutoPropertyToField)
-            {
-                var typeDef = emitter.GetTypeDefinition();
-                var propDef = typeDef.Properties.FirstOrDefault(p => p.Name == property.Name);
-                if (Helpers.IsAutoProperty(propDef))
-                {
-                    return name;
-                }
-            }
-            if (noOverload)
-            {
-                name = property.Name;
-            }
-            else
-            {
-                var overloads = OverloadsCollection.Create(emitter, property, isSetter);
-                name = overloads.HasOverloads ? overloads.GetOverloadName() : property.Name;
-            }
-            return (isSetter ? "set" : "get") + name;
-        }
-        public static string GetPropertyRef(IMember property, IEmitter emitter, bool isSetter = false, bool noOverload = false)
-        {
-            var name = emitter.GetEntityName(property);
-            if (Helpers.IsFieldProperty(property, emitter))
-            {
-                return name;
-            }
-            if (emitter.AssemblyInfo.AutoPropertyToField)
-            {
-                var typeDef = emitter.GetTypeDefinition(property.DeclaringType);
-                var propDef = typeDef.Properties.FirstOrDefault(p => p.Name == property.Name);
-                if (Helpers.IsAutoProperty(propDef))
-                {
-                    return name;
-                }
-            }
-            if (noOverload)
-            {
-                name = property.Name;
-            }
-            else
-            {
-                var overloads = OverloadsCollection.Create(emitter, property, isSetter);
-                name = overloads.HasOverloads ? overloads.GetOverloadName() : property.Name;
-            }
-            return (isSetter ? "set" : "get") + name;
-        }
-        public static string GetPropertyRef(PropertyDefinition property, IEmitter emitter, bool isSetter = false, bool noOverload = false)
-        {
-            var name = emitter.GetDefinitionName(property);
-            if (Helpers.IsFieldProperty(property, emitter))
-            {
-                return name;
+                var overloads = OverloadsCollection.Create(emitter, property, remove);
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
             }
 
-            if (emitter.AssemblyInfo.AutoPropertyToField)
+            return (remove ? "remove" : "add") + name;
+        }
+        public static string GetEventRef(IMember property, IEmitter emitter, bool remove = false, bool noOverload = false, bool ignoreInterface = false)
             {
-                var typeDef = property.DeclaringType;
-                var propDef = typeDef.Properties.FirstOrDefault(p => p.Name == property.Name);
-                if (Helpers.IsAutoProperty(propDef))
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
+
+            if (!noOverload)
                 {
-                    return name;
+                var overloads = OverloadsCollection.Create(emitter, property, remove);
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
                 }
+            return (remove ? "remove" : "add") + name;
             }
-            if (noOverload)
+
+        public static string GetPropertyRef(PropertyDeclaration property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
             {
-                name = property.Name;
-            }
-            else
+            var name = emitter.GetEntityName(property, true, ignoreInterface);            
+
+            if (!noOverload)
             {
                 var overloads = OverloadsCollection.Create(emitter, property, isSetter);
-                name = overloads.HasOverloads ? overloads.GetOverloadName() : property.Name;
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
             }
+
+            if (Helpers.IsFieldProperty(property, emitter))
+            {
+                return noOverload ? emitter.GetEntityName(property, false) : name;
+            }
+
+            return (isSetter ? "set" : "get") + name;
+                }
+
+        public static string GetPropertyRef(IMember property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
+            {
+            var name = emitter.GetEntityName(property, true, ignoreInterface);            
+            
+            if (!noOverload)
+            {
+                var overloads = OverloadsCollection.Create(emitter, property, isSetter);
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
+            }
+
+            if (Helpers.IsFieldProperty(property, emitter))
+            {
+
+                return noOverload ? emitter.GetEntityName(property, false) : name;
+            }
+
             return (isSetter ? "set" : "get") + name;
         }
 

@@ -57,11 +57,7 @@ namespace Bridge.Translator
                 }
 
                 var overloads = OverloadsCollection.Create(this.Emitter, propertyDeclaration, setter);
-                string name = propertyDeclaration.Name;
-                if (overloads.HasOverloads)
-                {
-                    name = overloads.GetOverloadName();
-                }
+                string name = overloads.GetOverloadName();
                 this.Write((setter ? "set" : "get") + name);
                 this.WriteColon();
                 this.WriteFunction();

@@ -37,15 +37,15 @@ namespace Bridge.Translator
         {
             if (this.StaticBlock)
             {
-                this.EmitMethods(this.TypeInfo.StaticMethods, this.TypeInfo.StaticProperties, this.TypeInfo.StaticEvents, this.TypeInfo.Operators);                
+                this.EmitMethods(this.TypeInfo.StaticMethods, this.TypeInfo.StaticProperties, this.TypeInfo.Operators);                
             }
             else
             {
-                this.EmitMethods(this.TypeInfo.InstanceMethods, this.TypeInfo.InstanceProperties, this.TypeInfo.Events, null);
+                this.EmitMethods(this.TypeInfo.InstanceMethods, this.TypeInfo.InstanceProperties, null);
             }
         }
 
-        protected virtual void EmitMethods(Dictionary<string, List<MethodDeclaration>> methods, Dictionary<string, EntityDeclaration> properties, List<EventDeclaration> events, Dictionary<OperatorType, List<OperatorDeclaration>> operators)
+        protected virtual void EmitMethods(Dictionary<string, List<MethodDeclaration>> methods, Dictionary<string, List<EntityDeclaration>> properties, Dictionary<OperatorType, List<OperatorDeclaration>> operators)
         {
             /*foreach (var e in events)
             {
@@ -66,8 +66,10 @@ namespace Bridge.Translator
 
             foreach (var name in names)
             {
-                var prop = properties[name];
+                var props = properties[name];
 
+                foreach (var prop in props)
+                {
                 if (prop is PropertyDeclaration)
                 {
                     this.Emitter.VisitPropertyDeclaration((PropertyDeclaration)prop);
@@ -75,6 +77,7 @@ namespace Bridge.Translator
                 else if (prop is CustomEventDeclaration)
                 {
                     this.Emitter.VisitCustomEventDeclaration((CustomEventDeclaration)prop);
+                    }
                 }
             }
 
@@ -111,7 +114,7 @@ namespace Bridge.Translator
                 structName = this.TypeInfo.GenericFullName;
             }
 
-            if (this.TypeInfo.InstanceFields.Count == 0)
+            if (this.TypeInfo.InstanceConfig.Fields.Count == 0)
             {
                 this.EnsureComma();
                 this.Write("$clone: function(o) { return this; }");
@@ -126,9 +129,9 @@ namespace Bridge.Translator
                 this.BeginBlock();
                 this.Write("var hash = 17;");                
 
-                foreach (var field in this.TypeInfo.InstanceFields)
+                foreach (var field in this.TypeInfo.InstanceConfig.Fields)
                 {
-                    string fieldName = GetFieldName(field.Key);
+                    string fieldName = field.GetName(this.Emitter);
 
                     this.WriteNewLine();
                     this.Write("hash = hash * 23 + ");
@@ -162,9 +165,9 @@ namespace Bridge.Translator
 
                 this.Write("return ");
                 bool and = false;
-                foreach (var field in this.TypeInfo.InstanceFields)
+                foreach (var field in this.TypeInfo.InstanceConfig.Fields)
                 {
-                    string fieldName = GetFieldName(field.Key);
+                    string fieldName = field.GetName(this.Emitter);
 
                     if (and)
                     {
@@ -192,10 +195,10 @@ namespace Bridge.Translator
             this.Write(structName);
             this.Write("();");                        
 
-            foreach (var field in this.TypeInfo.InstanceFields)
+            foreach (var field in this.TypeInfo.InstanceConfig.Fields)
             {
                 this.WriteNewLine();
-                string fieldName = GetFieldName(field.Key);
+                string fieldName = field.GetName(this.Emitter);
 
                 this.Write("s.");
                 this.Write(fieldName);
@@ -209,21 +212,8 @@ namespace Bridge.Translator
             this.WriteNewLine();
             this.EndBlock();
             this.Emitter.Comma = true;
-        }
 
-        protected virtual string GetFieldName(string field)
-        {
-            string fieldName = field;
 
-            if (this.TypeInfo.FieldsDeclarations.ContainsKey(fieldName))
-            {
-                fieldName = this.Emitter.GetEntityName(this.TypeInfo.FieldsDeclarations[fieldName]);
-            }
-            else
-            {
-                fieldName = this.Emitter.ChangeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(fieldName) : fieldName;
-            }
-            return fieldName;
         }
 
         protected void EmitEventAccessor(EventDeclaration e, VariableInitializer evtVar, bool add)

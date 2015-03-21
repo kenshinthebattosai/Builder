@@ -131,18 +131,24 @@ namespace Bridge.Translator
 
                 if (isStatic)
                 {
-                    if (fieldDeclaration.HasModifier(Modifiers.Const))
+                    this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem 
                     {
-                        this.CurrentType.Consts.Add(item.Name, initializer);
+                        Name = item.Name,
+                        Entity = fieldDeclaration,
+                        IsConst = fieldDeclaration.HasModifier(Modifiers.Const),
+                        VarInitializer = item,
+                        Initializer = initializer
+                    });
                     }
                     else
                     {
-                        this.CurrentType.StaticFields.Add(item.Name, initializer);
-                    }
-                }
-                else
+                    this.CurrentType.InstanceConfig.Fields.Add(new TypeConfigItem
                 {
-                    this.CurrentType.InstanceFields.Add(item.Name, initializer);
+                        Name = item.Name,
+                        Entity = fieldDeclaration,
+                        VarInitializer = item,
+                        Initializer = initializer
+                    });
                 }
             }
         }
@@ -224,29 +230,21 @@ namespace Bridge.Translator
 
             bool isStatic = customEventDeclaration.HasModifier(Modifiers.Static);
 
-            IDictionary<string, EntityDeclaration> dict = isStatic
+            IDictionary<string, List<EntityDeclaration>> dict = isStatic
                 ? CurrentType.StaticProperties
                 : CurrentType.InstanceProperties;
 
             var key = customEventDeclaration.Name;
 
-            dict.Add(key, customEventDeclaration);
 
-            if (!customEventDeclaration.AddAccessor.IsNull
-                && !this.HasInline(customEventDeclaration.AddAccessor)
-                && customEventDeclaration.AddAccessor.Body.IsNull
-                && !this.HasScript(customEventDeclaration.AddAccessor))
-            {
-                Expression initializer = this.GetDefaultFieldInitializer(customEventDeclaration.ReturnType);
 
-                if (isStatic)
+            if (dict.ContainsKey(key))
                 {
-                    this.CurrentType.StaticFields.Add(customEventDeclaration.Name.ToLowerCamelCase(), initializer);
+                dict[key].Add(customEventDeclaration);
                 }
                 else
                 {
-                    this.CurrentType.InstanceFields.Add(customEventDeclaration.Name.ToLowerCamelCase(), initializer);
-                }
+                dict.Add(key, new List<EntityDeclaration>(new[] { customEventDeclaration }));
             }
         }
 
@@ -259,13 +257,20 @@ namespace Bridge.Translator
 
             bool isStatic = propertyDeclaration.HasModifier(Modifiers.Static);
 
-            IDictionary<string, EntityDeclaration> dict = isStatic
+            IDictionary<string, List<EntityDeclaration>> dict = isStatic
                 ? CurrentType.StaticProperties
                 : CurrentType.InstanceProperties;
 
             var key = propertyDeclaration.Name;
 
-            dict.Add(key, propertyDeclaration);
+            if (dict.ContainsKey(key))
+            {
+                dict[key].Add(propertyDeclaration);
+            }
+            else
+            {
+                dict.Add(key, new List<EntityDeclaration>(new[] { propertyDeclaration }));
+            }
 
             if (!propertyDeclaration.Getter.IsNull
                 && !this.HasInline(propertyDeclaration.Getter)
@@ -273,19 +278,25 @@ namespace Bridge.Translator
                 && !this.HasScript(propertyDeclaration.Getter))
             {
                 Expression initializer = this.GetDefaultFieldInitializer(propertyDeclaration.ReturnType);
-
-                if (isStatic)
+                TypeConfigInfo info = isStatic ? this.CurrentType.StaticConfig : this.CurrentType.InstanceConfig;
+                if (!this.AssemblyInfo.AutoPropertyToField)
                 {
-                    this.CurrentType.StaticFields.Add(propertyDeclaration.Name.ToLowerCamelCase(), initializer);
+                    info.Properties.Add(new TypeConfigItem
+                {
+                        Name = key,
+                        Entity = propertyDeclaration,
+                        Initializer = initializer
+                    });
                 }
                 else
                 {
-                    this.CurrentType.InstanceFields.Add(propertyDeclaration.Name.ToLowerCamelCase(), initializer);
-                }
 
-                if (!this.AssemblyInfo.AutoPropertyToField)
+                    info.Fields.Add(new TypeConfigItem
                 {
-                this.CurrentType.AutoProperties.Add(propertyDeclaration.Name.ToLowerCamelCase());
+                        Name = key,
+                        Entity = propertyDeclaration,
+                        Initializer = initializer
+                    });
                 }
             }
         }
@@ -302,18 +313,41 @@ namespace Bridge.Translator
                 initializer = new PrimitiveExpression(this.CurrentType.LastEnumValue);
             }
 
-            this.CurrentType.StaticFields.Add(enumMemberDeclaration.Name.ToLowerCamelCase(), initializer);
+            this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem 
+            { 
+                Name = enumMemberDeclaration.Name,
+                Entity = enumMemberDeclaration,
+                Initializer = initializer
+            });
         }
 
         public override void VisitEventDeclaration(EventDeclaration eventDeclaration)
         {
-            if (eventDeclaration.HasModifier(Modifiers.Static))
+            bool isStatic = eventDeclaration.HasModifier(Modifiers.Static);
+            foreach (var item in eventDeclaration.Variables)
             {
-                this.CurrentType.StaticEvents.Add(eventDeclaration);
+                Expression initializer = item.Initializer;
+                this.CurrentType.EventsDeclarations.Add(item.Name, eventDeclaration);
+                if (isStatic)
+                {
+                    this.CurrentType.StaticConfig.Events.Add(new TypeConfigItem 
+                    {
+                        Name = item.Name,
+                        Entity = eventDeclaration,
+                        Initializer = initializer,
+                        VarInitializer = item
+                    });
             }
             else
             {
-                this.CurrentType.Events.Add(eventDeclaration);
+                    this.CurrentType.InstanceConfig.Events.Add(new TypeConfigItem
+                    {
+                        Name = item.Name,
+                        Entity = eventDeclaration,
+                        Initializer = initializer,
+                        VarInitializer = item
+                    });
+                }
             }            
         }
 

@@ -9,20 +9,30 @@ namespace Bridge.Translator
     {
         public TypeInfo() 
         {
-            this.StaticFields = new Dictionary<string, Expression>();
-            this.Consts = new Dictionary<string, Expression>();
-            this.InstanceFields = new Dictionary<string, Expression>();
             this.StaticMethods = new Dictionary<string, List<MethodDeclaration>>();
             this.InstanceMethods = new Dictionary<string, List<MethodDeclaration>>();
-            this.StaticProperties = new Dictionary<string, EntityDeclaration>();
-            this.InstanceProperties = new Dictionary<string, EntityDeclaration>();
+            this.StaticProperties = new Dictionary<string, List<EntityDeclaration>>();
+            this.InstanceProperties = new Dictionary<string, List<EntityDeclaration>>();
             this.FieldsDeclarations = new Dictionary<string, FieldDeclaration>();
-            this.Events = new List<EventDeclaration>();
-            this.StaticEvents = new List<EventDeclaration>();
+            this.EventsDeclarations = new Dictionary<string, EventDeclaration>();            
             this.Dependencies = new List<IPluginDependency>();
             this.Ctors = new List<ConstructorDeclaration>();
             this.Operators = new Dictionary<OperatorType, List<OperatorDeclaration>>();
-            this.AutoProperties = new List<string>();
+
+            this.StaticConfig = new TypeConfigInfo();
+            this.InstanceConfig = new TypeConfigInfo();
+        }
+
+        public TypeConfigInfo StaticConfig
+        {
+            get;
+            set;
+        }
+
+        public TypeConfigInfo InstanceConfig
+        {
+            get;
+            set;
         }
 
         public Dictionary<OperatorType, List<OperatorDeclaration>> Operators
@@ -31,19 +41,13 @@ namespace Bridge.Translator
             protected set;
         }
 
+        public Dictionary<string, EventDeclaration> EventsDeclarations
+        {
+            get;
+            set;
+        }
+
         public TypeDeclaration TypeDeclaration
-        {
-            get;
-            set;
-        }
-
-        public List<EventDeclaration> StaticEvents
-        {
-            get;
-            set;
-        }
-
-        public List<EventDeclaration> Events
         {
             get;
             set;
@@ -123,24 +127,6 @@ namespace Bridge.Translator
             protected set;
         }
 
-        public Dictionary<string, Expression> StaticFields 
-        { 
-            get; 
-            protected set; 
-        }
-
-        public Dictionary<string, Expression> Consts
-        {
-            get;
-            protected set;
-        }
-
-        public Dictionary<string, Expression> InstanceFields 
-        { 
-            get; 
-            protected set; 
-        }
-
         public Dictionary<string, List<MethodDeclaration>> StaticMethods 
         { 
             get; 
@@ -153,13 +139,13 @@ namespace Bridge.Translator
             protected set; 
         }
 
-        public Dictionary<string, EntityDeclaration> StaticProperties
+        public Dictionary<string, List<EntityDeclaration>> StaticProperties
         {
             get;
             protected set;
         }
 
-        public Dictionary<string, EntityDeclaration> InstanceProperties
+        public Dictionary<string, List<EntityDeclaration>> InstanceProperties
         {
             get;
             protected set;
@@ -169,11 +155,9 @@ namespace Bridge.Translator
         {
             get
             {
-                return this.StaticFields.Count > 0 
+                return this.StaticConfig.HasMembers
                        || this.StaticMethods.Count > 0 
-                       || this.StaticProperties.Count > 0
-                       || this.Consts.Count > 0
-                       || this.StaticEvents.Count > 0
+                       || this.StaticProperties.Count > 0                       
                        || this.StaticCtor != null
                        || this.Operators.Count > 0;
             }
@@ -183,10 +167,9 @@ namespace Bridge.Translator
         {
             get
             {
-                return this.InstanceFields.Count > 0 
+                return this.InstanceConfig.HasMembers
                        || this.InstanceMethods.Count > 0
                        || this.InstanceProperties.Count > 0 
-                       || this.Events.Count > 0
                        || this.Ctors.Count > 0;
             }
         }
@@ -255,13 +238,6 @@ namespace Bridge.Translator
         }
 
         public ITypeInfo ParentType
-        {
-            get;
-            set;
-        }
-
-
-        public List<string> AutoProperties
         {
             get;
             set;

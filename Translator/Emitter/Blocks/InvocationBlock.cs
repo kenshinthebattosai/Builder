@@ -92,13 +92,13 @@ namespace Bridge.Translator
                         var inlineExpression = code as PrimitiveExpression;
                         if (inlineExpression == null)
                         {
-                            throw new Exception("Only primitive expression can be inlined: " + inlineExpression.ToString());
+                            throw (Exception)this.Emitter.CreateException(invocationExpression, "Only primitive expression can be inlined");
                         }
                         
                         this.Write(inlineExpression.Value);
 
                         string value = inlineExpression.Value.ToString().Trim();
-                        if (value.Length > 0 && value[value.Length - 1] == ';')
+                        if (value.Length == 0 || value[value.Length - 1] == ';')
                         {
                             this.Emitter.EnableSemicolon = false;
                             this.WriteNewLine();

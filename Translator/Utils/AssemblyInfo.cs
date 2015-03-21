@@ -11,7 +11,7 @@ namespace Bridge.Translator
         public AssemblyInfo()
         {
             this.Dependencies = new List<IPluginDependency>();
-            this.AutoPropertyToField = true;        
+            //this.AutoPropertyToField = true;        
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ namespace Bridge.Contract
         string GetAttributeValue(System.Collections.Generic.IEnumerable<Mono.Cecil.CustomAttribute> attributes, string name);
         string GetCustomConstructor(Mono.Cecil.TypeDefinition type);
         string GetCustomTypeName(Mono.Cecil.TypeDefinition type);
+        string GetCustomTypeName(ICSharpCode.NRefactory.TypeSystem.IType type);
         string GetInlineCode(Mono.Cecil.MethodDefinition method);
         string GetInlineCode(Mono.Cecil.PropertyDefinition property);
         string GetMethodSignatureKey(Mono.Cecil.MethodDefinition method);

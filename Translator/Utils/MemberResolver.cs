@@ -99,7 +99,7 @@ namespace Bridge.Translator
                 var methodGroupResolveResult = (MethodGroupResolveResult)result;
                 var parentResolveResult = this.ResolveNode(node.Parent, log);
                 var parentInvocation = parentResolveResult as InvocationResolveResult;
-                var method = methodGroupResolveResult.Methods.FirstOrDefault();
+                var method = methodGroupResolveResult.Methods.LastOrDefault();
 
                 if (parentInvocation != null && method == null) 
                 {

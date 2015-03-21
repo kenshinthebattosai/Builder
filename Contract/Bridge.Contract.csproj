@@ -85,6 +85,7 @@
     <Compile Include="ITranslator.cs" />
     <Compile Include="IEmitter.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="TypeConfigInfo.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="IVisitorException.cs" />
     <Compile Include="IWriterInfo.cs" />
