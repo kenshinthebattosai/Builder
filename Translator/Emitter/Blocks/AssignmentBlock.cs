@@ -39,11 +39,12 @@ namespace Bridge.Translator
             this.WriteAwaiters(assignmentExpression.Left);
             this.WriteAwaiters(assignmentExpression.Right);
 
+            var leftResolverResult = this.Emitter.Resolver.ResolveNode(assignmentExpression.Left, this.Emitter);
+            var rightResolverResult = this.Emitter.Resolver.ResolveNode(assignmentExpression.Right, this.Emitter);
+
             if (assignmentExpression.Operator == AssignmentOperatorType.Add ||
                 assignmentExpression.Operator == AssignmentOperatorType.Subtract)
-            {
-                var leftResolverResult = this.Emitter.Resolver.ResolveNode(assignmentExpression.Left, this.Emitter);
-                var rightResolverResult = this.Emitter.Resolver.ResolveNode(assignmentExpression.Right, this.Emitter);
+            {                
                 var add = assignmentExpression.Operator == AssignmentOperatorType.Add;
 
                 if (this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult))
@@ -72,13 +73,21 @@ namespace Bridge.Translator
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
             this.Emitter.ReplaceAwaiterByVar = true;
 
-            assignmentExpression.Left.AcceptVisitor(this.Emitter);
+            bool thisAssignment = leftResolverResult is ThisResolveResult;
+            if (!thisAssignment)
+            {
+                assignmentExpression.Left.AcceptVisitor(this.Emitter);
+            }
+            else
+            {
+                this.Write("(");
+            }
 
             this.Emitter.ReplaceAwaiterByVar = oldValue;
             this.Emitter.AssignmentType = AssignmentOperatorType.Any;
             this.Emitter.IsAssignment = false;
 
-            if (this.Emitter.Writers.Count == 0 && !delegateAssigment)
+            if (this.Emitter.Writers.Count == 0 && !delegateAssigment && !thisAssignment)
             {
                 this.WriteSpace();
             }
@@ -125,7 +134,7 @@ namespace Bridge.Translator
 
                 int count = this.Emitter.Writers.Count;
 
-                if (count == 0)
+                if (count == 0 && !thisAssignment)
                 {
                     this.Write("= ");
                 }
@@ -139,6 +148,11 @@ namespace Bridge.Translator
             this.Emitter.ReplaceAwaiterByVar = true;
 
             assignmentExpression.Right.AcceptVisitor(this.Emitter);
+
+            if (thisAssignment)
+            {
+                this.Write(").$clone(this)");
+            }
 
             this.Emitter.ReplaceAwaiterByVar = oldValue;
             this.Emitter.AsyncExpressionHandling = asyncExpressionHandling;

@@ -117,7 +117,7 @@ namespace Bridge.Translator
             if (this.TypeInfo.InstanceConfig.Fields.Count == 0)
             {
                 this.EnsureComma();
-                this.Write("$clone: function(o) { return this; }");
+                this.Write("$clone: function(to) { return this; }");
                 this.Emitter.Comma = true;
                 return;
             }
@@ -189,9 +189,9 @@ namespace Bridge.Translator
             }
 
             this.EnsureComma();
-            this.Write("$clone: function(o) ");
+            this.Write("$clone: function(to) ");
             this.BeginBlock();
-            this.Write("var s = new ");
+            this.Write("var s = to || new ");
             this.Write(structName);
             this.Write("();");                        
 
@@ -202,7 +202,7 @@ namespace Bridge.Translator
 
                 this.Write("s.");
                 this.Write(fieldName);
-                this.Write(" = o.");
+                this.Write(" = this.");
                 this.Write(fieldName);
                 this.Write(";");
             }
