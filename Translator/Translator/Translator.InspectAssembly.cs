@@ -57,7 +57,29 @@ namespace Bridge.Translator
 
                 if (type.HasNestedTypes)
                 {
+                    InheritFileNameAttribute(type);
                     this.AddNestedTypes(type.NestedTypes);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Makes any existing nested types (classes?) inherit the FileName attribute of the specified type.
+        /// Does not override a nested type's FileName attribute if present.
+        /// </summary>
+        /// <param name="type"></param>
+        protected static void InheritFileNameAttribute(TypeDefinition type)
+        {
+            var FAtName = "FileNameAttribute";
+            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == FAtName))
+            {
+                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == FAtName);
+                foreach (var nestedType in type.NestedTypes)
+                {
+                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == FAtName))
+                    {
+                        nestedType.CustomAttributes.Add(FAt);
+                    }
                 }
             }
         }
