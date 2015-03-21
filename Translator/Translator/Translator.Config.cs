@@ -21,19 +21,19 @@ namespace Bridge.Translator
             {
                 path = Path.GetDirectoryName(this.Location) + "\\Bridge.NET\\bridge.json";
 
-                }
+            }
 
             if (!File.Exists(path))
-                {
+            {
                 var config = new AssemblyInfo();
 
 
                 this.Plugins.OnConfigRead(config);
                 return config;
-                }
+            }
 
             try
-                {
+            {
                 var json = File.ReadAllText(path);
                 IAssemblyInfo assemblyInfo = JsonConvert.DeserializeObject<AssemblyInfo>(json);
 
@@ -45,9 +45,9 @@ namespace Bridge.Translator
                 this.Plugins.OnConfigRead(assemblyInfo);
                 return assemblyInfo;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                throw new InvalidOperationException("Cannot read bridge.json", e);                
+                throw new InvalidOperationException("Cannot read bridge.json", e);
             }
 
         }
