@@ -98,7 +98,7 @@ namespace Bridge.Translator
                         this.Write(inlineExpression.Value);
 
                         string value = inlineExpression.Value.ToString().Trim();
-                        if (value[value.Length - 1] == ';')
+                        if (value.Length > 0 && value[value.Length - 1] == ';')
                         {
                             this.Emitter.EnableSemicolon = false;
                             this.WriteNewLine();
