@@ -89,6 +89,13 @@ namespace Bridge.Translator
                 fileName = AssemblyInfo.DEFAULT_FILENAME;
             }
 
+            // Append '.js' extension to file name at translator.Outputs level: this aids in code grouping on files
+            // when filesystem is not case sensitive.
+            if (!fileName.ToLower().EndsWith("." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION))
+            {
+                fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
+            }
+
             IEmitterOutput output = null;
 
             switch (this.Emitter.AssemblyInfo.fileNameCaseConverting)

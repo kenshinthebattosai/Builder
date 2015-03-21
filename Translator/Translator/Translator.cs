@@ -87,11 +87,6 @@ namespace Bridge.Translator
                     fileName = fileName.Replace(Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME, defaultFileName);
                 }
 
-                if (!fileName.ToLower().EndsWith("." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION))
-                {
-                    fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
-                }
-
                 // Trim heading slash/backslash off file names until it does not start with slash.
                 var oldFNlen = fileName.Length;
                 while (Path.IsPathRooted(fileName))
