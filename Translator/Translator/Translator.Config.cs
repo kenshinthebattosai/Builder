@@ -20,14 +20,11 @@ namespace Bridge.Translator
             if (!File.Exists(path))
             {
                 path = Path.GetDirectoryName(this.Location) + "\\Bridge.NET\\bridge.json";
-
             }
 
             if (!File.Exists(path))
             {
                 var config = new AssemblyInfo();
-
-
                 this.Plugins.OnConfigRead(config);
                 return config;
             }
