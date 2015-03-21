@@ -39,11 +39,33 @@ namespace Bridge.Contract
         Project = 6
     }
 
+    public enum FileNameCaseConvert
+    {
+        /// <summary>
+        /// Does no file name case converting. Safe if on filesystems that accept 'File.js' and 'file.js' as
+        /// separate files in the same directory.
+        /// </summary>
+        None = 1,
+
+        /// <summary>
+        /// (Default) Group contents on first file processed by compiler: this means data for 'File.js' and 'file.js' will 
+        /// go all to either 'File.js' or 'file.js', whichever comes first in the compiling or file creation process.
+        /// </summary>
+        Group = 2,
+
+        /// <summary>
+        /// Convert any file names to lowercase. This is the most fail-safe solution that might work on all file systems
+        /// regardles of their inherent file name case sensitiveness properties. But might break fancy file naming.
+        /// </summary>
+        AllLower = 3
+    }
+
     public interface IAssemblyInfo
     {
         System.Collections.Generic.List<IPluginDependency> Dependencies { get; set; }
         string FileName { get; set; }
         OutputBy OutputBy { get; set; }
+        FileNameCaseConvert fileNameCaseConverting { get; set; }
         string Module { get; set; }
         string Output { get; set; }
         int StartIndexInName { get; set; }

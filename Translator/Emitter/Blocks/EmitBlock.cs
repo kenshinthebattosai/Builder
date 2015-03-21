@@ -91,6 +91,26 @@ namespace Bridge.Translator
 
             IEmitterOutput output = null;
 
+            switch (this.Emitter.AssemblyInfo.fileNameCaseConverting)
+            {
+                case FileNameCaseConvert.AllLower:
+                    fileName = fileName.ToLower();
+                    break;
+                case FileNameCaseConvert.Group:
+                    var lcFileName = fileName.ToLower();
+
+                    // Find a file name that matches (case-insensitive) and use it as file name (if found)
+                    // The used file name will use the same casing of the existing one.
+                    foreach (var existingFile in this.Emitter.Outputs.Keys)
+                    {
+                        if (lcFileName == existingFile.ToLower())
+                        {
+                            fileName = existingFile;
+                        }
+                    }
+                    break;
+            }
+
             if (this.Emitter.Outputs.ContainsKey(fileName))
             {
                 output = this.Emitter.Outputs[fileName];

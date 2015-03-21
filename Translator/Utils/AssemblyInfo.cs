@@ -53,6 +53,24 @@ namespace Bridge.Translator
             }
         }
 
+        private FileNameCaseConvert jsFileCasing = FileNameCaseConvert.Group;
+
+        /// <summary>
+        /// The option to manage JavaScript file name case converting for class grouping.
+        /// See the FileNameCaseConvert enum for more details.
+        /// </summary>
+        public FileNameCaseConvert fileNameCaseConverting
+        {
+            get
+            {
+                return this.jsFileCasing;
+            }
+            set
+            {
+                this.jsFileCasing = value;
+            }
+        }
+
         /// <summary>
         /// Substrings the file name starting with the defined index. 
         /// For example, it might be useful to get rid of the first namespace in the chain if use ByFullName or ByNamespace FilesHierarchy.
