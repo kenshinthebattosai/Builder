@@ -41,15 +41,15 @@
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.1.0.0\lib\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.5.5.1\lib\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.Cecil, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.1.0.0\lib\ICSharpCode.NRefactory.Cecil.dll</HintPath>
+      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.5.5.1\lib\ICSharpCode.NRefactory.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d4bfe873e7598c49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.1.0.0\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+      <HintPath>..\..\Bridge\packages\Bridge.NRefactory.5.5.1\lib\ICSharpCode.NRefactory.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
