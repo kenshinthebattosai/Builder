@@ -33,6 +33,7 @@ namespace Bridge.Builder
         {
             string projectLocation = null;
             string outputLocation = null;
+            string bridgeLocation = null;
             bool rebuild = false;
             bool extractCore = true;
             bool changeCase = true;
@@ -52,6 +53,7 @@ namespace Bridge.Builder
             }
 
             int i = 0;
+
             while (i < args.Length)
             {
                 switch (args[i])
@@ -59,6 +61,10 @@ namespace Bridge.Builder
                     case "-p":
                     case "-project":
                         projectLocation = args[++i];
+                        break;
+                    case "-b":
+                    case "-bridge":
+                        bridgeLocation = args[++i];
                         break;
                     case "-o":
                     case "-output":
@@ -108,7 +114,10 @@ namespace Bridge.Builder
             {
                 Console.WriteLine("Generating script...");
                 var translator = new Bridge.Translator.Translator(projectLocation);
-                translator.BridgeLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll");
+
+                bridgeLocation = !string.IsNullOrEmpty(bridgeLocation) ? bridgeLocation : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll"); 
+
+                translator.BridgeLocation = bridgeLocation;
                 translator.Rebuild = rebuild;
                 translator.ChangeCase = changeCase;
                 translator.Log = LogMessage;
