@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!--Import Project="..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.props" Condition="Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.props')" /-->
   <Import Project="..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props" Condition="Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -80,16 +79,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.props'))" />
     <Error Condition="!Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets'))" />
-    <!--Error Condition="!Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.props'))" /-->
-    <!--Error Condition="!Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.targets'))" /-->
   </Target>
   <Import Project="..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets" Condition="Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.3-rc2\build\MSBuild.ILMerge.Task.targets')" />
-  <!--Import Project="..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.targets" Condition="Exists('..\..\Bridge\packages\MSBuild.ILMerge.Task.1.0.2\build\MSBuild.ILMerge.Task.targets')" /-->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
