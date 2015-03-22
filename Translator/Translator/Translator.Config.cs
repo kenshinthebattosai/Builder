@@ -10,7 +10,7 @@ namespace Bridge.Translator
     {
         protected virtual IAssemblyInfo ReadConfig()
         {
-            var path = Path.GetDirectoryName(this.Location) + "\\Bridge\\bridge.json";
+            var path = Path.GetDirectoryName(this.Location) + "\\bridge\\bridge.json";
 
             if (!File.Exists(path))
             {

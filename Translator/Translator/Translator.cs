@@ -1,14 +1,8 @@
-﻿using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
+﻿using Bridge.Contract;
+using Microsoft.Ajax.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Linq;
-using Bridge.Contract;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Reflection;
-using Microsoft.Ajax.Utilities;
 
 namespace Bridge.Translator
 {
@@ -135,7 +129,7 @@ namespace Bridge.Translator
         public static void ExtractCore(string clrPath, string outputPath, bool nodebug)
         {
             var assembly = System.Reflection.Assembly.ReflectionOnlyLoadFrom(clrPath);
-            var resourceName = "Bridge.resources.bridge.js";
+            var resourceName = "Bridge.Resources.bridge.js";
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
@@ -147,7 +141,7 @@ namespace Bridge.Translator
 
             if (!nodebug)
             {
-                resourceName = "Bridge.resources.bridge.min.js";
+                resourceName = "Bridge.Resources.bridge.min.js";
 
                 using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
