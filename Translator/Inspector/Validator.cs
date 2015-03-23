@@ -64,13 +64,26 @@ namespace Bridge.Translator
             return this.HasAttribute(type.CustomAttributes, ignoreAttr) || this.HasAttribute(type.CustomAttributes, objectLiteralAttr);
         }
 
+        public virtual bool IsBridgeClass(TypeDefinition type)
+        {
+            foreach (var i in type.Interfaces)
+            {
+                if (i.FullName == "Bridge.IBridgeClass")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public virtual bool IsIgnoreType(ICSharpCode.NRefactory.TypeSystem.ITypeDefinition typeDefinition)
         {
             string ignoreAttr = Translator.Bridge_ASSEMBLY + ".IgnoreAttribute";
             string objectLiteralAttr = Translator.Bridge_ASSEMBLY + ".ObjectLiteralAttribute";
-
+            
             return typeDefinition.Attributes.Any(attr => attr.Constructor!= null && ((attr.Constructor.DeclaringType.FullName == ignoreAttr) || (attr.Constructor.DeclaringType.FullName == objectLiteralAttr)));
-        }
+        }        
 
         public virtual int EnumEmitMode(DefaultResolvedTypeDefinition type)
         {

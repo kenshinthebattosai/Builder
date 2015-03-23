@@ -30,6 +30,7 @@ namespace Bridge.Contract
         bool IsDelegateOrLambda(ICSharpCode.NRefactory.Semantics.ResolveResult result);
         bool IsIgnoreType(Mono.Cecil.ICustomAttributeProvider type);
         bool IsIgnoreType(ICSharpCode.NRefactory.TypeSystem.ITypeDefinition typeDefinition);
+        bool IsBridgeClass(Mono.Cecil.TypeDefinition type);
         bool IsInlineMethod(Mono.Cecil.MethodDefinition method);
         bool IsNameEnum(ICSharpCode.NRefactory.TypeSystem.Implementation.DefaultResolvedTypeDefinition type);
         bool IsObjectLiteral(ICSharpCode.NRefactory.TypeSystem.ITypeDefinition type);

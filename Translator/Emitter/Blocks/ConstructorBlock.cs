@@ -78,12 +78,12 @@ namespace Bridge.Translator
             {
                 this.EnsureComma();
 
-                if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+                /*if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
                 {
                     this.Write("$");
-                }
+                }*/
 
-                this.Write("config");
+                this.Write("$config");
 
                 this.WriteColon();
                 this.WriteSpace();
@@ -128,15 +128,20 @@ namespace Bridge.Translator
                 return;
             }
 
-            if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+            /*if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
             {
                 this.Write("$");
-            }
+            }*/
 
-            this.Write("config");            
+            this.Write("$config");            
 
-            this.WriteColon();            
+            this.WriteColon();                        
+            this.WriteFunction();
+            this.WriteOpenParentheses();
+            this.WriteCloseParentheses();
             this.WriteSpace();
+            this.BeginBlock();
+            this.WriteReturn(true);
             this.BeginBlock();
 
             var changeCase = this.Emitter.ChangeCase;
@@ -169,8 +174,13 @@ namespace Bridge.Translator
 
                 this.Emitter.Comma = true;
             }
+
             this.WriteNewLine();
-            this.EndBlock();            
+            this.EndBlock();
+            this.WriteSemiColon();
+            this.WriteNewLine();
+            this.EndBlock();
+            
         }
 
         protected virtual void EmitCtorForInstantiableClass()
@@ -223,7 +233,7 @@ namespace Bridge.Translator
                 var requireNewLine = false;
                 var changeCase = this.Emitter.ChangeCase;
 
-                if (baseType != null && !this.Emitter.Validator.IsIgnoreType(baseType) ||
+                if (baseType != null && (!this.Emitter.Validator.IsIgnoreType(baseType) || this.Emitter.Validator.IsBridgeClass(baseType)) ||
                     (ctor.Initializer != null && ctor.Initializer.ConstructorInitializerType == ConstructorInitializerType.This))
                 {
                     if (requireNewLine)
