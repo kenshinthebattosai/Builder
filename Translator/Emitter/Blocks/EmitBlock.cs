@@ -98,7 +98,7 @@ namespace Bridge.Translator
 
             IEmitterOutput output = null;
 
-            switch (this.Emitter.AssemblyInfo.fileNameCaseConverting)
+            switch (this.Emitter.AssemblyInfo.FileNameCaseConverting)
             {
                 case FileNameCaseConvert.AllLower:
                     fileName = fileName.ToLower();

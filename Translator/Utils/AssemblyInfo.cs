@@ -59,7 +59,7 @@ namespace Bridge.Translator
         /// The option to manage JavaScript file name case converting for class grouping.
         /// See the FileNameCaseConvert enum for more details.
         /// </summary>
-        public FileNameCaseConvert fileNameCaseConverting
+        public FileNameCaseConvert FileNameCaseConverting
         {
             get
             {
