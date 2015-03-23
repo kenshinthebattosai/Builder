@@ -86,7 +86,7 @@ namespace Bridge.Translator
                     return this.Name;
                 }
 
-                return this.ParentType.Name + "." + this.Name;
+                return this.ParentType.ParentName + "." + this.Name;
             }
         }
 
@@ -99,7 +99,7 @@ namespace Bridge.Translator
                     return this.GenericName;
                 }
 
-                return (this.ParentType.GenericName ?? this.ParentType.Name) + "." + this.GenericName;
+                return (this.ParentType.ParentGenericName ?? this.ParentType.ParentName) + "." + this.GenericName;
             }
         }
 

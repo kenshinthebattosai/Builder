@@ -38,25 +38,25 @@ namespace Bridge.Translator
         {
             if (info.Fields.Count > 0)
             {
-                this.WriteObject("fields", this.TypeInfo.InstanceConfig.Fields);
+                this.WriteObject("fields", info.Fields);
                 this.Emitter.Comma = true;
             }
 
             if (info.Events.Count > 0)
             {
-                this.WriteObject("events", this.TypeInfo.InstanceConfig.Events);
+                this.WriteObject("events", info.Events);
                 this.Emitter.Comma = true;
             }
 
             if (info.Properties.Count > 0)
             {
-                this.WriteObject("properties", this.TypeInfo.InstanceConfig.Properties);
+                this.WriteObject("properties", info.Properties);
                 this.Emitter.Comma = true;
             }
 
             if (info.Alias.Count > 0)
             {
-                this.WriteAlias("alias", this.TypeInfo.InstanceConfig.Alias);
+                this.WriteAlias("alias", info.Alias);
                 this.Emitter.Comma = true;
             }
         }

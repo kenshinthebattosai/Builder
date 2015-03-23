@@ -26,7 +26,7 @@ namespace Bridge.Translator
         public const string FIX_ARGUMENT_NAME = "__autofix__";
 
 
-        private static List<string> reservedStaticNames = new List<string> { "Name", "Arguments", "Caller", "Length", "Prototype" };        
+        internal static List<string> reservedStaticNames = new List<string> { "Name", "Arguments", "Caller", "Length", "Prototype" };        
 
         private Dictionary<string, OverloadsCollection> overloadsCache;
         public Dictionary<string, OverloadsCollection> OverloadsCache 

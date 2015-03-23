@@ -45,7 +45,7 @@ namespace Bridge.Translator
             {
                 return -1;
             }
-
+            
             if (xTypeDefinition.IsInterface && Helpers.IsImplementationOf(yTypeDefinition, xTypeDefinition, this))
             {
                 return -1;
@@ -58,6 +58,11 @@ namespace Bridge.Translator
 
             var xPriority = this.GetSerializationPriority(xTypeDefinition);
             var yPriority = this.GetSerializationPriority(yTypeDefinition);
+
+            if (xPriority == yPriority)
+            {
+                return xTypeDefinition.FullName.CompareTo(yTypeDefinition.FullName);
+            }
 
             return -xPriority.CompareTo(yPriority);
             //return Comparer.Default.Compare(x.FullName, y.FullName);

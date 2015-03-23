@@ -63,10 +63,19 @@ namespace Bridge.Translator
 
             if (partialType == null)
             {
+                ITypeInfo parentTypeInfo = null;
+                var parentTypeDeclaration = typeDeclaration.GetParent<TypeDeclaration>();
+                if (parentTypeDeclaration != null)
+                {
+                    parentTypeInfo = this.Types.FirstOrDefault(t => t.TypeDeclaration == parentTypeDeclaration);
+                }
+
+                
+
                 this.CurrentType = new TypeInfo()
                 {
                     TypeDeclaration = typeDeclaration,
-                    ParentType = this.ParentType,
+                    ParentType = parentTypeInfo,
                     Name = Helpers.GetScriptName(typeDeclaration, false),
                     GenericName = Helpers.GetScriptName(typeDeclaration, true),
                     ClassType = typeDeclaration.ClassType,
@@ -75,6 +84,11 @@ namespace Bridge.Translator
                     IsEnum = typeDeclaration.ClassType == ClassType.Enum,
                     IsStatic = typeDeclaration.ClassType == ClassType.Enum || typeDeclaration.HasModifier(Modifiers.Static)
                 };
+
+                if (parentTypeInfo != null && Emitter.reservedStaticNames.Any(n => String.Equals(this.CurrentType.Name, n, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    throw new Exception("Nested class cannot have such name: " + this.CurrentType.Name + ". Please rename it.");
+                }
             }
             else
             {
@@ -100,9 +114,7 @@ namespace Bridge.Translator
                 this.NestedTypes = null;
                 foreach (var nestedType in types)
                 {
-                    this.ParentType = nestedType.Item2;
                     this.VisitTypeDeclaration(nestedType.Item1);
-                    this.ParentType = null;
                 }
             }
         }
