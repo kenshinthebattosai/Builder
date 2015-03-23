@@ -478,7 +478,10 @@ namespace Bridge.Translator
 
         public void RemovePenultimateEmptyLines(bool withLast = false)
         {
-            AbstractMethodBlock.RemovePenultimateEmptyLines(this.Emitter.Output, withLast);
+            if (this.Emitter.Output != null)
+            {
+                AbstractMethodBlock.RemovePenultimateEmptyLines(this.Emitter.Output, withLast);
+            }
         }
 
         public static StringBuilder RemovePenultimateEmptyLines(StringBuilder buffer, bool withLast = false)
