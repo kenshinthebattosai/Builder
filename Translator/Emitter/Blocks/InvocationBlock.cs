@@ -94,14 +94,22 @@ namespace Bridge.Translator
                         {
                             throw (Exception)this.Emitter.CreateException(invocationExpression, "Only primitive expression can be inlined");
                         }
-                        
-                        this.Write(inlineExpression.Value);
 
                         string value = inlineExpression.Value.ToString().Trim();
-                        if (value.Length == 0 || value[value.Length - 1] == ';')
+                        if (value.Length > 0)
                         {
+                            this.Write(inlineExpression.Value);
+
+                            if (value[value.Length - 1] == ';')
+                            {
+                                this.Emitter.EnableSemicolon = false;
+                                this.WriteNewLine();
+                            }
+                        }
+                        else
+                        {
+                            // Empty string, emit nothing.
                             this.Emitter.EnableSemicolon = false;
-                            this.WriteNewLine();
                         }
 
                         this.Emitter.ReplaceAwaiterByVar = oldValue;
