@@ -70,13 +70,13 @@ namespace Bridge.Translator
         /// <param name="type"></param>
         protected static void InheritFileNameAttribute(TypeDefinition type)
         {
-            var FAtName = "FileNameAttribute";
-            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == FAtName))
+            var fAtName = "FileNameAttribute";
+            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == fAtName))
             {
-                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == FAtName);
+                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == fAtName);
                 foreach (var nestedType in type.NestedTypes)
                 {
-                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == FAtName))
+                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == fAtName))
                     {
                         nestedType.CustomAttributes.Add(FAt);
                     }
