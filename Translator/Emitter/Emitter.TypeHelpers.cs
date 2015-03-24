@@ -56,8 +56,8 @@ namespace Bridge.Translator
                 return 1;
             }
 
-            var xPriority = this.GetSerializationPriority(xTypeDefinition);
-            var yPriority = this.GetSerializationPriority(yTypeDefinition);
+            var xPriority = this.GetPriority(xTypeDefinition);
+            var yPriority = this.GetPriority(yTypeDefinition);
 
             if (xPriority == yPriority)
             {
@@ -202,18 +202,17 @@ namespace Bridge.Translator
             sb.Append("[");
 
             var list = new List<string>();
+            
             foreach (var t in this.TypeInfo.TypeDeclaration.BaseTypes)
-
             {
                 var name = Helpers.TranslateTypeReference(t, this);
 
                 list.Add(name);
-                }
+            }
 
-            if (list.Count > 0 && list[0] == "Object")
-                {
+            if (list.Count > 0 && list[0] == "Object") 
+            {
                 list.RemoveAt(0);
-
             }
 
             if (list.Count == 0)
@@ -318,11 +317,11 @@ namespace Bridge.Translator
             return name;
         }
 
-        public virtual int GetSerializationPriority(TypeDefinition type)
+        public virtual int GetPriority(TypeDefinition type)
         {
             var attr = type.CustomAttributes.FirstOrDefault(a =>
             {
-                return a.AttributeType.FullName == "Bridge.SerializationPriorityAttribute";
+                return a.AttributeType.FullName == "Bridge.PriorityAttribute";
             });
 
             if (attr != null)
@@ -331,9 +330,10 @@ namespace Bridge.Translator
             }
 
             var baseType = this.GetBaseTypeDefinition(type);
+
             if (baseType != null)
             {
-                return this.GetSerializationPriority(baseType);
+                return this.GetPriority(baseType);
             }
 
             return 0;

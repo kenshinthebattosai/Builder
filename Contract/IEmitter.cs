@@ -36,7 +36,7 @@ namespace Bridge.Contract
         Tuple<bool, bool, string> GetInlineCode(ICSharpCode.NRefactory.CSharp.InvocationExpression node);
         string GetDefinitionName(IMemberDefinition member, bool changeCase = true);        
         System.Collections.Generic.IEnumerable<string> GetScript(ICSharpCode.NRefactory.CSharp.EntityDeclaration method);
-        int GetSerializationPriority(Mono.Cecil.TypeDefinition type);
+        int GetPriority(Mono.Cecil.TypeDefinition type);
         Mono.Cecil.TypeDefinition GetTypeDefinition();
         Mono.Cecil.TypeDefinition GetTypeDefinition(ICSharpCode.NRefactory.CSharp.AstType reference, bool safe = false);
         Mono.Cecil.TypeDefinition GetTypeDefinition(IType type);
