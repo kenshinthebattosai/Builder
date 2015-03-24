@@ -113,6 +113,11 @@ namespace Bridge.Translator
                         this.Write(" }");
                     }
                 }
+                else if (isReferenceLocal)
+                {
+                    addSemicolon = true;
+                    this.Write(" = {}");
+                }
             }
 
             this.Emitter.AsyncExpressionHandling = asyncExpressionHandling;
