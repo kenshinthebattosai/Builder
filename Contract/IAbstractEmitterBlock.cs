@@ -3,11 +3,13 @@ namespace Bridge.Contract
 {
     public interface IAbstractEmitterBlock
     {
-        void AddLocal(string name, ICSharpCode.NRefactory.CSharp.AstType type);
-        void AddLocals(System.Collections.Generic.IEnumerable<ICSharpCode.NRefactory.CSharp.ParameterDeclaration> declarations);
+        string AddLocal(string name, ICSharpCode.NRefactory.CSharp.AstType type);
+        void AddLocals(System.Collections.Generic.IEnumerable<ICSharpCode.NRefactory.CSharp.ParameterDeclaration> declarations, ICSharpCode.NRefactory.CSharp.AstNode statement);
         void BeginBlock();
-        System.Collections.Generic.Dictionary<string, string> BuildLocalsMap(ICSharpCode.NRefactory.CSharp.AstNode statement);
+        System.Collections.Generic.Dictionary<string, string> BuildLocalsMap();
         void ClearLocalsMap(System.Collections.Generic.Dictionary<string, string> prevMap = null);
+        System.Collections.Generic.Dictionary<string, string> BuildLocalsNamesMap();
+        void ClearLocalsNamesMap(System.Collections.Generic.Dictionary<string, string> prevMap = null);
         void Emit();
         void EmitBlockOrIndentedLine(ICSharpCode.NRefactory.CSharp.AstNode node);
         Bridge.Contract.IEmitter Emitter { get; set; }

@@ -4,10 +4,10 @@ namespace Bridge.Contract
     public interface IValidator
     {
         bool CanIgnoreType(Mono.Cecil.TypeDefinition type);
+        void CheckIdentifier(string name, ICSharpCode.NRefactory.CSharp.AstNode context);
         void CheckConstructors(Mono.Cecil.TypeDefinition type, ITranslator translator);
         void CheckFields(Mono.Cecil.TypeDefinition type, ITranslator translator);
-        void CheckFileName(Mono.Cecil.TypeDefinition type, ITranslator translator);
-        void CheckIdentifier(string name, ICSharpCode.NRefactory.CSharp.AstNode context);
+        void CheckFileName(Mono.Cecil.TypeDefinition type, ITranslator translator);        
         void CheckMethodArguments(Mono.Cecil.MethodDefinition method);
         void CheckMethods(Mono.Cecil.TypeDefinition type, ITranslator translator);
         void CheckModule(Mono.Cecil.TypeDefinition type, ITranslator translator);

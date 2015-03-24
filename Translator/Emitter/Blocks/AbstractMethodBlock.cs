@@ -17,7 +17,11 @@ namespace Bridge.Translator
 
             foreach (var p in declarations)
             {
-                this.Emitter.Validator.CheckIdentifier(p.Name, context);
+                string name = p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, "");
+                if(this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(name)) 
+                {
+                    name = this.Emitter.LocalsNamesMap[name];
+                }                
 
                 if (needComma)
                 {
@@ -25,7 +29,7 @@ namespace Bridge.Translator
                 }
 
                 needComma = true;
-                this.Write(p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, ""));
+                this.Write(name);
             }
 
             this.WriteCloseParentheses();

@@ -50,10 +50,13 @@ namespace Bridge.Translator
                 this.EnsureComma();
 
                 this.ResetLocals();
+                
+                var prevMap = this.BuildLocalsMap();
+                var prevNamesMap = this.BuildLocalsNamesMap();
 
                 if (setter)
-                {
-                    this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
+                {                    
+                    this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } }, accessor.Body);
                 }
 
                 var overloads = OverloadsCollection.Create(this.Emitter, propertyDeclaration, setter);
@@ -70,11 +73,7 @@ namespace Bridge.Translator
 
                 if (script == null)
                 {
-                        accessor.Body.AcceptVisitor(this.Emitter);
-
-
-
-
+                    accessor.Body.AcceptVisitor(this.Emitter);
                 }
                 else
                 {
@@ -89,6 +88,8 @@ namespace Bridge.Translator
                     this.EndBlock();
                 }
 
+                this.ClearLocalsMap(prevMap);
+                this.ClearLocalsNamesMap(prevNamesMap);
                 this.Emitter.Comma = true;
             }
         }

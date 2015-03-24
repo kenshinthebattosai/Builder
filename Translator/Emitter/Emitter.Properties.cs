@@ -76,6 +76,12 @@ namespace Bridge.Translator
             set;
         }
 
+        public Dictionary<string, string> LocalsNamesMap
+        {
+            get;
+            set;
+        }
+
         public Stack<Dictionary<string, AstType>> LocalsStack 
         { 
             get; 

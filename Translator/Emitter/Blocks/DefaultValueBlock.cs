@@ -21,7 +21,7 @@ namespace Bridge.Translator
 
         public override void Emit()
         {
-            var resolveResult = this.Emitter.Resolver.ResolveNode(DefaultValueExpression.Type, this.Emitter);
+            var resolveResult = this.Emitter.Resolver.ResolveNode(this.DefaultValueExpression.Type, this.Emitter);
 
             if (!resolveResult.IsError && resolveResult.Type.IsReferenceType.HasValue && resolveResult.Type.IsReferenceType.Value)
             {
@@ -29,7 +29,7 @@ namespace Bridge.Translator
             }
             else
             {
-                this.Write("Bridge.getDefaultValue(" + DefaultValueExpression.Type.ToString() + ")");
+                this.Write("Bridge.getDefaultValue(" + Helpers.TranslateTypeReference(DefaultValueExpression.Type, this.Emitter) + ")");
             }
         }
     }

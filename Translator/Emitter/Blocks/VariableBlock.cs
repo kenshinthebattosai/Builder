@@ -34,9 +34,8 @@ namespace Bridge.Translator
             var asyncExpressionHandling = this.Emitter.AsyncExpressionHandling;
 
             foreach (var variable in this.VariableDeclarationStatement.Variables)
-            {
-                this.Emitter.Validator.CheckIdentifier(variable.Name, this.VariableDeclarationStatement);
-                this.AddLocal(variable.Name, this.VariableDeclarationStatement.Type);
+            {                
+                var varName = this.AddLocal(variable.Name, this.VariableDeclarationStatement.Type);
 
                 if (variable.Initializer != null && !variable.Initializer.IsNull && variable.Initializer.ToString().Contains(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME))                {
                     continue;
@@ -83,7 +82,7 @@ namespace Bridge.Translator
 
                     needComma = true;
 
-                    this.Write(variable.Name);
+                    this.Write(varName);
                 }
 
                 if (hasInitializer)

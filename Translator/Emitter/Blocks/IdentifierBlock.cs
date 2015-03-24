@@ -127,6 +127,10 @@ namespace Bridge.Translator
                 {
                     this.Write(this.Emitter.LocalsMap[id]);
                 }
+                else if (this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(id))
+                {
+                    this.Write(this.Emitter.LocalsNamesMap[id]);
+                }
                 else
                 {
                     this.Write(id);

@@ -30,8 +30,9 @@ namespace Bridge.Translator
         {
             this.EnsureComma();
             this.ResetLocals();
-            var prevMap = this.BuildLocalsMap(operatorDeclaration.Body);
-            this.AddLocals(operatorDeclaration.Parameters);
+            var prevMap = this.BuildLocalsMap();
+            var prevNamesMap = this.BuildLocalsNamesMap();
+            this.AddLocals(operatorDeclaration.Parameters, operatorDeclaration.Body);
 
             var typeDef = this.Emitter.GetTypeDefinition();
             var overloads = OverloadsCollection.Create(this.Emitter, operatorDeclaration);            
@@ -74,6 +75,7 @@ namespace Bridge.Translator
             }
 
             this.ClearLocalsMap(prevMap);
+            this.ClearLocalsNamesMap(prevNamesMap);
             this.Emitter.Comma = true;
         }                  
     }

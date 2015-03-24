@@ -54,6 +54,7 @@ namespace Bridge.Contract
         int Level { get; set; }
         System.Collections.Generic.Dictionary<string, ICSharpCode.NRefactory.CSharp.AstType> Locals { get; set; }
         System.Collections.Generic.Dictionary<string, string> LocalsMap { get; set; }
+        System.Collections.Generic.Dictionary<string, string> LocalsNamesMap { get; set; }
         System.Collections.Generic.Stack<System.Collections.Generic.Dictionary<string, ICSharpCode.NRefactory.CSharp.AstType>> LocalsStack { get; set; }
         Action<string, string> Log { get; set; }
         void LogError(string message);

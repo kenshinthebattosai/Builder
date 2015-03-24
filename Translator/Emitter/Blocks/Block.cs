@@ -106,6 +106,31 @@ namespace Bridge.Translator
 
         public void DoEmitBlock()
         {
+            if (this.BlockStatement.Parent is MethodDeclaration)
+            {
+                this.ConvertParamsToReferences(((MethodDeclaration)this.BlockStatement.Parent).Parameters);
+            }
+            else if (this.BlockStatement.Parent is AnonymousMethodExpression)
+            {
+                this.ConvertParamsToReferences(((AnonymousMethodExpression)this.BlockStatement.Parent).Parameters);
+            }
+            else if (this.BlockStatement.Parent is LambdaExpression)
+            {
+                this.ConvertParamsToReferences(((LambdaExpression)this.BlockStatement.Parent).Parameters);
+            }
+            else if (this.BlockStatement.Parent is ConstructorDeclaration)
+            {
+                this.ConvertParamsToReferences(((ConstructorDeclaration)this.BlockStatement.Parent).Parameters);
+            }
+            else if (this.BlockStatement.Parent is OperatorDeclaration)
+            {
+                this.ConvertParamsToReferences(((OperatorDeclaration)this.BlockStatement.Parent).Parameters);
+            }
+            else if (this.BlockStatement.Parent is Accessor && this.BlockStatement.Parent.Role.ToString() == "Setter")
+            {
+                this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
+            }
+
             this.BlockStatement.Children.ToList().ForEach(child => child.AcceptVisitor(this.Emitter));
         }
 

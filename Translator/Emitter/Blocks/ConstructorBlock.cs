@@ -209,8 +209,9 @@ namespace Bridge.Translator
             {
                 this.EnsureComma();
                 this.ResetLocals();
-                var prevMap = this.BuildLocalsMap(ctor.Body);
-                this.AddLocals(ctor.Parameters);
+                var prevMap = this.BuildLocalsMap();
+                var prevNamesMap = this.BuildLocalsNamesMap();
+                this.AddLocals(ctor.Parameters, ctor.Body);
 
                 var ctorName = "constructor";
 
@@ -254,7 +255,7 @@ namespace Bridge.Translator
                         {
                             this.WriteNewLine();
                         }
-
+                        this.ConvertParamsToReferences(ctor.Parameters);
                         ctor.Body.AcceptChildren(this.Emitter);
                     }
                 }
@@ -275,6 +276,7 @@ namespace Bridge.Translator
                 this.EndBlock();
                 this.Emitter.Comma = true;
                 this.ClearLocalsMap(prevMap);
+                this.ClearLocalsNamesMap(prevNamesMap);
             }
         }        
 

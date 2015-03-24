@@ -77,8 +77,8 @@ namespace Bridge.Translator
                 return;
             }
 
-            var iteratorName = this.GetNextIteratorName();
-            this.AddLocal(iteratorName, AstType.Null);
+            //var iteratorName = this.GetNextIteratorName();
+            var iteratorName = this.AddLocal("$i", AstType.Null);
 
             this.WriteVar();
             this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
@@ -108,18 +108,18 @@ namespace Bridge.Translator
             this.WriteSpace();
             this.BeginBlock();
 
+            this.PushLocals();
+            var varName = this.AddLocal(foreachStatement.VariableName, foreachStatement.VariableType);
+            
             this.WriteVar();
-            this.Write(foreachStatement.VariableName, " = ", iteratorName);
+            this.Write(varName, " = ", iteratorName);
 
             this.WriteDot();
             this.Write(Bridge.Translator.Emitter.GET_CURRENT);
 
             this.WriteOpenCloseParentheses();
             this.WriteSemiColon();
-            this.WriteNewLine();
-
-            this.PushLocals();
-            this.AddLocal(foreachStatement.VariableName, foreachStatement.VariableType);
+            this.WriteNewLine();            
 
             BlockStatement block = foreachStatement.EmbeddedStatement as BlockStatement;
 
@@ -181,7 +181,8 @@ namespace Bridge.Translator
                 return;
             }
 
-            var iteratorName = this.GetNextIteratorName();
+            //var iteratorName = this.GetNextIteratorName();
+            var iteratorName = this.AddLocal("$i", AstType.Null);
 
             this.WriteVar();
             this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
@@ -204,18 +205,18 @@ namespace Bridge.Translator
             this.WriteSpace();
             this.BeginBlock();
 
+            this.PushLocals();
+            var varName = this.AddLocal(foreachStatement.VariableName, foreachStatement.VariableType);
+
             this.WriteVar();
-            this.Write(foreachStatement.VariableName, " = ", iteratorName);
+            this.Write(varName, " = ", iteratorName);
 
             this.WriteDot();
             this.Write(Bridge.Translator.Emitter.GET_CURRENT);
 
             this.WriteOpenCloseParentheses();
             this.WriteSemiColon();
-            this.WriteNewLine();
-
-            this.PushLocals();
-            this.AddLocal(foreachStatement.VariableName, foreachStatement.VariableType);
+            this.WriteNewLine();            
 
             BlockStatement block = foreachStatement.EmbeddedStatement as BlockStatement;
             

@@ -65,12 +65,12 @@ namespace Bridge.Translator
                     varName = "$e";                    
                 }
 
-                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, Helpers.TranslateTypeReference(clause.Type, this.Emitter), catchStep.Step));
-
                 if (!this.Emitter.Locals.ContainsKey(varName))
                 {
-                    this.AddLocal(varName, clause.Type);
+                    varName = this.AddLocal(varName, clause.Type);
                 }
+
+                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, Helpers.TranslateTypeReference(clause.Type, this.Emitter), catchStep.Step));                
 
                 this.Emitter.IgnoreBlock = clause.Body;
                 clause.Body.AcceptVisitor(this.Emitter);
@@ -163,11 +163,11 @@ namespace Bridge.Translator
 
                 if (String.IsNullOrEmpty(varName))
                 {
-                    varName = "$e";
+                    varName = this.AddLocal("$e", AstType.Null);
                 }
                 else
                 {
-                    this.AddLocal(varName, clause.Type);
+                    varName = this.AddLocal(varName, clause.Type);
                 }
 
                 this.WriteCatch();

@@ -121,8 +121,9 @@ namespace Bridge.Translator
                 asyncBlock.InitAsyncBlock();
             }
 
-            var prevMap = this.BuildLocalsMap(body);
-            this.AddLocals(parameters);
+            var prevMap = this.BuildLocalsMap();
+            var prevNamesMap = this.BuildLocalsNamesMap();
+            this.AddLocals(parameters, body);
             
 
             bool block = body is BlockStatement;            
@@ -138,11 +139,12 @@ namespace Bridge.Translator
             if (!block && !this.IsAsync)
             {
                 this.BeginBlock();
-            }
+            }            
 
             bool isSimpleLambda = body.Parent is LambdaExpression && !block && !this.IsAsync;
             if (isSimpleLambda)
-            {                
+            {
+                this.ConvertParamsToReferences(parameters);
                 this.WriteReturn(true);
             }
 
@@ -174,6 +176,7 @@ namespace Bridge.Translator
 
             this.PopLocals();
             this.ClearLocalsMap(prevMap);
+            this.ClearLocalsNamesMap(prevNamesMap);
         }
     }
 }
