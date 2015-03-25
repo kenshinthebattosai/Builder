@@ -48,8 +48,25 @@ namespace Bridge.Translator
             set;
         }
 
+        public bool? WrapByFn
+        {
+            get;
+            set;
+        }
+
         public override void Emit()
         {
+            if ((!this.WrapByFn.HasValue || this.WrapByFn.Value) && (this.BlockStatement.Parent is ForStatement ||
+                     this.BlockStatement.Parent is ForeachStatement ||
+                     this.BlockStatement.Parent is WhileStatement ||
+                     this.BlockStatement.Parent is DoWhileStatement))
+            {
+                var visitor = new LambdaVisitor();
+                this.BlockStatement.AcceptVisitor(visitor);
+
+                this.WrapByFn = true;
+            }
+
             this.EmitBlock();
         }
 
@@ -129,22 +146,30 @@ namespace Bridge.Translator
             else if (this.BlockStatement.Parent is Accessor && this.BlockStatement.Parent.Role.ToString() == "Setter")
             {
                 this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
-            }
+            }            
 
             this.BlockStatement.Children.ToList().ForEach(child => child.AcceptVisitor(this.Emitter));
         }
 
         public void EndEmitBlock()
         {
+            var blockWasEnded = false;
             if (!this.NoBraces && (!this.Emitter.IsAsync || (!this.AsyncNoBraces && this.BlockStatement.Parent != this.Emitter.AsyncBlock.Node)))
             {
                 this.EndBlock();
+                blockWasEnded = true;
             }            
 
             if (this.AddEndBlock)
             {
                 this.WriteNewLine();
                 this.EndBlock();
+                blockWasEnded = true;
+            }
+
+            if (blockWasEnded && this.WrapByFn.HasValue && this.WrapByFn.Value)
+            {
+                this.Write(").call(this);");
             }
 
             if (!this.KeepLineAfterBlock(this.BlockStatement))
@@ -161,6 +186,12 @@ namespace Bridge.Translator
 
             if (!this.NoBraces && (!this.Emitter.IsAsync || (!this.AsyncNoBraces && this.BlockStatement.Parent != this.Emitter.AsyncBlock.Node)))
             {
+                if (this.WrapByFn.HasValue && this.WrapByFn.Value)
+                {
+                    this.WriteNewLine();
+                    this.Indent();
+                    this.Write("(function() ");
+                }
                 this.BeginBlock();
             }            
         }        
