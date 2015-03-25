@@ -126,7 +126,22 @@ namespace Bridge.Translator
         {
             this.EmitTryBlock();
 
-            this.EmitMultipleCatchBlock();
+            var count = this.TryCatchStatement.CatchClauses.Count;
+            if(count > 0) 
+            {
+                var firstClause = this.TryCatchStatement.CatchClauses.Count == 1 ? this.TryCatchStatement.CatchClauses.First() : null;
+                var exceptionType = (firstClause == null || firstClause.Type.IsNull) ? null : Helpers.TranslateTypeReference(firstClause.Type, this.Emitter);
+                var isBaseException = exceptionType == null || exceptionType == "Bridge.Exception";
+
+                if (count == 1 && isBaseException)
+                {
+                    this.EmitSingleCatchBlock();                
+                }
+                else
+                {
+                    this.EmitMultipleCatchBlock();
+                }
+            }            
 
             this.EmitFinallyBlock();
         }
@@ -214,8 +229,8 @@ namespace Bridge.Translator
             var firstClause = true;
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
-                var exceptionType = Helpers.TranslateTypeReference(clause.Type, this.Emitter);
-                var isBaseException = exceptionType == "Bridge.Exception";
+                var exceptionType = clause.Type.IsNull ? null : Helpers.TranslateTypeReference(clause.Type, this.Emitter);
+                var isBaseException = exceptionType == null || exceptionType == "Bridge.Exception";
 
                 if (!firstClause)
                 {
@@ -251,27 +266,6 @@ namespace Bridge.Translator
 
             this.EndBlock();
             this.WriteNewLine();
-        }
-
-        protected void Validate()
-        {
-            TryCatchStatement tryCatchStatement = this.TryCatchStatement;
-
-            if (tryCatchStatement.CatchClauses.Count > 1)
-            {
-                throw (Exception)this.Emitter.CreateException(tryCatchStatement, "Multiple catch statements are not supported");
-            }
-
-            foreach (var clause in tryCatchStatement.CatchClauses)
-            {
-                if (!clause.Type.IsNull)
-                {
-                    if (this.Emitter.ResolveType(clause.Type.ToString(), clause.Type) != "System.Exception")
-                    {
-                        throw (Exception)this.Emitter.CreateException(clause, "Only System.Exception type is allowed in catch clauses");
-                    }
-                }
-            }
         }
     }
 
