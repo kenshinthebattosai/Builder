@@ -36,7 +36,7 @@ namespace Bridge.Contract
 
         public static OverloadsCollection Create(IEmitter emitter, CustomEventDeclaration eventDeclaration, bool remove)
         {
-            string key = eventDeclaration.GetHashCode().ToString();
+            string key = eventDeclaration.GetHashCode().ToString() + remove.GetHashCode().ToString();
             if (emitter.OverloadsCache.ContainsKey(key))
             {
                 return emitter.OverloadsCache[key];
@@ -69,7 +69,7 @@ namespace Bridge.Contract
 
         public static OverloadsCollection Create(IEmitter emitter, PropertyDeclaration propDeclaration, bool isSetter = false)
         {
-            string key = propDeclaration.GetHashCode().ToString();
+            string key = propDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString();
             if (emitter.OverloadsCache.ContainsKey(key))
             {
                 return emitter.OverloadsCache[key];
@@ -80,7 +80,7 @@ namespace Bridge.Contract
 
         public static OverloadsCollection Create(IEmitter emitter, IndexerDeclaration indexerDeclaration, bool isSetter = false)
         {
-            string key = indexerDeclaration.GetHashCode().ToString();
+            string key = indexerDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString();
             if (emitter.OverloadsCache.ContainsKey(key))
             {
                 return emitter.OverloadsCache[key];
@@ -102,7 +102,7 @@ namespace Bridge.Contract
 
         public static OverloadsCollection Create(IEmitter emitter, IMember member, bool isSetter = false)
         {
-            string key = member.MemberDefinition != null ? member.MemberDefinition.GetHashCode().ToString() : member.GetHashCode().ToString();
+            string key = (member.MemberDefinition != null ? member.MemberDefinition.GetHashCode().ToString() : member.GetHashCode().ToString()) + isSetter.GetHashCode().ToString();
             if (emitter.OverloadsCache.ContainsKey(key))
             {
                 return emitter.OverloadsCache[key];

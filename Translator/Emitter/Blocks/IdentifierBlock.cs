@@ -1,5 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
@@ -107,9 +108,11 @@ namespace Bridge.Translator
             IdentifierExpression identifierExpression = this.IdentifierExpression;
 
             ResolveResult resolveResult = null;
+            ResolveResult expressionResolveResult = null;
             if (identifierExpression.Parent is InvocationExpression && (((InvocationExpression)(identifierExpression.Parent)).Target == identifierExpression))
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(identifierExpression.Parent, this.Emitter);
+                expressionResolveResult = this.Emitter.Resolver.ResolveNode(identifierExpression, this.Emitter);
             }
             else
             {
@@ -208,7 +211,20 @@ namespace Bridge.Translator
                     if (resolveResult is InvocationResolveResult)
                     {
                         InvocationResolveResult invocationResult = (InvocationResolveResult)resolveResult;
-                        this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
+                        CSharpInvocationResolveResult cInvocationResult = (CSharpInvocationResolveResult)resolveResult;
+                        var expresssionMember = expressionResolveResult as MemberResolveResult;
+
+                        if (expresssionMember != null &&
+                            cInvocationResult != null &&
+                            cInvocationResult.IsDelegateInvocation &&
+                            invocationResult.Member != expresssionMember.Member)
+                        {
+                            this.Write(OverloadsCollection.Create(this.Emitter, expresssionMember.Member).GetOverloadName());
+                        }
+                        else
+                        {
+                            this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
+                        }    
                     }
                     else if (resolveResult is MemberResolveResult)
                     {
@@ -241,7 +257,28 @@ namespace Bridge.Translator
                     }
                     else
                     {
-                        this.Write(OverloadsCollection.Create(this.Emitter, memberResult.Member).GetOverloadName());
+                        if (resolveResult is InvocationResolveResult)
+                        {
+                            InvocationResolveResult invocationResult = (InvocationResolveResult)resolveResult;
+                            CSharpInvocationResolveResult cInvocationResult = (CSharpInvocationResolveResult)resolveResult;
+                            var expresssionMember = expressionResolveResult as MemberResolveResult;
+
+                            if (expresssionMember != null &&
+                                cInvocationResult != null &&
+                                cInvocationResult.IsDelegateInvocation &&
+                                invocationResult.Member != expresssionMember.Member)
+                            {
+                                this.Write(OverloadsCollection.Create(this.Emitter, expresssionMember.Member).GetOverloadName());
+                            }
+                            else
+                            {
+                                this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
+                            }
+                        }
+                        else
+                        {
+                            this.Write(OverloadsCollection.Create(this.Emitter, memberResult.Member).GetOverloadName());
+                        }
                     }
                 }
 
@@ -343,7 +380,7 @@ namespace Bridge.Translator
                 else
                 {
                     this.Write(this.Emitter.AssignmentType == AssignmentOperatorType.Add ? "add" : "remove");
-                    this.Write(OverloadsCollection.Create(this.Emitter, memberResult.Member).GetOverloadName());
+                    this.Write(OverloadsCollection.Create(this.Emitter, memberResult.Member, this.Emitter.AssignmentType == AssignmentOperatorType.Subtract).GetOverloadName());
                 }
 
                 this.WriteOpenParentheses();

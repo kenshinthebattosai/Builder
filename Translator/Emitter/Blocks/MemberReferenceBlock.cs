@@ -38,9 +38,11 @@ namespace Bridge.Translator
             MemberReferenceExpression memberReferenceExpression = this.MemberReferenceExpression;
 
             ResolveResult resolveResult = null;
+            ResolveResult expressionResolveResult = null;
             if (memberReferenceExpression.Parent is InvocationExpression && (((InvocationExpression)(memberReferenceExpression.Parent)).Target == memberReferenceExpression))
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Parent, this.Emitter);
+                expressionResolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression, this.Emitter);
             }
             else
             {
@@ -273,12 +275,25 @@ namespace Bridge.Translator
                 else if (resolveResult is InvocationResolveResult)
                 {
                     InvocationResolveResult invocationResult = (InvocationResolveResult)resolveResult;
-                    this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
+                    CSharpInvocationResolveResult cInvocationResult = (CSharpInvocationResolveResult)resolveResult;
+                    var expresssionMember = expressionResolveResult as MemberResolveResult;
+
+                    if (expresssionMember != null && 
+                        cInvocationResult != null && 
+                        cInvocationResult.IsDelegateInvocation && 
+                        invocationResult.Member != expresssionMember.Member)
+                    {
+                        this.Write(OverloadsCollection.Create(this.Emitter, expresssionMember.Member).GetOverloadName());
+                    }
+                    else
+                    {
+                        this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
+                    }                    
                 }
                 else if (member.Member is DefaultResolvedEvent && this.Emitter.IsAssignment && (this.Emitter.AssignmentType == AssignmentOperatorType.Add || this.Emitter.AssignmentType == AssignmentOperatorType.Subtract))
                 {
                     this.Write(this.Emitter.AssignmentType == AssignmentOperatorType.Add ? "add" : "remove");
-                    this.Write(OverloadsCollection.Create(this.Emitter, member.Member).GetOverloadName());
+                    this.Write(OverloadsCollection.Create(this.Emitter, member.Member, this.Emitter.AssignmentType == AssignmentOperatorType.Subtract).GetOverloadName());
                     this.WriteOpenParentheses();                    
                 }
                 else
