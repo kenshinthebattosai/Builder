@@ -75,10 +75,6 @@ namespace Bridge.Contract
             get;
         }
 
-
-
-
-
         Dictionary<OperatorType, List<OperatorDeclaration>> Operators
         {
             get;

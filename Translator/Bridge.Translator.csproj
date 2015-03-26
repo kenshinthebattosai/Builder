@@ -108,6 +108,7 @@
     <Compile Include="Emitter\Blocks\DoWhileBlock.cs" />
     <Compile Include="Emitter\Blocks\VisitorCustomEventBlock.cs" />
     <Compile Include="Emitter\Blocks\OperatorBlock.cs" />
+    <Compile Include="Emitter\Blocks\VisitorIndexerBlock.cs" />
     <Compile Include="Emitter\Blocks\WhileBlock.cs" />
     <Compile Include="Emitter\Blocks\TryCatchBlock.cs" />
     <Compile Include="Emitter\Blocks\ConditionalBlock.cs" />

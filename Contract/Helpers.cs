@@ -762,7 +762,7 @@ namespace Bridge.Contract
             }
 
         public static string GetPropertyRef(PropertyDeclaration property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
-            {
+        {
             var name = emitter.GetEntityName(property, true, ignoreInterface);            
 
             if (!noOverload)
@@ -778,10 +778,38 @@ namespace Bridge.Contract
             }
 
             return (isSetter ? "set" : "get") + name;
-                }
+        }
+
+        public static string GetPropertyRef(IndexerDeclaration property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
+        {
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
+
+            if (!noOverload)
+            {
+                var overloads = OverloadsCollection.Create(emitter, property, isSetter);
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
+            }
+
+            return (isSetter ? "set" : "get") + name;
+        }
+
+        public static string GetIndexerRef(IMember property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
+        {
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
+
+            if (!noOverload)
+            {
+                var overloads = OverloadsCollection.Create(emitter, property, isSetter);
+                name = overloads.HasOverloads ? overloads.GetOverloadName() : name;
+                noOverload = !overloads.HasOverloads;
+            }
+
+            return (isSetter ? "set" : "get") + name;
+        }
 
         public static string GetPropertyRef(IMember property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
-            {
+        {
             var name = emitter.GetEntityName(property, true, ignoreInterface);            
             
             if (!noOverload)

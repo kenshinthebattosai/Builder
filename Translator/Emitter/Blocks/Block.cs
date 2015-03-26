@@ -98,8 +98,8 @@ namespace Bridge.Translator
             {
                 return true;
             }
-
-            if (parent is Accessor && (parent.Parent is PropertyDeclaration || parent.Parent is CustomEventDeclaration))
+            
+            if (parent is Accessor && (parent.Parent is PropertyDeclaration || parent.Parent is CustomEventDeclaration || parent.Parent is IndexerDeclaration))
             {
                 return true;
             }

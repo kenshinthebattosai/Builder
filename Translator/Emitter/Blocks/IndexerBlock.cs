@@ -34,19 +34,29 @@ namespace Bridge.Translator
 
             IAttribute inlineAttr = null;
             var resolveResult = this.Emitter.Resolver.ResolveNode(indexerExpression, this.Emitter);
+            var isIgnore = false;
+            var ignoreAccessor = false;
+            IProperty member = null;
+            IMethod method = null;
 
-            if (resolveResult is InvocationResolveResult)
+            if (resolveResult is MemberResolveResult)
             {
-                var member = ((InvocationResolveResult)resolveResult).Member;
-                if (member is SpecializedProperty)
+                var resolvedMember = ((MemberResolveResult)resolveResult).Member;
+                isIgnore = this.Emitter.Validator.IsIgnoreType(resolvedMember.DeclaringTypeDefinition);
+
+                if (resolvedMember is IProperty)
                 {
-                    var specProp = (SpecializedProperty)member;
-                    var method = this.Emitter.IsAssignment ? specProp.Setter : specProp.Getter;
+                    member = (IProperty)resolvedMember;
+                    method = this.Emitter.IsAssignment ? member.Setter : member.Getter;
                     inlineAttr = this.Emitter.GetAttribute(method.Attributes, Translator.Bridge_ASSEMBLY + ".TemplateAttribute");
+                    ignoreAccessor = this.Emitter.Validator.HasAttribute(method.Attributes, "Bridge.IgnoreAttribute");
                 }
             }
 
-            indexerExpression.Target.AcceptVisitor(this.Emitter);
+            if (inlineAttr != null || isIgnore)
+            {
+                indexerExpression.Target.AcceptVisitor(this.Emitter);
+            }
 
             if (inlineAttr != null)
             {
@@ -67,6 +77,33 @@ namespace Bridge.Translator
                     {
                         this.WriteComma();
                     }
+                }
+            }
+            else if (!isIgnore)
+            {
+                var oldIsAssignment = this.Emitter.IsAssignment;
+                this.Emitter.IsAssignment = false;
+                indexerExpression.Target.AcceptVisitor(this.Emitter);
+                this.Emitter.IsAssignment = oldIsAssignment;
+                this.WriteDot();
+                var argsInfo = new ArgumentsInfo(this.Emitter, indexerExpression);
+                var argsExpressions = argsInfo.ArgumentsExpressions;
+                var paramsArg = argsInfo.ParamsExpression;
+                var name = Helpers.GetPropertyRef(member, this.Emitter, this.Emitter.IsAssignment);
+
+                if (!this.Emitter.IsAssignment)
+                {
+                    this.Write(name);
+                    this.WriteOpenParentheses();
+                    new ExpressionListBlock(this.Emitter, argsExpressions, paramsArg).Emit();
+                    this.WriteCloseParentheses();
+                }
+                else
+                {
+                    this.Write(name);
+                    this.WriteOpenParentheses();
+                    new ExpressionListBlock(this.Emitter, argsExpressions, paramsArg).Emit();
+                    this.PushWriter(", {0})");
                 }
             }
             else

@@ -289,5 +289,10 @@ namespace Bridge.Translator
         {
             new NullReferenceBlock(this, nullNode).Emit();
         }
+
+        public override void VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration)
+        {
+            new VisitorIndexerBlock(this, indexerDeclaration).Emit();
+        }
     }
 }

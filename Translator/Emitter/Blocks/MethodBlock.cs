@@ -37,7 +37,7 @@ namespace Bridge.Translator
         {
             if (this.StaticBlock)
             {
-                this.EmitMethods(this.TypeInfo.StaticMethods, this.TypeInfo.StaticProperties, this.TypeInfo.Operators);                
+                this.EmitMethods(this.TypeInfo.StaticMethods, this.TypeInfo.StaticProperties, this.TypeInfo.Operators);
             }
             else
             {
@@ -47,21 +47,6 @@ namespace Bridge.Translator
 
         protected virtual void EmitMethods(Dictionary<string, List<MethodDeclaration>> methods, Dictionary<string, List<EntityDeclaration>> properties, Dictionary<OperatorType, List<OperatorDeclaration>> operators)
         {
-            /*foreach (var e in events)
-            {
-                foreach (var evtVar in e.Variables)
-                {
-                    this.EnsureComma();
-                    this.EmitEventAccessor(e, evtVar, true);
-
-                    this.WriteComma();
-                    this.WriteNewLine();
-
-                    this.EmitEventAccessor(e, evtVar, false);
-                    this.Emitter.Comma = true;
-                }  
-            }*/
-            
             var names = new List<string>(properties.Keys);
 
             foreach (var name in names)
@@ -70,13 +55,17 @@ namespace Bridge.Translator
 
                 foreach (var prop in props)
                 {
-                if (prop is PropertyDeclaration)
-                {
-                    this.Emitter.VisitPropertyDeclaration((PropertyDeclaration)prop);
-                }
-                else if (prop is CustomEventDeclaration)
-                {
-                    this.Emitter.VisitCustomEventDeclaration((CustomEventDeclaration)prop);
+                    if (prop is PropertyDeclaration)
+                    {
+                        this.Emitter.VisitPropertyDeclaration((PropertyDeclaration)prop);
+                    }
+                    else if (prop is CustomEventDeclaration)
+                    {
+                        this.Emitter.VisitCustomEventDeclaration((CustomEventDeclaration)prop);
+                    }
+                    else if (prop is IndexerDeclaration)
+                    {
+                        this.Emitter.VisitIndexerDeclaration((IndexerDeclaration)prop);
                     }
                 }
             }

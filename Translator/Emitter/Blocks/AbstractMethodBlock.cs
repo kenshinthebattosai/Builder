@@ -10,7 +10,7 @@ namespace Bridge.Translator
 {
     public abstract class AbstractMethodBlock : AbstractEmitterBlock
     {
-        protected virtual void EmitMethodParameters(IEnumerable<ParameterDeclaration> declarations, AstNode context)
+        protected virtual void EmitMethodParameters(IEnumerable<ParameterDeclaration> declarations, AstNode context, bool skipCloseParentheses = false)
         {
             this.WriteOpenParentheses();
             bool needComma = false;
@@ -32,7 +32,10 @@ namespace Bridge.Translator
                 this.Write(name);
             }
 
-            this.WriteCloseParentheses();
+            if (!skipCloseParentheses)
+            {
+                this.WriteCloseParentheses();
+            }
         }
 
         protected virtual void EmitTypeParameters(IEnumerable<TypeParameterDeclaration> declarations, AstNode context)

@@ -78,6 +78,17 @@ namespace Bridge.Contract
             return new OverloadsCollection(emitter, propDeclaration, isSetter);
         }
 
+        public static OverloadsCollection Create(IEmitter emitter, IndexerDeclaration indexerDeclaration, bool isSetter = false)
+        {
+            string key = indexerDeclaration.GetHashCode().ToString();
+            if (emitter.OverloadsCache.ContainsKey(key))
+            {
+                return emitter.OverloadsCache[key];
+            }
+
+            return new OverloadsCollection(emitter, indexerDeclaration, isSetter);
+        }
+
         public static OverloadsCollection Create(IEmitter emitter, OperatorDeclaration operatorDeclaration)
         {
             string key = operatorDeclaration.GetHashCode().ToString();
@@ -91,7 +102,7 @@ namespace Bridge.Contract
 
         public static OverloadsCollection Create(IEmitter emitter, IMember member, bool isSetter = false)
         {
-            string key = member.MemberDefinition != null ? member.MemberDefinition.ToString() : member.ToString();
+            string key = member.MemberDefinition != null ? member.MemberDefinition.GetHashCode().ToString() : member.GetHashCode().ToString();
             if (emitter.OverloadsCache.ContainsKey(key))
             {
                 return emitter.OverloadsCache[key];
@@ -260,7 +271,23 @@ namespace Bridge.Contract
             this.Type = this.Member.DeclaringType;
             this.InitMembers();            
             this.Emitter.OverloadsCache[propDeclaration.GetHashCode().ToString()] = this;
-        }        
+        }
+
+        private OverloadsCollection(IEmitter emitter, IndexerDeclaration indexerDeclaration, bool isSetter)
+        {
+            this.Emitter = emitter;
+            this.Name = indexerDeclaration.Name;
+            this.JsName = Helpers.GetPropertyRef(indexerDeclaration, emitter, isSetter, true, true);
+            this.Inherit = true;
+            this.Static = false;
+            this.CancelChangeCase = true;
+            this.IsSetter = isSetter;
+            this.Member = this.FindMember(indexerDeclaration);
+            this.TypeDefinition = this.Member.DeclaringTypeDefinition;
+            this.Type = this.Member.DeclaringType;
+            this.InitMembers();
+            this.Emitter.OverloadsCache[indexerDeclaration.GetHashCode().ToString()] = this;
+        }       
 
         private OverloadsCollection(IEmitter emitter, OperatorDeclaration operatorDeclaration)
         {

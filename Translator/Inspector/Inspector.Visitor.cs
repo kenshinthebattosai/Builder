@@ -180,7 +180,6 @@ namespace Bridge.Translator
                 this.CurrentType.Ctors.Add(constructorDeclaration);
             }
         }
-
         
         public override void VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration)
         {
@@ -203,6 +202,27 @@ namespace Bridge.Translator
             else
             {
                 dict.Add(key, new List<OperatorDeclaration>(new[] { operatorDeclaration }));
+            }
+        }
+
+        public override void VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration)
+        {
+            if (indexerDeclaration.HasModifier(Modifiers.Abstract))
+            {
+                return;
+            }
+
+            IDictionary<string, List<EntityDeclaration>> dict = CurrentType.InstanceProperties;
+
+            var key = indexerDeclaration.Name;
+
+            if (dict.ContainsKey(key))
+            {
+                dict[key].Add(indexerDeclaration);
+            }
+            else
+            {
+                dict.Add(key, new List<EntityDeclaration>(new[] { indexerDeclaration }));
             }
         }
 
@@ -294,7 +314,7 @@ namespace Bridge.Translator
                 if (!this.AssemblyInfo.AutoPropertyToField)
                 {
                     info.Properties.Add(new TypeConfigItem
-                {
+                    {
                         Name = key,
                         Entity = propertyDeclaration,
                         Initializer = initializer
@@ -304,7 +324,7 @@ namespace Bridge.Translator
                 {
 
                     info.Fields.Add(new TypeConfigItem
-                {
+                    {
                         Name = key,
                         Entity = propertyDeclaration,
                         Initializer = initializer
