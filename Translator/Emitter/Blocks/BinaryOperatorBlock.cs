@@ -127,7 +127,8 @@ namespace Bridge.Translator
                 }
             }
 
-            bool nullable = NullableType.IsNullable(leftResolverResult.Type) || NullableType.IsNullable(rightResolverResult.Type);
+            //bool nullable = NullableType.IsNullable(leftResolverResult.Type) || NullableType.IsNullable(rightResolverResult.Type);
+            bool nullable = orr != null && orr.IsLiftedOperator;
             if (nullable)
             {
                 this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.");
