@@ -57,7 +57,7 @@ namespace Bridge.Contract
         /// Convert any file names to lowercase. This is the most fail-safe solution that might work on all file systems
         /// regardles of their inherent file name case sensitiveness properties. But might break fancy file naming.
         /// </summary>
-        AllLower = 3
+        Lowercase = 3
     }
 
     public interface IAssemblyInfo

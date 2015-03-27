@@ -100,7 +100,7 @@ namespace Bridge.Translator
 
             switch (this.Emitter.AssemblyInfo.FileNameCasing)
             {
-                case FileNameCaseConvert.AllLower:
+                case FileNameCaseConvert.Lowercase:
                     fileName = fileName.ToLower();
                     break;
                 case FileNameCaseConvert.Group:
