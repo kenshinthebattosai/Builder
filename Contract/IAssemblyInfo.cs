@@ -65,7 +65,7 @@ namespace Bridge.Contract
         System.Collections.Generic.List<IPluginDependency> Dependencies { get; set; }
         string FileName { get; set; }
         OutputBy OutputBy { get; set; }
-        FileNameCaseConvert FileNameCaseConverting { get; set; }
+        FileNameCaseConvert FileNameCasing { get; set; }
         string Module { get; set; }
         string Output { get; set; }
         int StartIndexInName { get; set; }
