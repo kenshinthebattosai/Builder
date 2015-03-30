@@ -89,30 +89,24 @@ namespace Bridge.Translator
                 fileName = AssemblyInfo.DEFAULT_FILENAME;
             }
 
+
+            if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
+            {
+                var stringList = new List<string>();
+
+                foreach (var str in fileName.Split('.'))
+                {
+                    stringList.Add(str.ToLowerCamelCase());
+                }
+
+                fileName = stringList.Join(".");
+            }
+
             // Append '.js' extension to file name at translator.Outputs level: this aids in code grouping on files
             // when filesystem is not case sensitive.
             if (!fileName.ToLower().EndsWith("." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION))
             {
                 fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
-            }
-
-            if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
-            {
-                var extensionLength = Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION.Length + 1;
-                var fileNameLastPos = fileName.Length - extensionLength;
-
-                var camelCasedString = fileName.Substring(0, fileNameLastPos);
-                var stringList = new List<string>();
-
-                foreach (var str in camelCasedString.Split('.'))
-                {
-                    stringList.Add(Object.Net.Utilities.StringUtils.ToLowerCamelCase(str));
-                }
-
-                camelCasedString = stringList.Join(".");
-
-                // Bind cased name adding back file extension.
-                fileName = camelCasedString + fileName.Substring(fileNameLastPos);
             }
 
             switch (this.Emitter.AssemblyInfo.FileNameCasing)
