@@ -98,32 +98,18 @@ namespace Bridge.Translator
 
             if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
             {
-                // Turns the fileName into 'lowerCamelCasing'. Considering dots to separate words
-                // e.g.: NameSpace.PrivateSTAAgency => nameSpace.privateSTAAgency
                 var extensionLength = Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION.Length + 1;
                 var fileNameLastPos = fileName.Length - extensionLength;
-                var camelCasedString = "";
 
-                // State machine-like loop to iterate thru filename converting case where it applies.
-                char currChar, currLCChar;
-                var wordStart = true; // on the beginning
-                for (int i = 0; i < fileNameLastPos; i++)
+                var camelCasedString = fileName.Substring(0, fileNameLastPos);
+                var stringList = new List<string>();
+
+                foreach (var str in camelCasedString.Split('.'))
                 {
-                    currChar = fileName[i];
-                    currLCChar = Char.ToLower(currChar);
-                    if (wordStart)
-                    {
-                        currChar = currLCChar;
-                        wordStart = false;
-                    }
-
-                    // FIXME: no localization support: á, ç, and other chars will delimit words!
-                    if (currLCChar < 'a' || currLCChar > 'z')
-                    {
-                        wordStart = true; // at every dot occurrence
-                    }
-                    camelCasedString += currChar;
+                    stringList.Add(Object.Net.Utilities.StringUtils.ToLowerCamelCase(str));
                 }
+
+                camelCasedString = stringList.Join(".");
 
                 // Bind cased name adding back file extension.
                 fileName = camelCasedString + fileName.Substring(fileNameLastPos);
