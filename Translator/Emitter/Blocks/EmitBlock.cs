@@ -96,14 +96,45 @@ namespace Bridge.Translator
                 fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
             }
 
-            IEmitterOutput output = null;
+            if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
+            {
+                // Turns the fileName into 'lowerCamelCasing'. Considering dots to separate words
+                // e.g.: NameSpace.PrivateSTAAgency => nameSpace.privateSTAAgency
+                var extensionLength = Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION.Length + 1;
+                var fileNameLastPos = fileName.Length - extensionLength;
+                var camelCasedString = "";
+
+                // State machine-like loop to iterate thru filename converting case where it applies.
+                char currChar, currLCChar;
+                var wordStart = true; // on the beginning
+                for (int i = 0; i < fileNameLastPos; i++)
+                {
+                    currChar = fileName[i];
+                    currLCChar = Char.ToLower(currChar);
+                    if (wordStart)
+                    {
+                        currChar = currLCChar;
+                        wordStart = false;
+                    }
+
+                    // FIXME: no localization support: á, ç, and other chars will delimit words!
+                    if (currLCChar < 'a' || currLCChar > 'z')
+                    {
+                        wordStart = true; // at every dot occurrence
+                    }
+                    camelCasedString += currChar;
+                }
+
+                // Bind cased name adding back file extension.
+                fileName = camelCasedString + fileName.Substring(fileNameLastPos);
+            }
 
             switch (this.Emitter.AssemblyInfo.FileNameCasing)
             {
                 case FileNameCaseConvert.Lowercase:
                     fileName = fileName.ToLower();
                     break;
-                case FileNameCaseConvert.Group:
+                default:
                     var lcFileName = fileName.ToLower();
 
                     // Find a file name that matches (case-insensitive) and use it as file name (if found)
@@ -117,6 +148,8 @@ namespace Bridge.Translator
                     }
                     break;
             }
+
+            IEmitterOutput output = null;
 
             if (this.Emitter.Outputs.ContainsKey(fileName))
             {
