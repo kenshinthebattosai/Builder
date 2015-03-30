@@ -22,7 +22,7 @@ namespace Bridge.Translator
             this.Emitter.LocalsStack = null;
             this.Emitter.IteratorCount = 0;
             this.Emitter.ThisRefCounter = 0;
-            this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool>>();
+            this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool, Action>>();
             this.Emitter.IsAssignment = false;
             this.Emitter.Level = 0;
             this.Emitter.IsNewLine = true;
@@ -160,7 +160,7 @@ namespace Bridge.Translator
 
         public override void Emit()
         {
-            this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool>>();
+            this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool, Action>>();
             this.Emitter.Outputs = new EmitterOutputs();
 
             foreach (var type in this.Emitter.Types)

@@ -63,6 +63,18 @@ namespace Bridge.Translator
             get;
             set;
         }
+
+        public UnaryOperatorType UnaryOperatorType
+        {
+            get;
+            set;
+        }
+
+        public bool IsUnaryAccessor 
+        { 
+            get; 
+            set; 
+        }
         
         public Dictionary<string, AstType> Locals 
         { 
@@ -149,7 +161,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public Stack<Tuple<string, StringBuilder, bool>> Writers
+        public Stack<Tuple<string, StringBuilder, bool, Action>> Writers
         {
             get;
             set;
@@ -331,6 +343,12 @@ namespace Bridge.Translator
         }
 
         public IPlugins Plugins
+        {
+            get;
+            set;
+        }
+
+        public Dictionary<string, bool> TempVariables
         {
             get;
             set;

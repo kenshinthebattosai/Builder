@@ -24,7 +24,7 @@ namespace Bridge.Contract
         void PopLocals();
         string PopWriter(bool preventWrite = false);
         void PushLocals();
-        void PushWriter(string format);
+        void PushWriter(string format, Action callback = null);
         void RemovePenultimateEmptyLines(bool withLast = false);
         void ResetLocals();
         bool RestoreWriter(IWriterInfo writer);

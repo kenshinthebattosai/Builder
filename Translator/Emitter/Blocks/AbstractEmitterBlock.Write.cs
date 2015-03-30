@@ -312,9 +312,9 @@ namespace Bridge.Translator
             this.Write("function ");
         }
 
-        public virtual void PushWriter(string format)
+        public virtual void PushWriter(string format, Action callback = null)
         {
-            this.Emitter.Writers.Push(new Tuple<string, StringBuilder, bool>(format, this.Emitter.Output, this.Emitter.IsNewLine));
+            this.Emitter.Writers.Push(new Tuple<string, StringBuilder, bool, Action>(format, this.Emitter.Output, this.Emitter.IsNewLine, callback));
             this.Emitter.IsNewLine = false;
             this.Emitter.Output = new StringBuilder();
         }
@@ -329,6 +329,11 @@ namespace Bridge.Translator
             if (!preventWrite)
             {
                 this.Write(result);
+            }
+
+            if (tuple.Item4 != null)
+            {
+                tuple.Item4.Invoke();
             }
 
             return result;

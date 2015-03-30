@@ -83,6 +83,8 @@ namespace Bridge.Translator
 
         public override void Emit()
         {
+            var oldVars = this.Emitter.TempVariables;
+            this.Emitter.TempVariables = new Dictionary<string, bool>();
             this.PreviousIsAync = this.Emitter.IsAsync;
             this.Emitter.IsAsync = this.IsAsync;
 
@@ -101,6 +103,7 @@ namespace Bridge.Translator
             this.Emitter.AsyncVariables = this.PreviousAsyncVariables;
             this.Emitter.AsyncBlock = this.PreviousAsyncBlock;
             this.Emitter.ReplaceAwaiterByVar = this.ReplaceAwaiterByVar;
+            this.Emitter.TempVariables = oldVars;
         }
 
         protected virtual void EmitLambda(IEnumerable<ParameterDeclaration> parameters, AstNode body, AstNode context)

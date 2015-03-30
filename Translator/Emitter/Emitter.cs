@@ -11,7 +11,9 @@ namespace Bridge.Translator
             this.TypeDefinitions = typeDefinitions;
             this.Types = types;
             this.Types.Sort(this.CompareTypeInfos);
-            this.Validator = validator;            
+            this.Validator = validator;
+            this.AssignmentType = ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Any;
+            this.UnaryOperatorType = ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Any;
         }
 
         public virtual Dictionary<string, string> Emit()

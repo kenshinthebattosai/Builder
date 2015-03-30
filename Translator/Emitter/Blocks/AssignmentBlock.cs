@@ -29,6 +29,8 @@ namespace Bridge.Translator
         protected void VisitAssignmentExpression()
         {
             AssignmentExpression assignmentExpression = this.AssignmentExpression;
+            var oldAssigment = this.Emitter.IsAssignment;
+            var oldAssigmentType = this.Emitter.AssignmentType;
 
             var delegateAssigment = false;
             bool isEvent = false;
@@ -68,6 +70,7 @@ namespace Bridge.Translator
                 }
             }
 
+            
             this.Emitter.IsAssignment = true;
             this.Emitter.AssignmentType = assignmentExpression.Operator;
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
@@ -84,8 +87,8 @@ namespace Bridge.Translator
             }
 
             this.Emitter.ReplaceAwaiterByVar = oldValue;
-            this.Emitter.AssignmentType = AssignmentOperatorType.Any;
-            this.Emitter.IsAssignment = false;
+            this.Emitter.AssignmentType = oldAssigmentType;
+            this.Emitter.IsAssignment = oldAssigment;
 
             if (this.Emitter.Writers.Count == 0 && !delegateAssigment && !thisAssignment)
             {

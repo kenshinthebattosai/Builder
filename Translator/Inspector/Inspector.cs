@@ -62,10 +62,10 @@ namespace Bridge.Translator
 
         private Expression GetDefaultFieldInitializer(AstType type) 
         {
-            return new PrimitiveExpression(this.GetDefaultFieldValue(type), "?");
+            return new PrimitiveExpression(Inspector.GetDefaultFieldValue(type, this.Resolver), "?");
         }
 
-        private object GetDefaultFieldValue(AstType type)
+        public static object GetDefaultFieldValue(AstType type, IMemberResolver resolver)
         {
             if (type is PrimitiveType)
             {
@@ -90,7 +90,7 @@ namespace Bridge.Translator
                 }                
             }
 
-            var resolveResult = this.Resolver.ResolveNode(type, null);
+            var resolveResult = resolver.ResolveNode(type, null);
 
             if (!resolveResult.IsError && resolveResult.Type.Kind == TypeKind.Enum)
             {

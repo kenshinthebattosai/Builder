@@ -50,7 +50,7 @@ namespace Bridge.Translator
                         this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.lift(");
                     }
                     
-                    this.Write(this.Emitter.ShortenTypeName(method.DeclaringType.FullName));
+                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
                     this.WriteDot();
 
                     this.Write(OverloadsCollection.Create(this.Emitter, method).GetOverloadName());

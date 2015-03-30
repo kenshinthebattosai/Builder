@@ -143,8 +143,11 @@ namespace Bridge.Translator
                     }
                     else
                     {
-
-                        block.Write(block.Emitter.ShortenTypeName(method.DeclaringType.FullName));
+                        if (method.DeclaringTypeDefinition != null && block.Emitter.Validator.IsIgnoreType(method.DeclaringTypeDefinition))
+                        {
+                            return false;
+                        }
+                        block.Write(block.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
                         block.WriteDot();
 
                         block.Write(OverloadsCollection.Create(block.Emitter, method).GetOverloadName());

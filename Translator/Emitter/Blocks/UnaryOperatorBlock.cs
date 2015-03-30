@@ -50,7 +50,7 @@ namespace Bridge.Translator
                         this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.lift(");
                     }
 
-                    this.Write(this.Emitter.ShortenTypeName(method.DeclaringType.FullName));
+                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
                     this.WriteDot();
 
                     this.Write(OverloadsCollection.Create(this.Emitter, method).GetOverloadName());
@@ -77,6 +77,8 @@ namespace Bridge.Translator
         protected void VisitUnaryOperatorExpression()
         {
             var unaryOperatorExpression = this.UnaryOperatorExpression;
+            var oldType = this.Emitter.UnaryOperatorType;
+            var oldAccessor = this.Emitter.IsUnaryAccessor;
 
             var resolveOperator = this.Emitter.Resolver.ResolveNode(unaryOperatorExpression, this.Emitter);
             OperatorResolveResult orr = resolveOperator as OperatorResolveResult;
@@ -106,147 +108,190 @@ namespace Bridge.Translator
                 }                
             }
 
-            switch (op)
+            bool isAccessor = false;
+            var memberArgResolverResult = argResolverResult as MemberResolveResult;
+            if (memberArgResolverResult != null && memberArgResolverResult.Member is IProperty)
             {
-                case UnaryOperatorType.BitNot:
-                    if (nullable)
-                    {
-                        this.Write("bnot(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(")");
-                    }
-                    else
-                    {
-                        this.Write("~");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }
-                    break;
-                case UnaryOperatorType.Decrement:
-                    if (nullable)
-                    {
-                        this.Write("(Bridge.hasValue(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(") ? --");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(" : null)");                        
-                    }
-                    else
-                    {
-                        this.Write("--");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }
-                    break;
-                case UnaryOperatorType.Increment:
-                    if (nullable)
-                    {
-                        this.Write("(Bridge.hasValue(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(") ? ++");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(" : null)");                        
-                    }
-                    else
-                    {
-                        this.Write("++");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }                    
-                    break;
-                case UnaryOperatorType.Minus:
-                    if (nullable)
-                    {
-                        this.Write("neg(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(")");
-                    }
-                    else
-                    {
-                        this.Write("-");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }                         
-                    break;
-                case UnaryOperatorType.Not:
-                    if (nullable)
-                    {
-                        this.Write("not(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(")");
-                    }
-                    else
-                    {
-                        this.Write("!");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }                            
-                    break;
-                case UnaryOperatorType.Plus:
-                    if (nullable)
-                    {
-                        this.Write("pos(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(")");
-                    }
-                    else
-                    {
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                    }         
-                    
-                    break;
-                case UnaryOperatorType.PostDecrement:
-                    if (nullable)
-                    {
-                        this.Write("(Bridge.hasValue(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(") ? ");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write("-- : null)");
-                    }
-                    else
-                    {
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write("--");
-                    }
-                    break;
-                case UnaryOperatorType.PostIncrement:
-                    if (nullable)
-                    {
-                        this.Write("(Bridge.hasValue(");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write(") ? ");
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write("++ : null)");
-                    }
-                    else
-                    {                        
-                        unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
-                        this.Write("++");
-                    }                   
-                    break;
-                case UnaryOperatorType.Await:
-                    if (this.Emitter.ReplaceAwaiterByVar)
-                    {
-                        var index = System.Array.IndexOf(this.Emitter.AsyncBlock.AwaitExpressions, unaryOperatorExpression.Expression) + 1;
-                        this.Write("$taskResult" + index);
-                    }
-                    else
-                    {
-                        var oldValue = this.Emitter.ReplaceAwaiterByVar;
-                        var oldAsyncExpressionHandling = this.Emitter.AsyncExpressionHandling;
-
-                        if (this.Emitter.IsAsync && !this.Emitter.AsyncExpressionHandling)
-                        {
-                            this.WriteAwaiters(unaryOperatorExpression.Expression);
-                            this.Emitter.ReplaceAwaiterByVar = true;
-                            this.Emitter.AsyncExpressionHandling = true;
-                        }   
-
-                        this.WriteAwaiter(unaryOperatorExpression.Expression);
-
-                        this.Emitter.ReplaceAwaiterByVar = oldValue;
-                        this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
-                    }
-                    break;
-                default:
-                    throw (Exception)this.Emitter.CreateException(unaryOperatorExpression, "Unsupported unary operator: " + unaryOperatorExpression.Operator.ToString());
+                isAccessor = true;
             }
+            else if (argResolverResult is ArrayAccessResolveResult)
+            {
+                isAccessor = ((ArrayAccessResolveResult)argResolverResult).Indexes.Count > 1;
+            }
+
+            this.Emitter.UnaryOperatorType = op;            
+
+            if (isAccessor && 
+                (op == UnaryOperatorType.Increment || 
+                 op == UnaryOperatorType.Decrement || 
+                 op == UnaryOperatorType.PostIncrement || 
+                 op == UnaryOperatorType.PostDecrement))
+            {
+                this.Emitter.IsUnaryAccessor = true;
+
+                if (nullable)
+                {
+                    this.Write("(Bridge.hasValue(");
+                    this.Emitter.IsUnaryAccessor = false;
+                    unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                    this.Write(") ? ");
+                    this.Emitter.IsUnaryAccessor = true;
+                    unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                    this.Write(" : null)");
+                }
+                else
+                {
+                    unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                }
+                
+                this.Emitter.IsUnaryAccessor = oldAccessor;
+            }
+            else
+            {
+                switch (op)
+                {
+                    case UnaryOperatorType.BitNot:
+                        if (nullable)
+                        {
+                            this.Write("bnot(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(")");
+                        }
+                        else
+                        {
+                            this.Write("~");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+                        break;
+                    case UnaryOperatorType.Decrement:
+                        if (nullable)
+                        {
+                            this.Write("(Bridge.hasValue(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(") ? --");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(" : null)");
+                        }
+                        else
+                        {
+                            this.Write("--");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+                        break;
+                    case UnaryOperatorType.Increment:
+                        if (nullable)
+                        {
+                            this.Write("(Bridge.hasValue(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(") ? ++");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(" : null)");
+                        }
+                        else
+                        {
+                            this.Write("++");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+                        break;
+                    case UnaryOperatorType.Minus:
+                        if (nullable)
+                        {
+                            this.Write("neg(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(")");
+                        }
+                        else
+                        {
+                            this.Write("-");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+                        break;
+                    case UnaryOperatorType.Not:
+                        if (nullable)
+                        {
+                            this.Write("not(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(")");
+                        }
+                        else
+                        {
+                            this.Write("!");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+                        break;
+                    case UnaryOperatorType.Plus:
+                        if (nullable)
+                        {
+                            this.Write("pos(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(")");
+                        }
+                        else
+                        {
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                        }
+
+                        break;
+                    case UnaryOperatorType.PostDecrement:
+                        if (nullable)
+                        {
+                            this.Write("(Bridge.hasValue(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(") ? ");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write("-- : null)");
+                        }
+                        else
+                        {
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write("--");
+                        }
+                        break;
+                    case UnaryOperatorType.PostIncrement:
+                        if (nullable)
+                        {
+                            this.Write("(Bridge.hasValue(");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write(") ? ");
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write("++ : null)");
+                        }
+                        else
+                        {
+                            unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
+                            this.Write("++");
+                        }
+                        break;
+                    case UnaryOperatorType.Await:
+                        if (this.Emitter.ReplaceAwaiterByVar)
+                        {
+                            var index = System.Array.IndexOf(this.Emitter.AsyncBlock.AwaitExpressions, unaryOperatorExpression.Expression) + 1;
+                            this.Write("$taskResult" + index);
+                        }
+                        else
+                        {
+                            var oldValue = this.Emitter.ReplaceAwaiterByVar;
+                            var oldAsyncExpressionHandling = this.Emitter.AsyncExpressionHandling;
+
+                            if (this.Emitter.IsAsync && !this.Emitter.AsyncExpressionHandling)
+                            {
+                                this.WriteAwaiters(unaryOperatorExpression.Expression);
+                                this.Emitter.ReplaceAwaiterByVar = true;
+                                this.Emitter.AsyncExpressionHandling = true;
+                            }
+
+                            this.WriteAwaiter(unaryOperatorExpression.Expression);
+
+                            this.Emitter.ReplaceAwaiterByVar = oldValue;
+                            this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+                        }
+                        break;
+                    default:
+                        throw (Exception)this.Emitter.CreateException(unaryOperatorExpression, "Unsupported unary operator: " + unaryOperatorExpression.Operator.ToString());
+                }
+            }
+
+            this.Emitter.UnaryOperatorType = oldType;
         }           
     }
 }

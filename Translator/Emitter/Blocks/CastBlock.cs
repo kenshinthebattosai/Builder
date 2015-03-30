@@ -198,7 +198,7 @@ namespace Bridge.Translator
 
             if (NullableType.IsNullable(resolveResult.Type))
             {
-                this.Write(this.Emitter.ShortenTypeName(Helpers.ReplaceSpecialChars(NullableType.GetUnderlyingType(resolveResult.Type).FullName)));
+                this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName((NullableType.GetUnderlyingType(resolveResult.Type)))));
             }
             else
             {

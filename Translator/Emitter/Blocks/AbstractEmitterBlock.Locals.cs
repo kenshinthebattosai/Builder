@@ -25,6 +25,7 @@ namespace Bridge.Translator
 
         public virtual void ResetLocals()
         {
+            this.Emitter.TempVariables = new Dictionary<string, bool>();
             this.Emitter.Locals = new Dictionary<string, AstType>();
             this.Emitter.IteratorCount = 0;
         }
@@ -145,6 +146,65 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                 }
             });
+        }
+
+        protected virtual void IntroduceTempVar(string name)
+        {
+            this.Emitter.TempVariables[name] = true;
+        }
+
+        protected virtual void RemoveTempVar(string name)
+        {
+            this.Emitter.TempVariables[name] = false;
+        }
+
+        protected virtual string GetTempVarName()
+        {
+            foreach (var pair in this.Emitter.TempVariables)
+            {
+                if (!pair.Value)
+                {
+                    this.Emitter.TempVariables[pair.Key] = true;
+                    return pair.Key;
+                }
+            }
+
+            string name = "$t";
+            int i = 0;
+            while (this.Emitter.TempVariables.ContainsKey(name)) 
+            {
+                name += ++i;
+            }
+
+            this.IntroduceTempVar(name);
+
+            return name;
+        }
+
+        protected virtual void EmitTempVars(int pos)
+        {
+            if (this.Emitter.TempVariables.Count > 0)
+            {
+                string temp = this.Emitter.Output.ToString(pos, this.Emitter.Output.Length - pos);
+                this.Emitter.Output.Length = pos;
+
+                this.Emitter.IsNewLine = true;
+                this.Indent();
+                this.WriteIndent();
+                this.WriteVar(true);
+                foreach (var localVar in this.Emitter.TempVariables)
+                {
+                    this.EnsureComma(false);
+                    this.Write(localVar.Key);
+                    this.Emitter.Comma = true;
+                }
+                this.Emitter.Comma = false;
+                this.WriteSemiColon();
+                this.Outdent();
+                this.WriteNewLine();
+
+                this.Emitter.Output.Append(temp);
+            }
         }
     }
 }

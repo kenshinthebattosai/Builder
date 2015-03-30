@@ -54,6 +54,18 @@ namespace Bridge.Translator
             set;
         }
 
+        public int BeginPosition
+        {
+            get;
+            set;
+        }
+
+        public bool IsMethodBlock
+        {
+            get;
+            set;
+        }
+
         public override void Emit()
         {
             if ((!this.WrapByFn.HasValue || this.WrapByFn.Value) && (this.BlockStatement.Parent is ForStatement ||
@@ -64,7 +76,7 @@ namespace Bridge.Translator
                 var visitor = new LambdaVisitor();
                 this.BlockStatement.AcceptVisitor(visitor);
 
-                this.WrapByFn = true;
+                this.WrapByFn = visitor.LambdaExpression.Count > 0;
             }
 
             this.EmitBlock();
@@ -125,28 +137,37 @@ namespace Bridge.Translator
         {
             if (this.BlockStatement.Parent is MethodDeclaration)
             {
+                this.IsMethodBlock = true;
                 this.ConvertParamsToReferences(((MethodDeclaration)this.BlockStatement.Parent).Parameters);
             }
             else if (this.BlockStatement.Parent is AnonymousMethodExpression)
             {
+                this.IsMethodBlock = true;
                 this.ConvertParamsToReferences(((AnonymousMethodExpression)this.BlockStatement.Parent).Parameters);
             }
             else if (this.BlockStatement.Parent is LambdaExpression)
             {
+                this.IsMethodBlock = true;
                 this.ConvertParamsToReferences(((LambdaExpression)this.BlockStatement.Parent).Parameters);
             }
             else if (this.BlockStatement.Parent is ConstructorDeclaration)
             {
+                this.IsMethodBlock = true;
                 this.ConvertParamsToReferences(((ConstructorDeclaration)this.BlockStatement.Parent).Parameters);
             }
             else if (this.BlockStatement.Parent is OperatorDeclaration)
             {
+                this.IsMethodBlock = true;
                 this.ConvertParamsToReferences(((OperatorDeclaration)this.BlockStatement.Parent).Parameters);
             }
-            else if (this.BlockStatement.Parent is Accessor && this.BlockStatement.Parent.Role.ToString() == "Setter")
+            else if (this.BlockStatement.Parent is Accessor)
             {
-                this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
-            }            
+                this.IsMethodBlock = true;
+                if (this.BlockStatement.Parent.Role.ToString() == "Setter")
+                {
+                    this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
+                }
+            }
 
             this.BlockStatement.Children.ToList().ForEach(child => child.AcceptVisitor(this.Emitter));
         }
@@ -169,12 +190,18 @@ namespace Bridge.Translator
 
             if (blockWasEnded && this.WrapByFn.HasValue && this.WrapByFn.Value)
             {
+                this.Outdent();
                 this.Write(").call(this);");
             }
 
             if (!this.KeepLineAfterBlock(this.BlockStatement))
             {
                 this.WriteNewLine();
+            }
+
+            if (this.IsMethodBlock)
+            {
+                this.EmitTempVars(this.BeginPosition);
             }
 
             this.PopLocals();
@@ -193,7 +220,9 @@ namespace Bridge.Translator
                     this.Write("(function() ");
                 }
                 this.BeginBlock();
-            }            
+            }
+
+            this.BeginPosition = this.Emitter.Output.Length;
         }        
     }
 }

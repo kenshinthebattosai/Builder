@@ -13,6 +13,8 @@ namespace Bridge.Contract
     {
         IAssemblyInfo AssemblyInfo { get; set; }
         ICSharpCode.NRefactory.CSharp.AssignmentOperatorType AssignmentType { get; set; }
+        ICSharpCode.NRefactory.CSharp.UnaryOperatorType UnaryOperatorType { get; set; }
+        bool IsUnaryAccessor { get; set; }
         IAsyncBlock AsyncBlock { get; set; }
         bool AsyncExpressionHandling { get; set; }
         ICSharpCode.NRefactory.CSharp.SwitchStatement AsyncSwitch { get; set; }
@@ -82,12 +84,13 @@ namespace Bridge.Contract
         System.Collections.Generic.Dictionary<string, ITypeInfo> TypeInfoDefinitions { get; set; }
         System.Collections.Generic.List<ITypeInfo> Types { get; set; }
         IValidator Validator { get; }
-        System.Collections.Generic.Stack<Tuple<string, System.Text.StringBuilder, bool>> Writers { get; set; }
+        System.Collections.Generic.Stack<Tuple<string, System.Text.StringBuilder, bool, Action>> Writers { get; set; }
         IVisitorException CreateException(AstNode node);
         IVisitorException CreateException(AstNode node, string message);
         IPlugins Plugins { get; set; }
         Dictionary<string, OverloadsCollection> OverloadsCache { get; }
         string GetFieldName(FieldDeclaration field);
         string GetEventName(EventDeclaration evt);
+        Dictionary<string, bool> TempVariables { get; set; }
     }
 }

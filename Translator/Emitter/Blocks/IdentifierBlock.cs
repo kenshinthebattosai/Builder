@@ -348,6 +348,28 @@ namespace Bridge.Translator
             }            
             else if (memberResult != null && memberResult.Member.SymbolKind == SymbolKind.Property && memberResult.TargetResult.Type.Kind != TypeKind.Anonymous)
             {
+                bool isStatement = false;
+                string valueVar = null;
+                if (this.Emitter.IsUnaryAccessor)
+                {
+                    isStatement = identifierExpression.Parent is UnaryOperatorExpression && identifierExpression.Parent.Parent is ExpressionStatement;
+
+                    if (NullableType.IsNullable(memberResult.Type))
+                    {
+                        isStatement = false;
+                    }
+
+                    if (!isStatement)
+                    {
+                        this.WriteOpenParentheses();
+
+                        valueVar = this.GetTempVarName();
+
+                        this.Write(valueVar);
+                        this.Write(" = ");
+                    }                    
+                }
+                
                 this.WriteTarget(memberResult);
 
                 if (!string.IsNullOrWhiteSpace(inlineCode))
@@ -360,9 +382,104 @@ namespace Bridge.Translator
                 }
                 else if (!this.Emitter.IsAssignment)
                 {
-                    this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter));
-                    this.WriteOpenParentheses();
-                    this.WriteCloseParentheses();
+                    if (this.Emitter.IsUnaryAccessor)
+                    {
+                        if (isStatement)
+                        {
+                            this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, true));
+                            this.WriteOpenParentheses();
+
+                            this.WriteTarget(memberResult);
+
+                            this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, false));
+                            this.WriteOpenParentheses();
+                            this.WriteCloseParentheses();
+
+                            if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
+                            {
+                                this.Write("+");
+                            }
+                            else
+                            {
+                                this.Write("-");
+                            }
+
+                            this.Write("1");
+                            this.WriteCloseParentheses();
+                        }
+                        else
+                        {
+                            this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, false));
+                            this.WriteOpenParentheses();
+                            this.WriteCloseParentheses();
+                            this.WriteComma();
+
+                            this.WriteTarget(memberResult);
+                            this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, true));
+                            this.WriteOpenParentheses();
+                            this.Write(valueVar);
+                            if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
+                            {
+                                this.Write("+");
+                            }
+                            else
+                            {
+                                this.Write("-");
+                            }
+                            this.Write("1");
+                            this.WriteCloseParentheses();
+                            this.WriteComma();
+
+                            this.Write(valueVar);
+
+                            if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.Decrement)
+                            {
+                                if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment)
+                                {
+                                    this.Write("+");
+                                }
+                                else
+                                {
+                                    this.Write("-");
+                                }
+
+                                this.Write("1");
+                            }
+
+                            this.WriteCloseParentheses();
+
+                            if (valueVar != null)
+                            {
+                                this.RemoveTempVar(valueVar);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter));
+                        this.WriteOpenParentheses();
+                        this.WriteCloseParentheses();
+                    }
+                }
+                else if (this.Emitter.AssignmentType != AssignmentOperatorType.Assign)
+                {
+                    string trg;
+                    if (memberResult.Member.IsStatic)
+                    {
+                        trg = this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(memberResult.Member.DeclaringType));
+                    }
+                    else
+                    {
+                        trg = "this";
+                    }
+
+                    this.PushWriter(string.Concat(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, true),
+                        "(",
+                        trg,
+                        ".",
+                        Helpers.GetPropertyRef(memberResult.Member, this.Emitter, false),
+                        "()",
+                        "{0})"));
                 }
                 else
                 {

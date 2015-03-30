@@ -1,5 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,13 +29,11 @@ namespace Bridge.Translator
         protected void VisitArrayCreateExpression()
         {
             ArrayCreateExpression arrayCreateExpression = this.ArrayCreateExpression;
+            var rr = this.Emitter.Resolver.ResolveNode(arrayCreateExpression, this.Emitter) as ArrayCreateResolveResult;
+            var at = (ArrayType)rr.Type;
+            var rank = arrayCreateExpression.Arguments.Count;
 
-            if (arrayCreateExpression.Arguments.Count > 1)
-            {
-                throw (Exception)this.Emitter.CreateException(arrayCreateExpression, "Multi-dimensional arrays are not supported");
-            }
-
-            if (arrayCreateExpression.Initializer.IsNull && arrayCreateExpression.Arguments.Count > 0)
+            if (arrayCreateExpression.Initializer.IsNull && rank == 1)
             {
                 this.Write("new Array(");
                 arrayCreateExpression.Arguments.First().AcceptVisitor(this.Emitter);
@@ -43,10 +42,66 @@ namespace Bridge.Translator
                 return;
             }
 
-            this.WriteOpenBracket();
-            var elements = arrayCreateExpression.Initializer.Elements;
-            new ExpressionListBlock(this.Emitter, elements, null).Emit();
-            this.WriteCloseBracket();
+            if (at.Dimensions > 1)
+            {
+                this.Write("Bridge.Array.create(");
+                var defaultInitializer = new PrimitiveExpression(Inspector.GetDefaultFieldValue(arrayCreateExpression.Type, this.Emitter.Resolver), "?");
+                if (defaultInitializer == null)
+                {
+                    this.Write("Bridge.getDefaultValue(" + Helpers.TranslateTypeReference(arrayCreateExpression.Type, this.Emitter) + ")");
+                }
+                else
+                {
+                    var primitiveExpr = defaultInitializer as PrimitiveExpression;
+                    if (primitiveExpr != null && primitiveExpr.Value is AstType)
+                    {
+                        this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
+                    }
+                    else
+                    {
+                        defaultInitializer.AcceptVisitor(this.Emitter);
+                    }
+                }
+
+                this.WriteComma();
+            }
+
+            if (rr.InitializerElements != null && rr.InitializerElements.Count > 0)
+            {
+                this.WriteOpenBracket();
+                var elements = arrayCreateExpression.Initializer.Elements;
+                new ExpressionListBlock(this.Emitter, elements, null).Emit();
+                this.WriteCloseBracket();
+            }
+            else if (at.Dimensions > 1)
+            {
+                this.Write("null");
+            }
+
+            if (at.Dimensions > 1)
+            {
+                this.Emitter.Comma = true;
+                for (int i = 0; i < rr.SizeArguments.Count; i++)
+                {
+                    var a = rr.SizeArguments[i];
+                    this.EnsureComma(false);
+                    if (a.IsCompileTimeConstant)
+                    {
+                        this.Write(a.ConstantValue);
+                    }
+                    else if (arrayCreateExpression.Arguments.Count > i)
+                    {
+                        var arg = arrayCreateExpression.Arguments.ElementAt(i);
+                        if (arg != null)
+                        {
+                            arg.AcceptVisitor(this.Emitter);
+                        }
+                    }
+                    this.Emitter.Comma = true;
+                }
+                this.Write(")");
+                this.Emitter.Comma = false;
+            }
         }
     }
 }
