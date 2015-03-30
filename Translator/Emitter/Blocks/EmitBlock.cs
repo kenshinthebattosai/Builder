@@ -89,6 +89,19 @@ namespace Bridge.Translator
                 fileName = AssemblyInfo.DEFAULT_FILENAME;
             }
 
+
+            if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
+            {
+                var stringList = new List<string>();
+
+                foreach (var str in fileName.Split('.'))
+                {
+                    stringList.Add(str.ToLowerCamelCase());
+                }
+
+                fileName = stringList.Join(".");
+            }
+
             // Append '.js' extension to file name at translator.Outputs level: this aids in code grouping on files
             // when filesystem is not case sensitive.
             if (!fileName.ToLower().EndsWith("." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION))
@@ -96,14 +109,12 @@ namespace Bridge.Translator
                 fileName += "." + Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION;
             }
 
-            IEmitterOutput output = null;
-
-            switch (this.Emitter.AssemblyInfo.FileNameCaseConverting)
+            switch (this.Emitter.AssemblyInfo.FileNameCasing)
             {
-                case FileNameCaseConvert.AllLower:
+                case FileNameCaseConvert.Lowercase:
                     fileName = fileName.ToLower();
                     break;
-                case FileNameCaseConvert.Group:
+                default:
                     var lcFileName = fileName.ToLower();
 
                     // Find a file name that matches (case-insensitive) and use it as file name (if found)
@@ -117,6 +128,8 @@ namespace Bridge.Translator
                     }
                     break;
             }
+
+            IEmitterOutput output = null;
 
             if (this.Emitter.Outputs.ContainsKey(fileName))
             {
