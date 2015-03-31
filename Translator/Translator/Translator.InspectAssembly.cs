@@ -57,7 +57,7 @@ namespace Bridge.Translator
 
                 if (type.HasNestedTypes)
                 {
-                    InheritFileNameAttribute(type);
+                    InheritAttributes(type);
                     this.AddNestedTypes(type.NestedTypes);
                 }
             }
@@ -68,19 +68,21 @@ namespace Bridge.Translator
         /// Does not override a nested type's FileName attribute if present.
         /// </summary>
         /// <param name="type"></param>
-        protected static void InheritFileNameAttribute(TypeDefinition type)
+        protected static void InheritAttributes(TypeDefinition type)
         {
-            var fAtName = "FileNameAttribute";
-            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == fAtName))
+            var attrList = new List<string> { "FileNameAttribute", "ModuleAttribute" };
+            foreach (var attribute in attrList) {
+            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
             {
-                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == fAtName);
+                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == attribute);
                 foreach (var nestedType in type.NestedTypes)
                 {
-                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == fAtName))
+                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
                     {
                         nestedType.CustomAttributes.Add(FAt);
                     }
                 }
+            }
             }
         }
 
