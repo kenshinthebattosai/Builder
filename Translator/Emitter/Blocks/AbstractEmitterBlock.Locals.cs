@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bridge.Contract;
+using ICSharpCode.NRefactory.Semantics;
 
 namespace Bridge.Translator
 {
@@ -49,9 +50,18 @@ namespace Bridge.Translator
             var visitor = new ReferenceArgumentVisitor();
             statement.AcceptVisitor(visitor);
 
-            foreach (IdentifierExpression expr in visitor.DirectionExpression)
+            foreach (var expr in visitor.DirectionExpression)
             {
-                this.Emitter.LocalsMap[expr.Identifier] = expr.Identifier + ".v";
+                var rr = this.Emitter.Resolver.ResolveNode(expr, this.Emitter);
+                if (rr is LocalResolveResult && expr is IdentifierExpression)
+                {
+                    var ie = (IdentifierExpression)expr;
+                    this.Emitter.LocalsMap[ie.Identifier] = ie.Identifier + ".v";
+                }
+                else
+                {
+                    throw new Exception("Only local variables can be passed by reference");
+                }
             }
         }
 

@@ -110,7 +110,7 @@ namespace Bridge.Translator
             this.WriteWhile();
             this.WriteOpenParentheses();
             this.WhileStatement.Condition.AcceptVisitor(this.Emitter);
-            this.WriteOpenCloseParentheses();
+            this.WriteCloseParentheses();
             this.EmitBlockOrIndentedLine(this.WhileStatement.EmbeddedStatement);
         }
     }
