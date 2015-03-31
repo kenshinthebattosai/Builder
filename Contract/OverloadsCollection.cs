@@ -451,14 +451,18 @@ namespace Bridge.Contract
                     {
                         foreach (var im2 in m2.ImplementedInterfaceMembers)
                         {
-                            if (im1.DeclaringTypeDefinition.IsDerivedFrom(im2.DeclaringTypeDefinition))
+                            if (im1.DeclaringType != im2.DeclaringType)
                             {
-                                return 1;
-                            }
 
-                            if (im2.DeclaringTypeDefinition.IsDerivedFrom(im1.DeclaringTypeDefinition))
-                            {
-                                return -1;
+                                if (im1.DeclaringTypeDefinition.IsDerivedFrom(im2.DeclaringTypeDefinition))
+                                {
+                                    return 1;
+                                }
+
+                                if (im2.DeclaringTypeDefinition.IsDerivedFrom(im1.DeclaringTypeDefinition))
+                                {
+                                    return -1;
+                                }
                             }
                         }
                     }
@@ -493,7 +497,15 @@ namespace Bridge.Contract
                     return v1.CompareTo(v2);
                 }
 
-                return string.Compare(this.MemberToString(m1), this.MemberToString(m2));
+                var name1 = this.MemberToString(m1);
+                var name2 = this.MemberToString(m2);
+                
+                if (name1.Length != name2.Length)
+                {
+                   //return name1.Length.CompareTo(name2.Length);
+                }
+
+                return string.Compare(name1, name2);
             });
         }
 
