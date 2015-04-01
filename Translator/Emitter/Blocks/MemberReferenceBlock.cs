@@ -6,6 +6,7 @@ using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using Object.Net.Utilities;
 using System.Text;
+using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -46,11 +47,17 @@ namespace Bridge.Translator
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Parent, this.Emitter);
                 expressionResolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression, this.Emitter);
+
+                if (expressionResolveResult is InvocationResolveResult)
+                {
+                    resolveResult = expressionResolveResult;
+                }
             }
             else
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression, this.Emitter);
             }
+
             bool oldIsAssignment = this.Emitter.IsAssignment;
             bool oldUnary = this.Emitter.IsUnaryAccessor;
 
@@ -74,7 +81,14 @@ namespace Bridge.Translator
 
             if (resolveResult is MethodGroupResolveResult)
             {
+                var oldResult = (MethodGroupResolveResult)resolveResult;
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Parent, this.Emitter);
+
+                if (resolveResult is DynamicInvocationResolveResult) 
+                {
+                    var method = oldResult.Methods.Last();
+                    resolveResult = new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
+                }
             }
 
             MemberResolveResult member = resolveResult as MemberResolveResult;
