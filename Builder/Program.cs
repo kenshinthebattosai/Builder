@@ -107,7 +107,7 @@ namespace Bridge.Builder
 
             if (string.IsNullOrEmpty(outputLocation))
             {
-                outputLocation = Path.ChangeExtension(projectLocation, Bridge.Translator.AssemblyInfo.JAVASCRIPT_EXTENSION);
+                outputLocation = Path.GetFileNameWithoutExtension(projectLocation);
             }
 
             try

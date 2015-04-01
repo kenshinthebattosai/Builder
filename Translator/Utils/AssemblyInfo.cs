@@ -15,7 +15,7 @@ namespace Bridge.Translator
         }
 
         /// <summary>
-        /// A file name where JavaScript is generated to. If omitted, it is [Project_Name].js by default.
+        /// A file name where JavaScript is generated to. If omitted, it is [Namespace_Name].js by default.
         /// Example: "MyBridgeNetLibrary.js"
         /// Tip. You can decorate a class with a [FileName('MyClass.js')] attribute. A class script will be generated to the defined file. It supersedes a global bridge.json fileName.
         /// </summary>
