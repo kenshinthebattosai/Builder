@@ -53,7 +53,7 @@ namespace Bridge.Translator
                         fileName = typeInfo.FullName;
                         break;
                     case OutputBy.Class:
-                        fileName = typeInfo.Name;
+                        fileName = getIteractiveClassPath(typeInfo);
                         break;
                     case OutputBy.Module:
                         fileName = module;
@@ -169,6 +169,35 @@ namespace Bridge.Translator
 
             this.Emitter.CurrentDependencies = dependencies;
             return moduleOutput;
+        }
+
+        /// <summary>
+        /// Gets class path iterating until its root class, writing something like this on a 3-level nested class:
+        /// RootClass.Lv1ParentClass.Lv2ParentClass.Lv3NestedClass
+        /// </summary>
+        /// <param name="typeInfo"></param>
+        /// <returns></returns>
+        private string getIteractiveClassPath(ITypeInfo typeInfo)
+        {
+            var fullClassName = typeInfo.Name;
+            var maxIterations = 100;
+            var curIterations = 0;
+
+            var parent = typeInfo.ParentType;
+            while (parent != null && curIterations++ < maxIterations)
+            {
+                fullClassName = parent.Name + "." + fullClassName;
+                parent = parent.ParentType;
+            }
+
+            // This should never happen but, just to be sure...
+            if (curIterations >= maxIterations)
+            {
+                throw new ArgumentOutOfRangeException("Iteration count for class '" + typeInfo.FullName + "' exceeded " +
+                    maxIterations + " depth iterations until root class!");
+            }
+
+            return fullClassName;
         }
 
         public override void Emit()
