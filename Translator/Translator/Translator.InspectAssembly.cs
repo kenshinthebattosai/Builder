@@ -71,18 +71,19 @@ namespace Bridge.Translator
         protected static void InheritAttributes(TypeDefinition type)
         {
             var attrList = new List<string> { "FileNameAttribute", "ModuleAttribute" };
-            foreach (var attribute in attrList) {
-            if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
+            foreach (var attribute in attrList)
             {
-                var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == attribute);
-                foreach (var nestedType in type.NestedTypes)
+                if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
                 {
-                    if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
+                    var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == attribute);
+                    foreach (var nestedType in type.NestedTypes)
                     {
-                        nestedType.CustomAttributes.Add(FAt);
+                        if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
+                        {
+                            nestedType.CustomAttributes.Add(FAt);
+                        }
                     }
                 }
-            }
             }
         }
 
