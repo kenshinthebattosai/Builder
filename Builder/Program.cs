@@ -48,6 +48,11 @@ namespace Bridge.Builder
                 Console.WriteLine("-r or -rebuild           Force assembly rebuilding");
                 Console.WriteLine("-nocore                  Do not extract core javascript files");
                 Console.WriteLine("-c or -case              Do not change case of members");
+#if DEBUG
+                // This code and logic is only compiled in when building bridge.net in Debug configuration
+                Console.WriteLine("-d or -debug             Attach the builder to an visual studio debugging instance.");
+                Console.WriteLine("                         Use this to attach the process to an open Bridge.NET solution.");
+#endif
                 Console.WriteLine("");
                 return;
             }
@@ -85,6 +90,12 @@ namespace Bridge.Builder
                     case "-nocore":
                         extractCore = false;
                         break;
+#if DEBUG
+                    case "-debug":
+                    case "-d":
+                        System.Diagnostics.Debugger.Launch();
+                        break;
+#endif
                     default:
                         Console.WriteLine("Unknown command: " + args[i]);
                         return;
