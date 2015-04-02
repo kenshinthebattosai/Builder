@@ -89,17 +89,32 @@ namespace Bridge.Translator
                 fileName = AssemblyInfo.DEFAULT_FILENAME;
             }
 
-
+            // Apply lowerCamelCase to filename if set up in bridge.json (or left default)
             if (this.Emitter.AssemblyInfo.FileNameCasing == FileNameCaseConvert.CamelCase)
             {
+                var sepList = new string[] { ".", System.IO.Path.DirectorySeparatorChar.ToString(), "\\", "/" };
+
+                // Populate list only with needed separators, as usually we will never have all four of them
+                var neededSepList = new List<string>();
+                foreach (var separator in sepList)
+                {
+                    if (fileName.Contains(separator.ToString()) && !neededSepList.Contains(separator))
+                    {
+                        neededSepList.Add(separator);
+                    }
+                }
+
+                // now, separating the filename string only by the used separators, apply lowerCamelCase
+                foreach (var separator in neededSepList) {
                 var stringList = new List<string>();
 
-                foreach (var str in fileName.Split('.'))
+                foreach (var str in fileName.Split(separator[0]))
                 {
                     stringList.Add(str.ToLowerCamelCase());
                 }
 
-                fileName = stringList.Join(".");
+                fileName = stringList.Join(separator);
+                }
             }
 
             // Append '.js' extension to file name at translator.Outputs level: this aids in code grouping on files
