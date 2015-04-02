@@ -68,6 +68,7 @@ namespace Bridge.Translator
 
                 var isPathRelated = this.Emitter.AssemblyInfo.OutputBy == OutputBy.ClassPath ||
                                     this.Emitter.AssemblyInfo.OutputBy == OutputBy.NamespacePath;
+
                 if (fileName.IsNotEmpty() && isPathRelated)
                 {
                     fileName = fileName.Replace('.', System.IO.Path.DirectorySeparatorChar);
@@ -82,7 +83,6 @@ namespace Bridge.Translator
             {
                 fileName = this.Emitter.AssemblyInfo.FileName;
             }
-
 
             if (fileName.IsEmpty())
             {
@@ -105,15 +105,16 @@ namespace Bridge.Translator
                 }
 
                 // now, separating the filename string only by the used separators, apply lowerCamelCase
-                foreach (var separator in neededSepList) {
-                var stringList = new List<string>();
-
-                foreach (var str in fileName.Split(separator[0]))
+                foreach (var separator in neededSepList)
                 {
-                    stringList.Add(str.ToLowerCamelCase());
-                }
+                    var stringList = new List<string>();
 
-                fileName = stringList.Join(separator);
+                    foreach (var str in fileName.Split(separator[0]))
+                    {
+                        stringList.Add(str.ToLowerCamelCase());
+                    }
+
+                    fileName = stringList.Join(separator);
                 }
             }
 
