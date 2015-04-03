@@ -328,7 +328,16 @@ namespace Bridge.Translator
                 {
                     if (result[i] == null)
                     {
-                        result[i] = new PrimitiveExpression(parameters[i + shift].ConstantValue);
+                        var p = parameters[i + shift];
+
+                        if (p.Type.Kind == TypeKind.Enum)
+                        {
+                            result[i] = new PrimitiveExpression(Helpers.GetEnumValue(this.Emitter, p.Type, p.ConstantValue));
+                        }
+                        else
+                        {
+                            result[i] = new PrimitiveExpression(p.ConstantValue);
+                        }
                         names[i] = parameters[i + shift].Name;
                     }
                 }                
@@ -393,7 +402,16 @@ namespace Bridge.Translator
                 {
                     if (result[i] == null)
                     {
-                        result[i] = new PrimitiveExpression(parameters[i].ConstantValue);
+                        var p = parameters[i];
+
+                        if (p.Type.Kind == TypeKind.Enum)
+                        {
+                            result[i] = new PrimitiveExpression(Helpers.GetEnumValue(this.Emitter, p.Type, p.ConstantValue));
+                        }
+                        else
+                        {
+                            result[i] = new PrimitiveExpression(p.ConstantValue);
+                        }
                         names[i] = parameters[i].Name;
                     }
                 }

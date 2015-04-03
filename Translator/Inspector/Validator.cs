@@ -8,6 +8,7 @@ using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.CSharp;
 using Object.Net.Utilities;
 using Bridge.Contract;
+using ICSharpCode.NRefactory.TypeSystem;
 
 namespace Bridge.Translator
 {
@@ -93,6 +94,24 @@ namespace Bridge.Translator
                 if (attr.Constructor != null && attr.Constructor.DeclaringType.FullName == enumAttr && attr.PositionalArguments.Count > 0)
                 {
                     result = (int)attr.PositionalArguments.First().ConstantValue;                    
+                    return true;
+                }
+
+                return false;
+            });
+
+            return result;
+        }
+
+        public virtual int EnumEmitMode(IType type)
+        {
+            string enumAttr = Translator.Bridge_ASSEMBLY + ".EnumAttribute";
+            int result = -1;
+            type.GetDefinition().Attributes.Any(attr =>
+            {
+                if (attr.Constructor != null && attr.Constructor.DeclaringType.FullName == enumAttr && attr.PositionalArguments.Count > 0)
+                {
+                    result = (int)attr.PositionalArguments.First().ConstantValue;
                     return true;
                 }
 

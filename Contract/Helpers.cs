@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using ICSharpCode.NRefactory.Semantics;
 using System;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
+using System.Globalization;
 
 namespace Bridge.Contract
 {
@@ -853,6 +854,55 @@ namespace Bridge.Contract
         public static bool IsReservedWord(string word)
         {
             return reservedWords.Contains(word);
+        }
+
+        public static object GetEnumValue(IEmitter emitter, IType type, object constantValue)
+        {
+            var enumMode = emitter.Validator.EnumEmitMode(type);
+
+            if ((emitter.Validator.IsIgnoreType(type.GetDefinition()) && enumMode == -1) || enumMode == 2)
+            {
+                return constantValue;
+            }
+
+            if (enumMode >= 3)
+            {
+                var member = type.GetFields().FirstOrDefault(f => f.ConstantValue == constantValue);
+
+                if (member == null)
+                {
+                    return constantValue;
+                }                
+                
+                string enumStringName = member.Name;
+                var attr = emitter.GetAttribute(member.Attributes, "Bridge.NameAttribute");
+
+                if (attr != null)
+                {
+                    enumStringName = emitter.GetEntityName(member);
+                }
+                else
+                {
+                    switch (enumMode)
+                    {
+                        case 3:
+                            enumStringName = member.Name.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + member.Name.Substring(1);
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            enumStringName = enumStringName.ToLowerInvariant();
+                            break;
+                        case 6:
+                            enumStringName = enumStringName.ToUpperInvariant();
+                            break;
+                    }
+                }
+
+                return enumStringName;
+            }
+
+            return constantValue;
         }
     }
 }

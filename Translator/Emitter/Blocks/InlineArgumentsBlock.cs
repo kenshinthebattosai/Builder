@@ -73,7 +73,9 @@ namespace Bridge.Translator
             {
                 int count = this.Emitter.Writers.Count;
                 string key = m.Groups[2].Value;
-                bool ignoreArray = (m.Groups[1].Success && m.Groups[1].Value == "*") || argsInfo.ParamsExpression == null;
+                bool isRaw = m.Groups[1].Success && m.Groups[1].Value == "*";
+                bool ignoreArray = isRaw || argsInfo.ParamsExpression == null;
+                
 
                 StringBuilder oldSb = this.Emitter.Output;
                 this.Emitter.Output = new StringBuilder();

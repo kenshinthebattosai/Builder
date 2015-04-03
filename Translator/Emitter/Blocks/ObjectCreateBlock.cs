@@ -120,7 +120,7 @@ namespace Bridge.Translator
                     {
                         this.WriteScript(OverloadsCollection.Create(this.Emitter, ((InvocationResolveResult)this.Emitter.Resolver.ResolveNode(objectCreateExpression, this.Emitter)).Member).GetOverloadName());
 
-                        if (objectCreateExpression.Arguments.Count > 0)
+                        if (argsExpressions.Length > 0)
                         {
                             this.WriteComma();
                         }
