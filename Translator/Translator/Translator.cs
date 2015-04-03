@@ -81,6 +81,9 @@ namespace Bridge.Translator
                     fileName = fileName.Replace(Bridge.Translator.AssemblyInfo.DEFAULT_FILENAME, defaultFileName);
                 }
 
+                // Ensure filename contains no ":". It could be used like "c:/absolute/path"
+                fileName = fileName.Replace(":", "_");
+
                 // Trim heading slash/backslash off file names until it does not start with slash.
                 var oldFNlen = fileName.Length;
                 while (Path.IsPathRooted(fileName))
