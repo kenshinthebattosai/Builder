@@ -57,8 +57,8 @@ namespace Bridge.Translator
                 return;
             }
 
-            var fullName = this.Namespace + "." + Helpers.GetScriptName(typeDeclaration, false);
-            var partialType = this.Types.FirstOrDefault(t => t.FullName == fullName);
+            var fullName = this.Namespace + "." + Helpers.GetScriptName(typeDeclaration, true);
+            var partialType = this.Types.FirstOrDefault(t => t.GenericName == fullName);
             var add = true;
 
             if (partialType == null)

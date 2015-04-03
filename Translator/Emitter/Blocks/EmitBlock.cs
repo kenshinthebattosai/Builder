@@ -53,7 +53,7 @@ namespace Bridge.Translator
                         fileName = typeInfo.FullName;
                         break;
                     case OutputBy.Class:
-                        fileName = getIteractiveClassPath(typeInfo);
+                        fileName = this.GetIteractiveClassPath(typeInfo);
                         break;
                     case OutputBy.Module:
                         fileName = module;
@@ -193,7 +193,7 @@ namespace Bridge.Translator
         /// </summary>
         /// <param name="typeInfo"></param>
         /// <returns></returns>
-        private string getIteractiveClassPath(ITypeInfo typeInfo)
+        private string GetIteractiveClassPath(ITypeInfo typeInfo)
         {
             var fullClassName = typeInfo.Name;
             var maxIterations = 100;
