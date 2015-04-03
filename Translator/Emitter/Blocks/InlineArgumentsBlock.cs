@@ -36,7 +36,7 @@ namespace Bridge.Translator
             this.EmitInlineExpressionList(this.ArgumentsInfo, this.InlineCode);
         }
 
-        private static Regex _formatArg = new Regex(@"\{(\*?)(\w+)\}");
+        private static Regex _formatArg = new Regex(@"\{(\*?)(\w+)(\:(\w+)?)\}");
         protected virtual IList<Expression> GetExpressionsByKey(IEnumerable<NamedParamExpression> expressions, string key)
         {
 
@@ -75,7 +75,7 @@ namespace Bridge.Translator
                 string key = m.Groups[2].Value;
                 bool isRaw = m.Groups[1].Success && m.Groups[1].Value == "*";
                 bool ignoreArray = isRaw || argsInfo.ParamsExpression == null;
-                
+                string modifier = m.Groups[1].Success ? m.Groups[4].Value : null;                
 
                 StringBuilder oldSb = this.Emitter.Output;
                 this.Emitter.Output = new StringBuilder();
@@ -110,7 +110,18 @@ namespace Bridge.Translator
                         }
                         else
                         {
+                            var writer = this.SaveWriter();
+                            this.NewWriter();                            
                             exprs[0].AcceptVisitor(this.Emitter);
+                            var s = this.Emitter.Output.ToString();
+                            this.RestoreWriter(writer);
+
+                            if (modifier == "raw")
+                            {
+                                s = s.Trim('"');
+                            }
+
+                            this.Write(s);
                         }
                     }
                     else if (typeParams != null)
