@@ -47,7 +47,7 @@ namespace Bridge.Translator
 
         protected virtual bool HasIgnore(EntityDeclaration declaration) 
         {
-            return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".Ignore") || this.IsObjectLiteral(declaration);
+            return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".Ignore");
         }
 
         protected virtual bool HasInline(EntityDeclaration declaration) 

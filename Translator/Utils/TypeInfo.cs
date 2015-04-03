@@ -242,5 +242,11 @@ namespace Bridge.Translator
             get;
             set;
         }
+
+        public bool IsObjectLiteral
+        {
+            get;
+            set;
+        }
     }
 }

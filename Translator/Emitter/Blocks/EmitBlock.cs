@@ -223,6 +223,11 @@ namespace Bridge.Translator
 
             foreach (var type in this.Emitter.Types)
             {
+                if (type.IsObjectLiteral)
+                {
+                    continue;
+                }
+
                 this.InitEmitter();
 
                 ITypeInfo typeInfo;

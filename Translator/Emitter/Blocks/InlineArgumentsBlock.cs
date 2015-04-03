@@ -36,7 +36,7 @@ namespace Bridge.Translator
             this.EmitInlineExpressionList(this.ArgumentsInfo, this.InlineCode);
         }
 
-        private static Regex _formatArg = new Regex(@"\{(\*?)(\w+)(\:(\w+)?)\}");
+        private static Regex _formatArg = new Regex(@"\{(\*?)(\w+)(\:(\w+))?\}");
         protected virtual IList<Expression> GetExpressionsByKey(IEnumerable<NamedParamExpression> expressions, string key)
         {
 

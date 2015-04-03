@@ -68,9 +68,7 @@ namespace Bridge.Translator
                 if (parentTypeDeclaration != null)
                 {
                     parentTypeInfo = this.Types.FirstOrDefault(t => t.TypeDeclaration == parentTypeDeclaration);
-                }
-
-                
+                }                
 
                 this.CurrentType = new TypeInfo()
                 {
@@ -82,7 +80,8 @@ namespace Bridge.Translator
                     Namespace = this.Namespace,
                     Usings = new HashSet<string>(Usings),
                     IsEnum = typeDeclaration.ClassType == ClassType.Enum,
-                    IsStatic = typeDeclaration.ClassType == ClassType.Enum || typeDeclaration.HasModifier(Modifiers.Static)
+                    IsStatic = typeDeclaration.ClassType == ClassType.Enum || typeDeclaration.HasModifier(Modifiers.Static),
+                    IsObjectLiteral = this.IsObjectLiteral(typeDeclaration)
                 };
 
                 if (parentTypeInfo != null && Emitter.reservedStaticNames.Any(n => String.Equals(this.CurrentType.Name, n, StringComparison.InvariantCultureIgnoreCase)))

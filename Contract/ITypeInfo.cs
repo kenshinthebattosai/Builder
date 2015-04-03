@@ -170,5 +170,11 @@ namespace Bridge.Contract
             get;
             set;
         }
+
+        bool IsObjectLiteral
+        {
+            get;
+            set;
+        }
     }
 }
