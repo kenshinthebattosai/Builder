@@ -300,6 +300,7 @@ namespace Bridge.Translator
             if (type.HasMethods) 
             {
                 var ctors = type.Methods.Where(method => method.IsConstructor);
+
                 foreach (MethodDefinition ctor in ctors) 
                 {
                     this.CheckMethodArguments(ctor);

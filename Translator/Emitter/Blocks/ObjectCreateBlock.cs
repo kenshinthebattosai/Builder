@@ -2,6 +2,7 @@
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,15 +78,16 @@ namespace Bridge.Translator
 
                 if (hasInitializer)
                 {
-                    this.WriteObjectInitializer(objectCreateExpression.Initializer.Elements, this.Emitter.ChangeCase);
-
-                    this.WriteSpace();
-                    this.WriteCloseBrace();
+                    this.WriteObjectInitializer(objectCreateExpression.Initializer.Elements, this.Emitter.ChangeCase, type);
+                    this.WriteSpace();                    
                 }
-                else
+                else if (this.Emitter.Validator.IsObjectLiteral(type))
                 {
-                    this.WriteCloseBrace();
+                    this.WriteObjectInitializer(null, this.Emitter.ChangeCase, type);
+                    this.WriteSpace();                    
                 }
+             
+                this.WriteCloseBrace();
             }
             else
             {
@@ -200,30 +202,78 @@ namespace Bridge.Translator
             Helpers.CheckValueTypeClone(invocationResolveResult, this.ObjectCreateExpression, this);
         }
 
-        protected virtual void WriteObjectInitializer(IEnumerable<Expression> expressions, bool changeCase)
+        protected virtual void WriteObjectInitializer(IEnumerable<Expression> expressions, bool changeCase, TypeDefinition type)
         {
             bool needComma = false;
+            List<string> names = new List<string>();
 
-            foreach (Expression item in expressions)
+            if (expressions != null)
             {
-                NamedExpression namedExression = item as NamedExpression;
-                NamedArgumentExpression namedArgumentExpression = item as NamedArgumentExpression;
-
-                if (needComma)
+                foreach (Expression item in expressions)
                 {
-                    this.WriteComma();
-                }
+                    NamedExpression namedExression = item as NamedExpression;
+                    NamedArgumentExpression namedArgumentExpression = item as NamedArgumentExpression;
 
-                needComma = true;
-                string name = namedExression != null ? namedExression.Name : namedArgumentExpression.Name;
-                if (changeCase)
+                    if (needComma)
+                    {
+                        this.WriteComma();
+                    }
+
+                    needComma = true;
+                    string name = namedExression != null ? namedExression.Name : namedArgumentExpression.Name;
+                    if (changeCase)
+                    {
+                        name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
+                    }
+                    Expression expression = namedExression != null ? namedExression.Expression : namedArgumentExpression.Expression;
+
+                    this.Write(name, ": ");
+                    expression.AcceptVisitor(this.Emitter);
+
+                    names.Add(name);
+                }
+            }
+
+            if (this.Emitter.Validator.IsObjectLiteral(type))
+            {
+                var typeName = Helpers.ReplaceSpecialChars(type.FullName);
+                var tinfo = this.Emitter.Types.FirstOrDefault(t => t.GenericFullName == typeName);
+                var members = tinfo.InstanceConfig.Fields.Concat(tinfo.InstanceConfig.Properties);
+
+                if (members.Any())
                 {
-                    name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
-                }
-                Expression expression = namedExression != null ? namedExression.Expression : namedArgumentExpression.Expression;
+                    foreach (var member in members)
+                    {
+                        var name = member.GetName(this.Emitter);
+                        if (changeCase)
+                        {
+                            name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
+                        }
 
-                this.Write(name, ": ");
-                expression.AcceptVisitor(this.Emitter);
+                        if (names.Contains(name))
+                        {
+                            continue;
+                        }
+
+                        if (needComma)
+                        {
+                            this.WriteComma();
+                        }
+                        needComma = true;                       
+                        
+                        this.Write(name, ": ");
+
+                        var primitiveExpr = member.Initializer as PrimitiveExpression;
+                        if (primitiveExpr != null && primitiveExpr.Value is AstType)
+                        {
+                            this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
+                        }
+                        else
+                        {
+                            member.Initializer.AcceptVisitor(this.Emitter);
+                        }
+                    }
+                }
             }
         }
     }
