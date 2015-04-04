@@ -26,14 +26,26 @@ namespace Bridge.Translator
         private static Regex injectComment = new Regex("@(.*)@?", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Multiline);
         private static Regex removeStars = new Regex("(^\\s*)(\\* )", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-        protected virtual void WriteMultiLineComment(string text)
+        protected virtual void WriteMultiLineComment(string text, bool newline)
         {
-            this.Write("/* " + text + "*/");
+            if (!newline && this.RemovePenultimateEmptyLines(true))
+            {
+                this.Emitter.IsNewLine = false;
+                this.WriteSpace();
+            }
+
+            this.Write("/* " + text + "*/");            
             this.WriteNewLine();
         }
 
-        protected virtual void WriteSingleLineComment(string text)
+        protected virtual void WriteSingleLineComment(string text, bool newline)
         {
+            if (!newline && this.RemovePenultimateEmptyLines(true))
+            {
+                this.Emitter.IsNewLine = false;
+                this.WriteSpace();
+            }
+
             this.Write("//" + text);
             this.WriteNewLine();
         }
@@ -41,6 +53,13 @@ namespace Bridge.Translator
         protected void VisitComment()
         {
             Comment comment = this.Comment;
+            var prev = comment.PrevSibling;
+            bool newLine = true;
+
+            if (prev != null && prev.EndLocation.Line == comment.StartLocation.Line)
+            {
+                newLine = false;
+            }
 
             Match injection = injectComment.Match(comment.Content);
 
@@ -58,11 +77,11 @@ namespace Bridge.Translator
             }
             else if (comment.CommentType == CommentType.MultiLine)
             {
-                this.WriteMultiLineComment(comment.Content);
+                this.WriteMultiLineComment(comment.Content, newLine);
             }
             else if (comment.CommentType == CommentType.SingleLine)
             {
-                this.WriteSingleLineComment(comment.Content);
+                this.WriteSingleLineComment(comment.Content, newLine);
             }
         }
     }

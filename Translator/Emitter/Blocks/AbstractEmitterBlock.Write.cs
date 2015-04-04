@@ -484,16 +484,19 @@ namespace Bridge.Translator
             return true;
         }
 
-        public void RemovePenultimateEmptyLines(bool withLast = false)
+        public bool RemovePenultimateEmptyLines(bool withLast = false)
         {
             if (this.Emitter.Output != null)
             {
-                AbstractMethodBlock.RemovePenultimateEmptyLines(this.Emitter.Output, withLast);
+                return AbstractMethodBlock.RemovePenultimateEmptyLines(this.Emitter.Output, withLast);
             }
+
+            return false;
         }
 
-        public static StringBuilder RemovePenultimateEmptyLines(StringBuilder buffer, bool withLast = false)
+        public static bool RemovePenultimateEmptyLines(StringBuilder buffer, bool withLast = false)
         {
+            bool removed = false;
             if (buffer.Length != 0)
             {
                 int length = buffer.Length;
@@ -529,9 +532,10 @@ namespace Bridge.Translator
                 if (start > -1 && end > -1)
                 {
                     buffer.Remove(start, end - start + 1);
+                    removed = true;
                 }
             }
-            return buffer;
+            return removed;
         }
 
         public static bool IsReturnLast(string str)
