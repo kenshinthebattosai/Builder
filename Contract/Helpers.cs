@@ -221,7 +221,7 @@ namespace Bridge.Contract
 
         public static string ReplaceSpecialChars(string name) 
         {
-            return name.Replace('`', '$').Replace('/', '.');
+            return name.Replace('`', '$').Replace('/', '.').Replace("+", ".");
         }
 
         private static string GetPostfixedName(string name, int paramCount, string separator) 

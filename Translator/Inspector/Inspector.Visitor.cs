@@ -57,8 +57,10 @@ namespace Bridge.Translator
                 return;
             }
 
-            var fullName = this.Namespace + "." + Helpers.GetScriptName(typeDeclaration, true);
-            var partialType = this.Types.FirstOrDefault(t => t.GenericName == fullName);
+            var rr = this.Resolver.ResolveNode(typeDeclaration, null);
+            var fullName = Helpers.ReplaceSpecialChars(rr.Type.ReflectionName);
+            //var fullName = this.Namespace + "." + Helpers.GetScriptName(typeDeclaration, true);
+            var partialType = this.Types.FirstOrDefault(t => t.GenericFullName == fullName);
             var add = true;
 
             if (partialType == null)
@@ -67,7 +69,9 @@ namespace Bridge.Translator
                 var parentTypeDeclaration = typeDeclaration.GetParent<TypeDeclaration>();
                 if (parentTypeDeclaration != null)
                 {
-                    parentTypeInfo = this.Types.FirstOrDefault(t => t.TypeDeclaration == parentTypeDeclaration);
+                    var rr1 = this.Resolver.ResolveNode(parentTypeDeclaration, null);
+                    var parentName = Helpers.ReplaceSpecialChars(rr1.Type.ReflectionName);
+                    parentTypeInfo = this.Types.FirstOrDefault(t => t.GenericFullName == parentName);
                 }                
 
                 this.CurrentType = new TypeInfo()
