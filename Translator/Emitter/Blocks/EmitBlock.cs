@@ -106,6 +106,7 @@ namespace Bridge.Translator
                 }
 
                 // now, separating the filename string only by the used separators, apply lowerCamelCase
+                if (neededSepList.Count > 0) {
                 foreach (var separator in neededSepList)
                 {
                     var stringList = new List<string>();
@@ -116,6 +117,11 @@ namespace Bridge.Translator
                     }
 
                     fileName = stringList.Join(separator);
+                }
+                }
+                else
+                {
+                    fileName = fileName.ToLowerCamelCase();
                 }
             }
 
