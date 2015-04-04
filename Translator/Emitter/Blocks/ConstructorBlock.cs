@@ -136,12 +136,7 @@ namespace Bridge.Translator
             this.Write("$config");            
 
             this.WriteColon();                        
-            this.WriteFunction();
-            this.WriteOpenParentheses();
-            this.WriteCloseParentheses();
             this.WriteSpace();
-            this.BeginBlock();
-            this.WriteReturn(true);
             this.BeginBlock();
 
             var changeCase = this.Emitter.ChangeCase;
@@ -177,10 +172,6 @@ namespace Bridge.Translator
 
             this.WriteNewLine();
             this.EndBlock();
-            this.WriteSemiColon();
-            this.WriteNewLine();
-            this.EndBlock();
-            
         }
 
         protected virtual void EmitCtorForInstantiableClass()
@@ -191,7 +182,6 @@ namespace Bridge.Translator
             {
                 return;
             }
-
 
             var baseType = this.Emitter.GetBaseTypeDefinition();
             var typeDef = this.Emitter.GetTypeDefinition();

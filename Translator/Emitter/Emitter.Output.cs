@@ -88,7 +88,7 @@ namespace Bridge.Translator
                     moduleOutput.AppendLine(") {");
 
                     moduleOutput.Append("    ");
-                    moduleOutput.AppendLine("var exports = {};");
+                    moduleOutput.AppendLine("var exports = { };");
                     moduleOutput.Append(str);
                     moduleOutput.Append("    ");
                     moduleOutput.AppendLine("return exports;");
