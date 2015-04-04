@@ -86,7 +86,12 @@ namespace Bridge.Translator
                 this.Write("$config");
 
                 this.WriteColon();
+                this.WriteFunction();
+                this.WriteOpenParentheses();
+                this.WriteCloseParentheses();
                 this.WriteSpace();
+                this.BeginBlock();
+                this.WriteReturn(true);
                 this.BeginBlock();
 
                 if (this.TypeInfo.StaticConfig.HasMembers)
@@ -114,6 +119,9 @@ namespace Bridge.Translator
                     this.EndBlock();
                     this.Emitter.Comma = true;
                 }
+                this.WriteNewLine();
+                this.EndBlock();
+                this.WriteSemiColon();
                 this.WriteNewLine();
                 this.EndBlock();
             }
