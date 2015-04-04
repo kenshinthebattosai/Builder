@@ -99,9 +99,30 @@ namespace Bridge.Translator
                 var methodGroupResolveResult = (MethodGroupResolveResult)result;
                 var parentResolveResult = this.ResolveNode(node.Parent, log);
                 var parentInvocation = parentResolveResult as InvocationResolveResult;
-                var method = methodGroupResolveResult.Methods.LastOrDefault();
+                IParameterizedMember method = methodGroupResolveResult.Methods.LastOrDefault();
+                bool isInvocation = node.Parent is InvocationExpression && (((InvocationExpression)(node.Parent)).Target == node);
 
-                if (parentInvocation != null && method == null) 
+                if (!isInvocation && parentInvocation != null)
+                {
+                    var or1 = methodGroupResolveResult.PerformOverloadResolution(this.compilation, parentInvocation.GetArgumentsForCall().ToArray());
+                    if (or1.FoundApplicableCandidate)
+                    {
+                        method = or1.BestCandidate;
+                        return new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
+                    }
+                }
+
+                if (parentInvocation != null)
+                {
+                    var or = methodGroupResolveResult.PerformOverloadResolution(this.compilation, parentInvocation.GetArgumentsForCall().ToArray());
+                    if (or.FoundApplicableCandidate)
+                    {
+                        method = or.BestCandidate;
+                        return new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
+                    }
+                }
+
+                if (parentInvocation != null && method == null)
                 {
                     var typeDef = methodGroupResolveResult.TargetType as DefaultResolvedTypeDefinition;
 
@@ -128,11 +149,10 @@ namespace Bridge.Translator
 
                     method = extMethods.First().First();
                 }
-                
-                if (parentInvocation == null || method.FullName != parentInvocation.Member.FullName)
-                {                   
-                    MemberResolveResult memberResolveResult = new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
 
+                if (parentInvocation == null || method.FullName != parentInvocation.Member.FullName)
+                {
+                    MemberResolveResult memberResolveResult = new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
                     return memberResolveResult;
                 }
 

@@ -146,7 +146,10 @@ namespace Bridge.Translator
 
                 if (parser.HasErrors)
                 {
-                    Bridge.Translator.Exception.Throw("Parsing error in a file {0}: {1}", fileName, parser.Errors.ToString());
+                    foreach (var error in parser.Errors)
+                    {
+                        Bridge.Translator.Exception.Throw("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString());
+                    }                    
                 }
                 
                 return syntaxTree;

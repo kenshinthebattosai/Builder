@@ -69,12 +69,12 @@ namespace Bridge.Translator
 
             if (extend.IsNotEmpty() && !this.TypeInfo.IsEnum)
             {
-                if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "extend")))
+                /*if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "extends")))
                 {
                     this.Write("$");
-                }
+                }*/
 
-                this.Write("extend");
+                this.Write("$extends");
                 this.WriteColon();
                 this.Write(extend);
                 this.Emitter.Comma = true;
