@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,6 +55,7 @@ namespace Bridge.Translator
             if (this.SwitchStatement != null)
             {
                 var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.SwitchStatement) : null;
+
                 if (awaiters != null && awaiters.Length > 0)
                 {
                     this.VisitAsyncSwitchStatement();
@@ -147,6 +147,7 @@ namespace Bridge.Translator
             this.Emitter.JumpStatements = new List<IJumpInfo>();
             bool writeElse = false;
             var thisStep = this.Emitter.AsyncBlock.Steps.Last();
+
             foreach (var switchSection in list)
             {
                 this.VisitAsyncSwitchSection(switchSection, writeElse, key);
@@ -155,6 +156,7 @@ namespace Bridge.Translator
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
             thisStep.JumpToStep = nextStep.Step;
+
             if (this.Emitter.JumpStatements.Count > 0)
             {
                 foreach (var jump in this.Emitter.JumpStatements)
@@ -256,6 +258,7 @@ namespace Bridge.Translator
             {
                 this.WriteNewLine();
             }
+
             this.EndBlock();
             this.WriteNewLine();
         }

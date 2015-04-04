@@ -1,9 +1,7 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
-using System.Collections.Generic;
 
 namespace Bridge.Translator
 {
@@ -53,6 +51,7 @@ namespace Bridge.Translator
                 {
                     delegateAssigment = true;
                     var leftMemberResolveResult = leftResolverResult as MemberResolveResult;
+
                     if (leftMemberResolveResult != null)
                     {
                         isEvent = leftMemberResolveResult.Member is DefaultResolvedEvent;
@@ -77,6 +76,7 @@ namespace Bridge.Translator
             this.Emitter.ReplaceAwaiterByVar = true;
 
             bool thisAssignment = leftResolverResult is ThisResolveResult;
+
             if (!thisAssignment)
             {
                 assignmentExpression.Left.AcceptVisitor(this.Emitter);

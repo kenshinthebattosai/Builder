@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using System;
 
 namespace Bridge.Translator
 {
@@ -59,12 +58,14 @@ namespace Bridge.Translator
         {
             var awaitSearch = new AwaitSearchVisitor();
             node.AcceptVisitor(awaitSearch);
+
             return awaitSearch.GetAwaitExpressions().ToArray();
         }
 
         protected bool IsDirectAsyncBlockChild(AstNode node)
         {
             var block = node.GetParent<BlockStatement>();
+
             if (block != null && (block.Parent is MethodDeclaration || block.Parent is AnonymousMethodExpression || block.Parent is LambdaExpression))
             {
                 return true;
@@ -92,6 +93,7 @@ namespace Bridge.Translator
             this.Write("return;");
 
             var asyncStep = this.Emitter.AsyncBlock.AddAsyncStep(index);
+
             if (this.Emitter.AsyncBlock.EmittedAsyncSteps != null)
             {
                 this.Emitter.AsyncBlock.EmittedAsyncSteps.Add(asyncStep);

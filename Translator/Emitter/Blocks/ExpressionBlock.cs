@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 
 namespace Bridge.Translator
@@ -29,12 +28,14 @@ namespace Bridge.Translator
             var oldSemiColon = this.Emitter.EnableSemicolon;
             
             List<Expression> awaiters = null;
+
             if (this.Emitter.IsAsync)
             {
                 var awaitSearch = new AwaitSearchVisitor();
                 this.ExpressionStatement.Expression.AcceptVisitor(awaitSearch);
                 awaiters = awaitSearch.GetAwaitExpressions();
             }
+
             bool isAwaiter = this.ExpressionStatement.Expression is UnaryOperatorExpression && ((UnaryOperatorExpression)this.ExpressionStatement.Expression).Operator == UnaryOperatorType.Await;
 
 

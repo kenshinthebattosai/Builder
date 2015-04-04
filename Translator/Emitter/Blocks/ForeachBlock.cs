@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -137,11 +136,13 @@ namespace Bridge.Translator
             }
 
             IAsyncStep loopStep = null;
+
             if (this.Emitter.AsyncBlock.Steps.Count > startCount)
             {
                 loopStep = this.Emitter.AsyncBlock.Steps.Last();
                 loopStep.JumpToStep = conditionStep.Step;
             }
+
             this.RestoreWriter(writer);
 
             if (!AbstractEmitterBlock.IsJumpStatementLast(this.Emitter.Output.ToString()))

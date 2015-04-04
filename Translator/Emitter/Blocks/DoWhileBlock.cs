@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,6 +42,7 @@ namespace Bridge.Translator
             this.Emitter.JumpStatements = new List<IJumpInfo>();
 
             var loopStep = this.Emitter.AsyncBlock.Steps.Last();
+
             if (!string.IsNullOrWhiteSpace(loopStep.Output.ToString()))
             {
                 loopStep = this.Emitter.AsyncBlock.AddAsyncStep();

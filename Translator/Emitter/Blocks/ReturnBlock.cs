@@ -1,7 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 
 namespace Bridge.Translator
 {
@@ -35,6 +33,7 @@ namespace Bridge.Translator
                     this.WriteAwaiters(returnStatement.Expression);
                     
                     this.Write("$returnTask.setResult(");
+
                     if (!returnStatement.Expression.IsNull)
                     {
                         var oldValue = this.Emitter.ReplaceAwaiterByVar;
@@ -46,6 +45,7 @@ namespace Bridge.Translator
                     {
                         this.Write("null");
                     }
+
                     this.Write(");");
 
                     this.WriteNewLine();

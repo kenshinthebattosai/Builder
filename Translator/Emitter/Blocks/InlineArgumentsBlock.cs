@@ -1,10 +1,10 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.TypeSystem;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Bridge.Contract;
+using System.Text.RegularExpressions;
 
 namespace Bridge.Translator
 {
@@ -37,6 +37,7 @@ namespace Bridge.Translator
         }
 
         private static Regex _formatArg = new Regex(@"\{(\*?)(\w+)(\:(\w+))?\}");
+
         protected virtual IList<Expression> GetExpressionsByKey(IEnumerable<NamedParamExpression> expressions, string key)
         {
 
@@ -44,6 +45,7 @@ namespace Bridge.Translator
             {
                 var list = new List<Expression>();
                 list.Add(expressions.Skip(int.Parse(key)).First().Expression);
+
                 return list;
             }
 
@@ -69,6 +71,7 @@ namespace Bridge.Translator
             var matches = _formatArg.Matches(inline);
 
             this.Write("");
+
             inline = _formatArg.Replace(inline, delegate(Match m)
             {
                 int count = this.Emitter.Writers.Count;

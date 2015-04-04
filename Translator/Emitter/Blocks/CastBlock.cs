@@ -133,14 +133,17 @@ namespace Bridge.Translator
             if (method == Bridge.Translator.Emitter.CAST)
             {
                 var resolveResult = this.Emitter.Resolver.ResolveNode(type, this.Emitter);
+
                 if (Helpers.IsIntegerType(resolveResult.Type, this.Emitter.Resolver))
                 {
                     var fromType = this.Emitter.Resolver.ResolveNode(this.CastExpression.Expression, this.Emitter).Type;
+                    
                     if (fromType != null && Helpers.IsFloatType(fromType, this.Emitter.Resolver))
                     {
                         this.Write("Bridge.Int.trunc(");
                         expression.AcceptVisitor(this.Emitter);
                         this.Write(")");
+
                         return;
                     }
                 }
@@ -148,6 +151,7 @@ namespace Bridge.Translator
                 if (ConversionBlock.IsUserDefinedConversion(this, expression))
                 {
                     expression.AcceptVisitor(this.Emitter);
+
                     return;
                 }
             }
@@ -238,6 +242,7 @@ namespace Bridge.Translator
                     )
                 {
                     string tmpInline = this.Emitter.GetInline(m);
+
                     if (!string.IsNullOrWhiteSpace(tmpInline))
                     {
                         inline = tmpInline;
@@ -258,6 +263,7 @@ namespace Bridge.Translator
             {
                 IEnumerable<IAttribute> attributes = null;
                 DefaultResolvedTypeDefinition type = resolveResult.Type as DefaultResolvedTypeDefinition;
+                
                 if (type != null)
                 {
                     attributes = type.Attributes;
@@ -265,6 +271,7 @@ namespace Bridge.Translator
                 else
                 {
                     ParameterizedType paramType = resolveResult.Type as ParameterizedType;
+
                     if (paramType != null)
                     {
                         attributes = paramType.GetDefinition().Attributes;

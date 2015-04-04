@@ -1,8 +1,8 @@
-﻿using ICSharpCode.NRefactory.CSharp;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.Semantics;
 using System.Collections.Generic;
 using System.Linq;
-using Bridge.Contract;
-using ICSharpCode.NRefactory.Semantics;
 
 namespace Bridge.Translator
 {
@@ -53,6 +53,7 @@ namespace Bridge.Translator
             foreach (var expr in visitor.DirectionExpression)
             {
                 var rr = this.Emitter.Resolver.ResolveNode(expr, this.Emitter);
+
                 if (rr is LocalResolveResult && expr is IdentifierExpression)
                 {
                     var ie = (IdentifierExpression)expr;
@@ -76,6 +77,7 @@ namespace Bridge.Translator
 
             name = name.StartsWith(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME) ? name.Substring(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME.Length) : name;
             string vName = name;
+
             if (Helpers.IsReservedWord(name))
             {
                 vName = this.GetUniqueName(name);
@@ -96,6 +98,7 @@ namespace Bridge.Translator
         protected virtual string GetUniqueName(string name)
         {
             string tempName = name + "1";
+
             while (this.Emitter.LocalsNamesMap.ContainsValue(tempName))
             {
                 tempName += "1";
@@ -107,6 +110,7 @@ namespace Bridge.Translator
         public virtual Dictionary<string, string> BuildLocalsMap()
         {            
             var prevMap = this.Emitter.LocalsMap;
+
             if (prevMap == null)
             {
                 this.Emitter.LocalsMap = new Dictionary<string, string>();
@@ -150,6 +154,7 @@ namespace Bridge.Translator
             declarations.ToList().ForEach(item =>
             {
                 var isReferenceLocal = this.Emitter.LocalsMap.ContainsKey(item.Name) && this.Emitter.LocalsMap[item.Name].EndsWith(".v");
+                
                 if (isReferenceLocal && !(item.ParameterModifier == ParameterModifier.Out || item.ParameterModifier == ParameterModifier.Ref))
                 {
                     this.Write(string.Format("{0} = {{v:{0}}};", this.Emitter.LocalsNamesMap[item.Name]));
@@ -181,6 +186,7 @@ namespace Bridge.Translator
 
             string name = "$t";
             int i = 0;
+
             while (this.Emitter.TempVariables.ContainsKey(name)) 
             {
                 name += ++i;
@@ -202,12 +208,14 @@ namespace Bridge.Translator
                 this.Indent();
                 this.WriteIndent();
                 this.WriteVar(true);
+
                 foreach (var localVar in this.Emitter.TempVariables)
                 {
                     this.EnsureComma(false);
                     this.Write(localVar.Key);
                     this.Emitter.Comma = true;
                 }
+
                 this.Emitter.Comma = false;
                 this.WriteSemiColon();
                 this.Outdent();

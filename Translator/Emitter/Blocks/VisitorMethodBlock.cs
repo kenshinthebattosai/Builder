@@ -1,10 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -31,8 +26,10 @@ namespace Bridge.Translator
         {
             this.EnsureComma();
             this.ResetLocals();
+
             var prevMap = this.BuildLocalsMap();
             var prevNamesMap = this.BuildLocalsNamesMap();
+
             this.AddLocals(methodDeclaration.Parameters, methodDeclaration.Body);
 
             var typeDef = this.Emitter.GetTypeDefinition();
@@ -58,7 +55,6 @@ namespace Bridge.Translator
                 this.BeginBlock();
                 this.WriteReturn(true);
             }
-
 
             this.WriteFunction();
 

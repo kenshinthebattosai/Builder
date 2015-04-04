@@ -2,7 +2,6 @@
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Bridge.Translator
@@ -46,6 +45,7 @@ namespace Bridge.Translator
             {
                 this.Write("Bridge.Array.create(");
                 var defaultInitializer = new PrimitiveExpression(Inspector.GetDefaultFieldValue(arrayCreateExpression.Type, this.Emitter.Resolver), "?");
+                
                 if (defaultInitializer == null)
                 {
                     this.Write("Bridge.getDefaultValue(" + Helpers.TranslateTypeReference(arrayCreateExpression.Type, this.Emitter) + ")");
@@ -53,6 +53,7 @@ namespace Bridge.Translator
                 else
                 {
                     var primitiveExpr = defaultInitializer as PrimitiveExpression;
+
                     if (primitiveExpr != null && primitiveExpr.Value is AstType)
                     {
                         this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
@@ -81,10 +82,12 @@ namespace Bridge.Translator
             if (at.Dimensions > 1)
             {
                 this.Emitter.Comma = true;
+
                 for (int i = 0; i < rr.SizeArguments.Count; i++)
                 {
                     var a = rr.SizeArguments[i];
                     this.EnsureComma(false);
+
                     if (a.IsCompileTimeConstant)
                     {
                         this.Write(a.ConstantValue);
@@ -92,6 +95,7 @@ namespace Bridge.Translator
                     else if (arrayCreateExpression.Arguments.Count > i)
                     {
                         var arg = arrayCreateExpression.Arguments.ElementAt(i);
+
                         if (arg != null)
                         {
                             arg.AcceptVisitor(this.Emitter);
@@ -99,6 +103,7 @@ namespace Bridge.Translator
                     }
                     this.Emitter.Comma = true;
                 }
+
                 this.Write(")");
                 this.Emitter.Comma = false;
             }

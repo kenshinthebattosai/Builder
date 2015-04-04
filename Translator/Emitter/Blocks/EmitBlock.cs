@@ -1,10 +1,8 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
+﻿using Bridge.Contract;
+using Object.Net.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Object.Net.Utilities;
-using Bridge.Contract;
 
 namespace Bridge.Translator
 {
@@ -34,6 +32,7 @@ namespace Bridge.Translator
         protected virtual StringBuilder GetOutputForType(ITypeInfo typeInfo)
         {
             string module = null;
+
             if (typeInfo.Module != null)
             {
                 module = typeInfo.Module;
@@ -72,6 +71,7 @@ namespace Bridge.Translator
                 if (fileName.IsNotEmpty() && isPathRelated)
                 {
                     fileName = fileName.Replace('.', System.IO.Path.DirectorySeparatorChar);
+
                     if (this.Emitter.AssemblyInfo.StartIndexInName > 0)
                     {
                         fileName = fileName.Substring(this.Emitter.AssemblyInfo.StartIndexInName);
@@ -96,6 +96,7 @@ namespace Bridge.Translator
 
                 // Populate list only with needed separators, as usually we will never have all four of them
                 var neededSepList = new List<string>();
+
                 foreach (var separator in sepList)
                 {
                     if (fileName.Contains(separator.ToString()) && !neededSepList.Contains(separator))
@@ -142,6 +143,7 @@ namespace Bridge.Translator
                             fileName = existingFile;
                         }
                     }
+
                     break;
             }
 
@@ -184,6 +186,7 @@ namespace Bridge.Translator
             }
 
             this.Emitter.CurrentDependencies = dependencies;
+
             return moduleOutput;
         }
 
@@ -198,8 +201,8 @@ namespace Bridge.Translator
             var fullClassName = typeInfo.Name;
             var maxIterations = 100;
             var curIterations = 0;
-
             var parent = typeInfo.ParentType;
+
             while (parent != null && curIterations++ < maxIterations)
             {
                 fullClassName = parent.Name + "." + fullClassName;
@@ -231,6 +234,7 @@ namespace Bridge.Translator
                 this.InitEmitter();
 
                 ITypeInfo typeInfo;
+
                 if (this.Emitter.TypeInfoDefinitions.ContainsKey(type.GenericFullName))
                 {
                     typeInfo = this.Emitter.TypeInfoDefinitions[type.GenericFullName];
@@ -255,6 +259,7 @@ namespace Bridge.Translator
 
                 new ClassBlock(this.Emitter, this.Emitter.TypeInfo).Emit();
             }
+
             this.RemovePenultimateEmptyLines(true);
         }
     }

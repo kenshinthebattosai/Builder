@@ -1,9 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -88,6 +85,7 @@ namespace Bridge.Translator
             OperatorResolveResult orr = resolveOperator as OperatorResolveResult;
 
             var delegateOperator = false;
+
             if (this.ResolveOperator(binaryOperatorExpression, orr))
             {
                 return;
@@ -129,6 +127,7 @@ namespace Bridge.Translator
 
             //bool nullable = NullableType.IsNullable(leftResolverResult.Type) || NullableType.IsNullable(rightResolverResult.Type);
             bool nullable = orr != null && orr.IsLiftedOperator;
+
             if (nullable)
             {
                 this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.");

@@ -1,10 +1,5 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.Semantics;
-using Mono.Cecil;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Bridge.Translator
 {
@@ -18,6 +13,7 @@ namespace Bridge.Translator
             foreach (var p in declarations)
             {
                 string name = p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, "");
+
                 if(this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(name)) 
                 {
                     name = this.Emitter.LocalsNamesMap[name];

@@ -1,7 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Bridge.Translator
@@ -45,13 +43,16 @@ namespace Bridge.Translator
             Comment comment = this.Comment;
 
             Match injection = injectComment.Match(comment.Content);
+
             if (comment.CommentType == CommentType.MultiLine && injection.Success)
             {
                 string code = removeStars.Replace(injection.Groups[1].Value, "$1");
+
                 if (code.EndsWith("@"))
                 {
                     code = code.Substring(0, code.Length - 1);
                 }
+
                 this.Write(code);
                 this.WriteNewLine();
             }

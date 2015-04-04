@@ -2,8 +2,6 @@
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -97,6 +95,7 @@ namespace Bridge.Translator
             var op = unaryOperatorExpression.Operator;
             var argResolverResult = this.Emitter.Resolver.ResolveNode(unaryOperatorExpression.Expression, this.Emitter);
             bool nullable = NullableType.IsNullable(argResolverResult.Type);
+
             if (nullable)
             {
                 if (op != UnaryOperatorType.Increment && 
@@ -110,6 +109,7 @@ namespace Bridge.Translator
 
             bool isAccessor = false;
             var memberArgResolverResult = argResolverResult as MemberResolveResult;
+
             if (memberArgResolverResult != null && memberArgResolverResult.Member is IProperty)
             {
                 isAccessor = true;

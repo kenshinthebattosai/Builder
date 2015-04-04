@@ -1,9 +1,5 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
-using System.Collections.Generic;
-using Object.Net.Utilities;
-using Bridge.Contract;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 
 namespace Bridge.Translator
 {
@@ -37,8 +33,11 @@ namespace Bridge.Translator
 
                 var prevMap = this.BuildLocalsMap();
                 var prevNamesMap = this.BuildLocalsNamesMap();
+                
                 this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } }, accessor.Body);
+                
                 var overloads = OverloadsCollection.Create(this.Emitter, customEventDeclaration, remover);
+                
                 this.Write((remover ? "remove" : "add") + overloads.GetOverloadName());
                 this.WriteColon();
                 this.WriteFunction();
@@ -65,6 +64,7 @@ namespace Bridge.Translator
 
                     this.EndBlock();
                 }
+
                 this.ClearLocalsMap(prevMap);
                 this.ClearLocalsNamesMap(prevNamesMap);
                 this.Emitter.Comma = true;

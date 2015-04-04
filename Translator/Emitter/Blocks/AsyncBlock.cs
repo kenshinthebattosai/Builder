@@ -1,11 +1,11 @@
-﻿using ICSharpCode.NRefactory.CSharp;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Bridge.Contract;
+using System.Text;
 
 namespace Bridge.Translator
 {
@@ -215,6 +215,7 @@ namespace Bridge.Translator
             for (int i = 0; i < this.AwaitExpressions.Length; i++)
             {
                 this.Emitter.AsyncVariables.Add("$task" + (i+1));
+
                 if (this.IsTaskResult(this.AwaitExpressions[i]))
                 {
                     this.Emitter.AsyncVariables.Add("$taskResult" + (i + 1));
@@ -227,6 +228,7 @@ namespace Bridge.Translator
             var resolveResult = this.Emitter.Resolver.ResolveNode(expression, this.Emitter);
 
             IType type;
+
             if (resolveResult is InvocationResolveResult)
             {
                 type = ((InvocationResolveResult)resolveResult).Member.ReturnType;
@@ -263,6 +265,7 @@ namespace Bridge.Translator
             {
                 this.InitAsyncBlock();
             }
+
             this.EmitAsyncBlock();
             this.FinishAsyncBlock();
         }       
@@ -328,6 +331,7 @@ namespace Bridge.Translator
                 {
                     this.Emitter.AsyncVariables.Add("$returnTask = new Bridge.Task()");
                 }
+
                 this.Write("try");
                 this.WriteSpace();
                 this.BeginBlock();
@@ -354,6 +358,7 @@ namespace Bridge.Translator
 
             this.WriteNewLine();
             this.EndBlock();
+
             if (needTry)
             {
                 this.WriteNewLine();
@@ -447,7 +452,6 @@ namespace Bridge.Translator
                     }
                 }
 
-                
                 this.WriteNewLine();
                 this.Write("setTimeout($asyncBody, 0);");
                 this.WriteNewLine();
@@ -498,6 +502,7 @@ namespace Bridge.Translator
                 {
                     this.WriteNewLine();
                 }
+
                 this.Write("case " + i + ": ");
                 this.BeginBlock();                
                 
@@ -559,6 +564,7 @@ namespace Bridge.Translator
                         this.Write("$returnTask.setResult(null);");
                         this.WriteNewLine();
                     }
+
                     this.Write("return;");
                 }
 
@@ -569,11 +575,13 @@ namespace Bridge.Translator
             this.WriteNewLine();
             this.Write("default: ");
             this.BeginBlock();
+
             if (this.IsTaskReturn)
             {
                 this.Write("$returnTask.setResult(null);");
                 this.WriteNewLine();
             }
+
             this.Write("return;");
             this.WriteNewLine();
             this.EndBlock();
@@ -617,7 +625,6 @@ namespace Bridge.Translator
             this.Emitter = emitter;
             this.JumpToStep = -1;
             this.FromTaskNumber = -1;
-
 
             if (this.Emitter.LastSavedWriter != null)
             {

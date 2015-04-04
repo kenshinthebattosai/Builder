@@ -6,8 +6,6 @@ using ICSharpCode.NRefactory.TypeSystem;
 using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using Mono.Cecil;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Bridge.Translator
@@ -109,6 +107,7 @@ namespace Bridge.Translator
 
             ResolveResult resolveResult = null;
             ResolveResult expressionResolveResult = null;
+
             if (identifierExpression.Parent is InvocationExpression && (((InvocationExpression)(identifierExpression.Parent)).Target == identifierExpression))
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(identifierExpression.Parent, this.Emitter);
@@ -118,6 +117,7 @@ namespace Bridge.Translator
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(identifierExpression, this.Emitter);
             }
+
             var id = identifierExpression.Identifier;
             //this.Emitter.Validator.CheckIdentifier(id, identifierExpression);
 
@@ -350,6 +350,7 @@ namespace Bridge.Translator
             {
                 bool isStatement = false;
                 string valueVar = null;
+
                 if (this.Emitter.IsUnaryAccessor)
                 {
                     isStatement = identifierExpression.Parent is UnaryOperatorExpression && identifierExpression.Parent.Parent is ExpressionStatement;
@@ -418,6 +419,7 @@ namespace Bridge.Translator
                             this.Write(Helpers.GetPropertyRef(memberResult.Member, this.Emitter, true));
                             this.WriteOpenParentheses();
                             this.Write(valueVar);
+
                             if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
                             {
                                 this.Write("+");
@@ -426,6 +428,7 @@ namespace Bridge.Translator
                             {
                                 this.Write("-");
                             }
+
                             this.Write("1");
                             this.WriteCloseParentheses();
                             this.WriteComma();
@@ -464,6 +467,7 @@ namespace Bridge.Translator
                 else if (this.Emitter.AssignmentType != AssignmentOperatorType.Assign)
                 {
                     string trg;
+
                     if (memberResult.Member.IsStatic)
                     {
                         trg = this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(memberResult.Member.DeclaringType));

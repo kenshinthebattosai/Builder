@@ -1,14 +1,10 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.Semantics;
+using ICSharpCode.NRefactory.TypeSystem;
+using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Text;
-using Mono.Cecil;
-using Object.Net.Utilities;
-using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
 namespace Bridge.Translator
 {
@@ -42,6 +38,7 @@ namespace Bridge.Translator
 
                                     string eventName = methodGroup.Key;
                                     var eventField = resolveresult.Type.GetFields(f => f.Name == "Event");
+
                                     if (eventField.Count() > 0)
                                     {
                                         eventName = eventField.First().ConstantValue.ToString();
@@ -49,6 +46,7 @@ namespace Bridge.Translator
 
                                     string format = null;
                                     var formatField = resolveresult.Type.GetFields(f => f.Name == "Format", GetMemberOptions.IgnoreInheritedMembers);
+                                    
                                     if (formatField.Count() > 0)
                                     {
                                         format = formatField.First().ConstantValue.ToString();
@@ -58,6 +56,7 @@ namespace Bridge.Translator
                                         for (int i = baseTypes.Length - 1; i >= 0; i--)
                                         {
                                             formatField = baseTypes[i].GetFields(f => f.Name == "Format");
+
                                             if (formatField.Count() > 0)
                                             {
                                                 format = formatField.First().ConstantValue.ToString();
@@ -68,6 +67,7 @@ namespace Bridge.Translator
 
                                     bool isCommon = false;
                                     var commonField = resolveresult.Type.GetFields(f => f.Name == "IsCommonEvent");
+                                    
                                     if (commonField.Count() > 0)
                                     {
                                         isCommon = Convert.ToBoolean(commonField.First().ConstantValue);
@@ -100,6 +100,7 @@ namespace Bridge.Translator
 
                                     int selectorIndex = isCommon ? 1 : 0;
                                     string selector = null;
+
                                     if (attr.Arguments.Count > selectorIndex)
                                     {
                                         selector = ((ICSharpCode.NRefactory.CSharp.PrimitiveExpression)(attr.Arguments.ElementAt(selectorIndex))).Value.ToString();
@@ -107,6 +108,7 @@ namespace Bridge.Translator
                                     else
                                     {
                                         var resolvedmethod = resolveresult.Member as IMethod;
+
                                         if (resolvedmethod.Parameters.Count > selectorIndex)
                                         {
                                             selector = resolvedmethod.Parameters[selectorIndex].ConstantValue.ToString();
@@ -116,6 +118,7 @@ namespace Bridge.Translator
                                     if (attr.Arguments.Count > (selectorIndex + 1))
                                     {
                                         var memberResolveResult = this.Emitter.Resolver.ResolveNode(attr.Arguments.ElementAt(selectorIndex + 1), this.Emitter) as MemberResolveResult;
+                                        
                                         if (memberResolveResult != null && memberResolveResult.Member.Attributes.Count > 0)
                                         {
                                             var template = this.Emitter.Validator.GetAttribute(memberResolveResult.Member.Attributes, "Bridge.TemplateAttribute");
@@ -129,19 +132,23 @@ namespace Bridge.Translator
                                     else
                                     {
                                         var resolvedmethod = resolveresult.Member as IMethod;
+
                                         if (resolvedmethod.Parameters.Count > (selectorIndex + 1))
                                         {
                                             var templateType = resolvedmethod.Parameters[selectorIndex + 1].Type;
                                             var templateValue = Convert.ToInt32(resolvedmethod.Parameters[selectorIndex + 1].ConstantValue);
+                                            
                                             var fields = templateType.GetFields(f => 
                                             {
                                                 var field = f as DefaultResolvedField;
+
                                                 if (field != null && field.ConstantValue != null && Convert.ToInt32(field.ConstantValue.ToString()) == templateValue)
                                                 {
                                                     return true;
                                                 }
 
                                                 var field1 = f as DefaultUnresolvedField;
+
                                                 if (field1 != null && field1.ConstantValue != null && Convert.ToInt32(field1.ConstantValue.ToString()) == templateValue)
                                                 {
                                                     return true;

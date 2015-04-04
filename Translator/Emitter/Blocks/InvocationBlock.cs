@@ -4,7 +4,6 @@ using ICSharpCode.NRefactory.CSharp.Resolver;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -40,7 +39,9 @@ namespace Bridge.Translator
             {
                 return false;
             }
+
             var resolvedMethod = invocationResult.Member as IMethod;
+
             return resolvedMethod != null && resolvedMethod.IsPartial && !resolvedMethod.HasBody;
         }
 
@@ -90,12 +91,14 @@ namespace Bridge.Translator
                     {
                         var code = invocationExpression.Arguments.First();
                         var inlineExpression = code as PrimitiveExpression;
+
                         if (inlineExpression == null)
                         {
                             throw (Exception)this.Emitter.CreateException(invocationExpression, "Only primitive expression can be inlined");
                         }
 
                         string value = inlineExpression.Value.ToString().Trim();
+
                         if (value.Length > 0)
                         {
                             this.Write(inlineExpression.Value);
@@ -114,6 +117,7 @@ namespace Bridge.Translator
 
                         this.Emitter.ReplaceAwaiterByVar = oldValue;
                         this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+
                         return;
                     }
                 }
@@ -127,14 +131,17 @@ namespace Bridge.Translator
                         this.WriteThis();
                         this.WriteDot();
                     }
+
                     new InlineArgumentsBlock(this.Emitter, argsInfo, inlineScript).Emit();
                     this.Emitter.ReplaceAwaiterByVar = oldValue;
                     this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+
                     return;
                 }
             }            
 
             MemberReferenceExpression targetMember = invocationExpression.Target as MemberReferenceExpression;
+            
             if (targetMember != null)
             {
                 var member = this.Emitter.Resolver.ResolveNode(targetMember.Target, this.Emitter);
@@ -149,6 +156,7 @@ namespace Bridge.Translator
                 if (targetResolve != null)
                 {
                     var csharpInvocation = targetResolve as CSharpInvocationResolveResult;
+
                     InvocationResolveResult invocationResult;
 
                     if (csharpInvocation != null)
@@ -160,6 +168,7 @@ namespace Bridge.Translator
                             this.Emitter.SkipSemiColon = true;
                             this.Emitter.ReplaceAwaiterByVar = oldValue;
                             this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+
                             return;
                         }
                     }
@@ -172,6 +181,7 @@ namespace Bridge.Translator
                             this.Emitter.SkipSemiColon = true;
                             this.Emitter.ReplaceAwaiterByVar = oldValue;
                             this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+
                             return;
                         }
                     }
@@ -224,6 +234,7 @@ namespace Bridge.Translator
 
                             this.Emitter.ReplaceAwaiterByVar = oldValue;
                             this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
+
                             return;
                         }
                     }
@@ -236,6 +247,7 @@ namespace Bridge.Translator
                 var method = invocationExpression.GetParent<MethodDeclaration>();
 
                 bool isIgnore = this.Emitter.Validator.IsIgnoreType(baseType);
+
                 if (isIgnore)
                 {
                     throw (Exception)this.Emitter.CreateException(targetMember.Target, "Cannot call base method, because parent class code is ignored");

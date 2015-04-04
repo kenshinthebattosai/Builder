@@ -1,7 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 
 namespace Bridge.Translator
 {
@@ -57,9 +55,11 @@ namespace Bridge.Translator
                 this.WriteAwaiters(variable.Initializer);
 
                 var hasInitializer = !variable.Initializer.IsNull;
+
                 if (variable.Initializer.IsNull && !this.VariableDeclarationStatement.Type.IsVar())
                 {
                     var typeDef = this.Emitter.GetTypeDefinition(this.VariableDeclarationStatement.Type);
+
                     if (typeDef.IsValueType && !this.Emitter.Validator.IsIgnoreType(typeDef))
                     {
                         hasInitializer = true;
@@ -116,7 +116,7 @@ namespace Bridge.Translator
                 else if (isReferenceLocal)
                 {
                     addSemicolon = true;
-                    this.Write(" = {}");
+                    this.Write(" = { }");
                 }
             }
 

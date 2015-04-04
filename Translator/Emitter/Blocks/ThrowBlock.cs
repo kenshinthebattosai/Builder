@@ -1,7 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 
 namespace Bridge.Translator
 {
@@ -22,6 +20,7 @@ namespace Bridge.Translator
         public override void Emit()
         {
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
+
             if (this.Emitter.IsAsync)
             {                
                 this.WriteAwaiters(this.ThrowStatement.Expression);

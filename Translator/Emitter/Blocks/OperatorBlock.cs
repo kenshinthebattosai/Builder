@@ -1,9 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Translator
 {

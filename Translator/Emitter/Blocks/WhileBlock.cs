@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,6 +41,7 @@ namespace Bridge.Translator
             
             IAsyncStep conditionStep = null;
             var lastStep = this.Emitter.AsyncBlock.Steps.Last();
+
             if (string.IsNullOrWhiteSpace(lastStep.Output.ToString()))
             {
                 conditionStep = lastStep;
@@ -65,8 +65,11 @@ namespace Bridge.Translator
             this.BeginBlock();
 
             var writer = this.SaveWriter();
+
             this.Emitter.IgnoreBlock = this.WhileStatement.EmbeddedStatement;
+
             var startCount = this.Emitter.AsyncBlock.Steps.Count;
+
             this.WhileStatement.EmbeddedStatement.AcceptVisitor(this.Emitter);
 
             if (!AbstractEmitterBlock.IsJumpStatementLast(this.Emitter.Output.ToString()))

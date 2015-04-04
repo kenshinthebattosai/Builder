@@ -1,15 +1,8 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Text;
-using Mono.Cecil;
-using Object.Net.Utilities;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem.Implementation;
-using Bridge.Contract;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -50,6 +43,7 @@ namespace Bridge.Translator
         {
             var handlers = this.GetEvents();
             var aspects = this.Emitter.Plugins.GetConstructorInjectors(this);
+
             return aspects.Concat(handlers);
         }
 
@@ -74,6 +68,7 @@ namespace Bridge.Translator
             }
 
             var injectors = this.GetInjectors();
+
             if (this.TypeInfo.StaticConfig.HasMembers || injectors.Count() > 0)
             {
                 this.EnsureComma();
@@ -106,14 +101,17 @@ namespace Bridge.Translator
                     this.WriteCloseParentheses();
                     this.WriteSpace();
                     this.BeginBlock();
+
                     foreach (var fn in injectors)
                     {
                         this.Write(fn);
                         this.WriteNewLine();
                     }
+
                     this.EndBlock();
                     this.Emitter.Comma = true;
                 }
+
                 this.WriteNewLine();
                 this.EndBlock();
             }
@@ -231,6 +229,7 @@ namespace Bridge.Translator
                     {
                         this.WriteNewLine();
                     }
+
                     this.EmitBaseConstructor(ctor, ctorName);
                     requireNewLine = true;
                 }
@@ -245,6 +244,7 @@ namespace Bridge.Translator
                         {
                             this.WriteNewLine();
                         }
+
                         this.ConvertParamsToReferences(ctor.Parameters);
                         ctor.Body.AcceptChildren(this.Emitter);
                     }
@@ -283,11 +283,14 @@ namespace Bridge.Translator
             {
                 var baseType = this.Emitter.GetBaseTypeDefinition();
                 var baseName = "constructor";
+
                 if (ctor.Initializer != null && !ctor.Initializer.IsNull) 
                 {
                     var member = ((InvocationResolveResult)this.Emitter.Resolver.ResolveNode(ctor.Initializer, this.Emitter)).Member;
                     var overloads = OverloadsCollection.Create(this.Emitter, member);
-                    if (overloads.HasOverloads) {
+
+                    if (overloads.HasOverloads) 
+                    {
                         baseName = overloads.GetOverloadName();
                     }
                 }
@@ -310,6 +313,7 @@ namespace Bridge.Translator
                 var baseName = "constructor";
                 var member = ((InvocationResolveResult)this.Emitter.Resolver.ResolveNode(ctor.Initializer, this.Emitter)).Member;
                 var overloads = OverloadsCollection.Create(this.Emitter, member);
+
                 if (overloads.HasOverloads)
                 {
                     baseName = overloads.GetOverloadName();
@@ -336,9 +340,11 @@ namespace Bridge.Translator
             }
 
             var args = new List<Expression>(initializer.Arguments);
+
             for (int i = 0; i < args.Count; i++)
             {
                 args[i].AcceptVisitor(this.Emitter);
+
                 if (i != (args.Count - 1))
                 {
                     this.WriteComma();

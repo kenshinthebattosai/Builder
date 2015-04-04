@@ -1,7 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
 using Mono.Cecil;
 using System;
 using System.Collections.Generic;
@@ -54,6 +53,7 @@ namespace Bridge.Translator
 
             var invocationResolveResult = this.Emitter.Resolver.ResolveNode(objectCreateExpression, this.Emitter) as InvocationResolveResult;
             string inlineCode = null;
+
             if (invocationResolveResult != null)
             {
                 inlineCode = this.Emitter.GetInline(invocationResolveResult.Member);
@@ -65,6 +65,7 @@ namespace Bridge.Translator
 
             bool isCollectionInitializer = false;
             AstNodeCollection<Expression> elements = null;
+
             if (hasInitializer)
             {
                 elements = objectCreateExpression.Initializer.Elements;
@@ -127,6 +128,7 @@ namespace Bridge.Translator
                             this.WriteComma();
                         }
                     }
+
                     new ExpressionListBlock(this.Emitter, argsExpressions, paramsArg).Emit();
                     this.WriteCloseParentheses();
                 }
@@ -172,18 +174,21 @@ namespace Bridge.Translator
                         {
                             var arrayInitializer = (ArrayInitializerExpression)item;
                             this.Write("[");
+
                             foreach (var el in arrayInitializer.Elements)
                             {
                                 this.EnsureComma(false);
                                 el.AcceptVisitor(this.Emitter);
                                 this.Emitter.Comma = true;
                             }
+
                             this.Write("]");
                             this.Emitter.Comma = false;
                         }
                     }
 
                     this.WriteNewLine();
+
                     if (isCollectionInitializer)
                     {
                         this.Outdent();
@@ -221,10 +226,12 @@ namespace Bridge.Translator
 
                     needComma = true;
                     string name = namedExression != null ? namedExression.Name : namedArgumentExpression.Name;
+                    
                     if (changeCase)
                     {
                         name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
                     }
+
                     Expression expression = namedExression != null ? namedExression.Expression : namedArgumentExpression.Expression;
 
                     this.Write(name, ": ");
@@ -245,6 +252,7 @@ namespace Bridge.Translator
                     foreach (var member in members)
                     {
                         var name = member.GetName(this.Emitter);
+
                         if (changeCase)
                         {
                             name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
@@ -259,11 +267,13 @@ namespace Bridge.Translator
                         {
                             this.WriteComma();
                         }
+
                         needComma = true;                       
                         
                         this.Write(name, ": ");
 
                         var primitiveExpr = member.Initializer as PrimitiveExpression;
+
                         if (primitiveExpr != null && primitiveExpr.Value is AstType)
                         {
                             this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");

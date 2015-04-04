@@ -1,14 +1,9 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Text;
-using Mono.Cecil;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using Object.Net.Utilities;
-using ICSharpCode.NRefactory.Semantics;
-using Bridge.Contract;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Bridge.Translator
 {
@@ -106,7 +101,7 @@ namespace Bridge.Translator
             if (this.TypeInfo.InstanceConfig.Fields.Count == 0)
             {
                 this.EnsureComma();
-                this.Write("$clone: function(to) { return this; }");
+                this.Write("$clone: function (to) { return this; }");
                 this.Emitter.Comma = true;
                 return;
             }
@@ -114,7 +109,7 @@ namespace Bridge.Translator
             if (!this.TypeInfo.InstanceMethods.ContainsKey("GetHashCode"))
             {
                 this.EnsureComma();
-                this.Write("getHashCode: function() ");
+                this.Write("getHashCode: function () ");
                 this.BeginBlock();
                 this.Write("var hash = 17;");                
 
@@ -141,7 +136,7 @@ namespace Bridge.Translator
             if (!this.TypeInfo.InstanceMethods.ContainsKey("Equals"))
             {                
                 this.EnsureComma();
-                this.Write("equals: function(o) ");
+                this.Write("equals: function (o) ");
                 this.BeginBlock();
                 this.Write("if (!Bridge.is(o,");
                 this.Write(structName);
@@ -151,9 +146,10 @@ namespace Bridge.Translator
                 this.WriteNewLine();
                 this.EndBlock();
                 this.WriteNewLine();
-
                 this.Write("return ");
+
                 bool and = false;
+
                 foreach (var field in this.TypeInfo.InstanceConfig.Fields)
                 {
                     string fieldName = field.GetName(this.Emitter);
@@ -162,6 +158,7 @@ namespace Bridge.Translator
                     {
                         this.Write(" && ");
                     }
+
                     and = true;
 
                     this.Write("Bridge.equals(this.");
@@ -178,7 +175,7 @@ namespace Bridge.Translator
             }
 
             this.EnsureComma();
-            this.Write("$clone: function(to) ");
+            this.Write("$clone: function (to) ");
             this.BeginBlock();
             this.Write("var s = to || new ");
             this.Write(structName);
@@ -201,8 +198,6 @@ namespace Bridge.Translator
             this.WriteNewLine();
             this.EndBlock();
             this.Emitter.Comma = true;
-
-
         }
 
         protected void EmitEventAccessor(EventDeclaration e, VariableInitializer evtVar, bool add)

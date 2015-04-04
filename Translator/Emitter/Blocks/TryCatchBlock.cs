@@ -1,10 +1,9 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
+using Object.Net.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Object.Net.Utilities;
-using Bridge.Contract;
 
 namespace Bridge.Translator
 {
@@ -52,6 +51,7 @@ namespace Bridge.Translator
             tryInfo.EndStep = tryStep.Step;
 
             List<IAsyncStep> catchSteps = new List<IAsyncStep>();
+
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
                 var catchStep = this.Emitter.AsyncBlock.AddAsyncStep();
@@ -127,6 +127,7 @@ namespace Bridge.Translator
             this.EmitTryBlock();
 
             var count = this.TryCatchStatement.CatchClauses.Count;
+
             if(count > 0) 
             {
                 var firstClause = this.TryCatchStatement.CatchClauses.Count == 1 ? this.TryCatchStatement.CatchClauses.First() : null;
@@ -212,6 +213,7 @@ namespace Bridge.Translator
 
             this.WriteVar(true);
             var catchVars = new Dictionary<string, string>();
+
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
                 if (clause.VariableName.IsNotEmpty() && !catchVars.ContainsKey(clause.VariableName))
@@ -227,6 +229,7 @@ namespace Bridge.Translator
             this.WriteSemiColon(true);
 
             var firstClause = true;
+
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
                 var exceptionType = clause.Type.IsNull ? null : Helpers.TranslateTypeReference(clause.Type, this.Emitter);
@@ -250,6 +253,7 @@ namespace Bridge.Translator
                 
                 this.PushLocals();
                 this.BeginBlock();
+
                 if (clause.VariableName.IsNotEmpty()){
                     this.Write(clause.VariableName + " = $e;");
                     this.WriteNewLine();
@@ -290,6 +294,7 @@ namespace Bridge.Translator
         }
 
         private List<Tuple<string, string, int>> catchBlocks;
+
         public List<Tuple<string, string, int>> CatchBlocks
         {
             get

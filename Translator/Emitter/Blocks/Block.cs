@@ -1,7 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Bridge.Translator
@@ -163,6 +161,7 @@ namespace Bridge.Translator
             else if (this.BlockStatement.Parent is Accessor)
             {
                 this.IsMethodBlock = true;
+
                 if (this.BlockStatement.Parent.Role.ToString() == "Setter")
                 {
                     this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
@@ -175,6 +174,7 @@ namespace Bridge.Translator
         public void EndEmitBlock()
         {
             var blockWasEnded = false;
+
             if (!this.NoBraces && (!this.Emitter.IsAsync || (!this.AsyncNoBraces && this.BlockStatement.Parent != this.Emitter.AsyncBlock.Node)))
             {
                 this.EndBlock();
@@ -217,8 +217,9 @@ namespace Bridge.Translator
                 {
                     this.WriteNewLine();
                     this.Indent();
-                    this.Write("(function() ");
+                    this.Write("(function () ");
                 }
+
                 this.BeginBlock();
             }
 

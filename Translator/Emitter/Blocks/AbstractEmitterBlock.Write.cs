@@ -1,9 +1,5 @@
 ﻿using Bridge.Contract;
-using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Bridge.Translator
@@ -75,6 +71,7 @@ namespace Bridge.Translator
         {
             this.WriteIndent();
             string s = null;
+
             if (value is char)
             {
                 s = this.Emitter.ToJavaScript((int)(char)value);
@@ -326,6 +323,7 @@ namespace Bridge.Translator
             this.Emitter.Output = tuple.Item2;
             result = tuple.Item1 != null ? string.Format(tuple.Item1, result) : result;
             this.Emitter.IsNewLine = tuple.Item3;
+
             if (!preventWrite)
             {
                 this.Write(result);
@@ -342,6 +340,7 @@ namespace Bridge.Translator
         public virtual string WriteIndentToString(string value)
         {
             StringBuilder output = new StringBuilder();
+
             for (var i = 0; i < this.Emitter.Level; i++)
             {
                 output.Append("    ");
@@ -371,7 +370,8 @@ namespace Bridge.Translator
                 return this.Emitter.LastSavedWriter;
             }*/
             
-            var info = new WriterInfo { 
+            var info = new WriterInfo 
+            { 
                 Output = this.Emitter.Output,
                 IsNewLine = this.Emitter.IsNewLine,
                 Level = this.Emitter.Level,
@@ -424,6 +424,7 @@ namespace Bridge.Translator
             while (i >= 0)
             {
                 char c = charArray[i];
+
                 if (!Char.IsWhiteSpace(c))
                 {
                     return count;
@@ -459,6 +460,7 @@ namespace Bridge.Translator
             while (i >= 0)
             {
                 char c = charArray[i];
+
                 if (!Char.IsWhiteSpace(c))
                 {
                     return false;
@@ -475,6 +477,7 @@ namespace Bridge.Translator
                         return true;
                     }
                 }
+
                 i--;
             }
 

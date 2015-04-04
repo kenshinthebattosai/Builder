@@ -1,10 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -79,6 +75,7 @@ namespace Bridge.Translator
                 this.WriteColon();
 
                 var primitiveExpr = member.Initializer as PrimitiveExpression;
+
                 if (primitiveExpr != null && primitiveExpr.Value is AstType)
                 {
                     this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
@@ -87,6 +84,7 @@ namespace Bridge.Translator
                 {
                     member.Initializer.AcceptVisitor(this.Emitter);
                 }
+
                 this.Emitter.Comma = true;
             }
 

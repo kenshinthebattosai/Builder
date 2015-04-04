@@ -1,13 +1,7 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Text;
+﻿using Bridge.Contract;
 using Mono.Cecil;
 using Object.Net.Utilities;
-using Bridge.Contract;
+using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -165,6 +159,7 @@ namespace Bridge.Translator
                 {
                     this.Write("$");
                 }
+
                 this.Write("statics");
                 this.WriteColon();
                 this.BeginBlock();
@@ -181,6 +176,7 @@ namespace Bridge.Translator
         protected virtual void EmitInstantiableBlock()
         {
             var ctorBlock = new ConstructorBlock(this.Emitter, this.TypeInfo, false);
+
             if (this.TypeInfo.HasInstantiable || this.Emitter.Plugins.HasConstructorInjectors(ctorBlock))
             {
                 this.EnsureComma();

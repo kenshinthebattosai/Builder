@@ -1,14 +1,6 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using System;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
-using ICSharpCode.NRefactory.TypeSystem;
-using System.Text;
-using Mono.Cecil;
-using Object.Net.Utilities;
-using ICSharpCode.NRefactory.Semantics;
-using Bridge.Contract;
 
 namespace Bridge.Translator
 {
@@ -110,6 +102,7 @@ namespace Bridge.Translator
         {
             AsyncBlock asyncBlock = null;
             this.PushLocals();
+
             if (this.IsAsync)
             {
                 if (context is LambdaExpression)
@@ -145,6 +138,7 @@ namespace Bridge.Translator
             }            
 
             bool isSimpleLambda = body.Parent is LambdaExpression && !block && !this.IsAsync;
+
             if (isSimpleLambda)
             {
                 this.ConvertParamsToReferences(parameters);

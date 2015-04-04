@@ -1,9 +1,5 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
-using System.Collections.Generic;
-using Object.Net.Utilities;
-using Bridge.Contract;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
 using System.Linq;
 

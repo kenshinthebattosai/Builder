@@ -1,11 +1,9 @@
-﻿using ICSharpCode.NRefactory.CSharp;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
 using ICSharpCode.NRefactory.TypeSystem;
-using ICSharpCode.NRefactory.TypeSystem.Implementation;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
-using Bridge.Contract;
+using System.Text.RegularExpressions;
 
 namespace Bridge.Translator
 {
@@ -37,6 +35,7 @@ namespace Bridge.Translator
             var memberResolveResult = resolveResult as MemberResolveResult;
 
             var arrayAccess = resolveResult as ArrayAccessResolveResult;
+
             if (arrayAccess != null && arrayAccess.Indexes.Count > 1)
             {
                 this.EmitArrayAccess(indexerExpression);
@@ -76,6 +75,7 @@ namespace Bridge.Translator
             if (inlineAttr != null)
             {
                 var inlineCode = inlineAttr.PositionalArguments[0];
+
                 if (inlineCode.ConstantValue != null)
                 {
                     string code = inlineCode.ConstantValue.ToString();
@@ -100,6 +100,7 @@ namespace Bridge.Translator
                 string valueVar = null;
                 bool writeTargetVar = false;
                 bool isStatement = false;
+
                 if (this.Emitter.IsAssignment && this.Emitter.AssignmentType != AssignmentOperatorType.Assign)
                 {
                     writeTargetVar = true;
@@ -126,6 +127,7 @@ namespace Bridge.Translator
                     var targetrr = this.Emitter.Resolver.ResolveNode(indexerExpression.Target, this.Emitter);
                     var memberTargetrr = targetrr as MemberResolveResult;
                     bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
+                    
                     if (!(targetrr is ThisResolveResult || targetrr is LocalResolveResult || isField))
                     {
                         targetVar = this.GetTempVarName();                        
@@ -242,6 +244,7 @@ namespace Bridge.Translator
                             this.Write(paramsStr);
                             this.WriteComma(false);
                             this.Write(valueVar);
+
                             if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
                             {
                                 this.Write("+");
@@ -250,6 +253,7 @@ namespace Bridge.Translator
                             {
                                 this.Write("-");
                             }
+
                             this.Write("1");
                             this.WriteCloseParentheses();
                             this.WriteComma();
@@ -412,6 +416,7 @@ namespace Bridge.Translator
                 var targetrr = this.Emitter.Resolver.ResolveNode(indexerExpression.Target, this.Emitter);
                 var memberTargetrr = targetrr as MemberResolveResult;
                 bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
+                
                 if (!(targetrr is ThisResolveResult || targetrr is LocalResolveResult || isField))
                 {
                     targetVar = this.GetTempVarName();
@@ -534,6 +539,7 @@ namespace Bridge.Translator
                         this.WriteCloseBracket();
                         this.WriteComma(false);
                         this.Write(valueVar);
+
                         if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
                         {
                             this.Write("+");
@@ -542,6 +548,7 @@ namespace Bridge.Translator
                         {
                             this.Write("-");
                         }
+
                         this.Write("1");
                         this.WriteCloseParentheses();
                         this.WriteComma();

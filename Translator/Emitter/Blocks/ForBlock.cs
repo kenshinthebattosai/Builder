@@ -1,6 +1,5 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,13 +48,15 @@ namespace Bridge.Translator
 
             this.PushLocals();
             
-            bool newLine = false;            
+            bool newLine = false;
+            
             foreach (var item in forStatement.Initializers)
             {
                 if (newLine)
                 {
                     this.WriteNewLine();
                 }
+
                 item.AcceptVisitor(this.Emitter);
                 newLine = true;
             }
@@ -87,10 +88,12 @@ namespace Bridge.Translator
             var startCount = this.Emitter.AsyncBlock.Steps.Count;
             forStatement.EmbeddedStatement.AcceptVisitor(this.Emitter);
             IAsyncStep loopStep = null;
+
             if (this.Emitter.AsyncBlock.Steps.Count > startCount)
             {
                 loopStep = this.Emitter.AsyncBlock.Steps.Last();
             }
+
             this.RestoreWriter(writer);
 
             if (!AbstractEmitterBlock.IsJumpStatementLast(this.Emitter.Output.ToString()))
@@ -132,15 +135,19 @@ namespace Bridge.Translator
 
             lastIteratorStep.JumpToStep = conditionStep.Step;
             this.Emitter.ReplaceAwaiterByVar = true;
+
             foreach (var item in forStatement.Iterators)
             {
                 item.AcceptVisitor(this.Emitter);
+
                 if (this.Emitter.Output.ToString().TrimEnd().Last() != ';')
                 {
                     this.WriteSemiColon();
                 }
+
                 this.WriteNewLine();
             }
+
             this.Emitter.ReplaceAwaiterByVar = oldValue;
             
             this.PopLocals();                        

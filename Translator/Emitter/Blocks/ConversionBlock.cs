@@ -1,8 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.Semantics;
-using ICSharpCode.NRefactory.TypeSystem;
-using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using System.Collections.Generic;
 
 namespace Bridge.Translator
@@ -12,6 +10,7 @@ namespace Bridge.Translator
         public sealed override void Emit()
         {
             var expression = this.GetExpression();
+
             if (expressionInWork.Contains(expression))
             {
                 this.EmitConversionExpression();
@@ -22,6 +21,7 @@ namespace Bridge.Translator
 
             var isConversion = false;
             bool check = expression != null && !expression.IsNull && expression.Parent != null;
+
             if (check)
             {
                 isConversion = this.CheckConversion(expression);   
@@ -58,6 +58,7 @@ namespace Bridge.Translator
         public static bool IsUserDefinedConversion(AbstractEmitterBlock block, Expression expression)
         {
             Conversion conversion = null;
+
             try
             {
                 var rr = block.Emitter.Resolver.ResolveNode(expression, null);
@@ -105,10 +106,12 @@ namespace Bridge.Translator
                     var method = conversion.Method;
 
                     string inline = block.Emitter.GetInline(method);
+
                     if (conversion.IsExplicit && !string.IsNullOrWhiteSpace(inline))
                     {
                         return false;
                     }
+
                     if (!string.IsNullOrWhiteSpace(inline))
                     {
                         if (expression is InvocationExpression)
@@ -139,6 +142,7 @@ namespace Bridge.Translator
                         }
 
                         block.DisableEmitConversionExpression = true;
+
                         return false;
                     }
                     else
@@ -147,6 +151,7 @@ namespace Bridge.Translator
                         {
                             return false;
                         }
+
                         block.Write(block.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
                         block.WriteDot();
 

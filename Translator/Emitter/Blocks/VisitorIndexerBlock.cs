@@ -1,11 +1,5 @@
-﻿using ICSharpCode.NRefactory.CSharp;
-using ICSharpCode.NRefactory.TypeSystem;
-using Mono.Cecil;
-using System.Collections.Generic;
-using Object.Net.Utilities;
-using Bridge.Contract;
-using ICSharpCode.NRefactory.Semantics;
-using System.Linq;
+﻿using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp;
 
 namespace Bridge.Translator
 {
@@ -46,11 +40,13 @@ namespace Bridge.Translator
                 }
 
                 var overloads = OverloadsCollection.Create(this.Emitter, indexerDeclaration, setter);
+
                 string name = overloads.GetOverloadName();
                 this.Write((setter ? "set" : "get") + name);
                 this.WriteColon();
                 this.WriteFunction();
                 this.EmitMethodParameters(indexerDeclaration.Parameters, indexerDeclaration, setter);
+
                 if (setter)
                 {
                     this.Write(", value)");
