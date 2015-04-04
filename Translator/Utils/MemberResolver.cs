@@ -86,11 +86,6 @@ namespace Bridge.Translator
         {
             var syntaxTree = node.GetParent<SyntaxTree>();
             this.InitResolver(syntaxTree);
-
-            if (this.CanFreeze)
-            {
-                //syntaxTree.Freeze();
-            }
             
             var result = this.resolver.Resolve(node);
 
@@ -101,6 +96,15 @@ namespace Bridge.Translator
                 var parentInvocation = parentResolveResult as InvocationResolveResult;
                 IParameterizedMember method = methodGroupResolveResult.Methods.LastOrDefault();
                 bool isInvocation = node.Parent is InvocationExpression && (((InvocationExpression)(node.Parent)).Target == node);
+
+                if (node is Expression)
+                {
+                    var conversion = this.Resolver.GetConversion((Expression)node);
+                    if (conversion != null && conversion.IsMethodGroupConversion)
+                    {
+                        return new MemberResolveResult(new TypeResolveResult(conversion.Method.DeclaringType), conversion.Method);                        
+                    }
+                }
 
                 if (!isInvocation && parentInvocation != null)
                 {

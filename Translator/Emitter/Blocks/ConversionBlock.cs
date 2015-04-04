@@ -83,7 +83,7 @@ namespace Bridge.Translator
             Conversion conversion = null;
             try
             {
-                var rr = block.Emitter.Resolver.ResolveNode(expression, null);
+                var rr = block.Emitter.Resolver.ResolveNode(expression, block.Emitter);
                 conversion = block.Emitter.Resolver.Resolver.GetConversion(expression);
 
                 if (conversion == null)
