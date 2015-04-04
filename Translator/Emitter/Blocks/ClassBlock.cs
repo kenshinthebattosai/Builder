@@ -56,7 +56,8 @@ namespace Bridge.Translator
                 this.WriteGenericHeader(name, typeDef);
             }
 
-            this.Write(Bridge.Translator.Emitter.ROOT + ".Class.define");
+            this.Write(Bridge.Translator.Emitter.ROOT + ".define");
+
             this.WriteOpenParentheses();
 
             if (this.IsGeneric)
@@ -78,6 +79,7 @@ namespace Bridge.Translator
                 {
                     this.Write("$");
                 }
+
                 this.Write("extend");
                 this.WriteColon();
                 this.Write(extend);
