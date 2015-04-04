@@ -56,7 +56,7 @@ namespace Bridge.Translator
             var prev = comment.PrevSibling;
             bool newLine = true;
 
-            if (prev != null && prev.EndLocation.Line == comment.StartLocation.Line)
+            if (prev != null && !(prev is NewLineNode) && prev.EndLocation.Line == comment.StartLocation.Line)
             {
                 newLine = false;
             }

@@ -294,5 +294,14 @@ namespace Bridge.Translator
         {
             new VisitorIndexerBlock(this, indexerDeclaration).Emit();
         }
+
+        public override void VisitNewLine(NewLineNode newLineNode)
+        {
+            if (newLineNode.PrevSibling == null || newLineNode.PrevSibling is NewLineNode || newLineNode.PrevSibling.EndLocation.Line != newLineNode.StartLocation.Line)
+            {
+                this.Output.Append('\n');
+                this.IsNewLine = true;
+            }
+        }
     }
 }
