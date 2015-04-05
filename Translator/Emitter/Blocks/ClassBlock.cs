@@ -80,12 +80,12 @@ namespace Bridge.Translator
 
             if (extend.IsNotEmpty() && !this.TypeInfo.IsEnum)
             {
-                /*if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "extends")))
+                if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "inherits")))
                 {
                     this.Write("$");
-                }*/
+                }
 
-                this.Write("$extends");
+                this.Write("inherits");
                 this.WriteColon();
                 this.Write(extend);
                 this.Emitter.Comma = true;
