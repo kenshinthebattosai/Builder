@@ -2,6 +2,7 @@
 using Mono.Cecil;
 using Object.Net.Utilities;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Bridge.Translator
 {
@@ -20,6 +21,12 @@ namespace Bridge.Translator
         }
 
         public bool IsGeneric
+        {
+            get;
+            set;
+        }
+
+        public int StartPosition
         {
             get;
             set;
@@ -56,11 +63,15 @@ namespace Bridge.Translator
 
             if (this.IsGeneric)
             {
-                this.Write("$$name, ");
+                this.Write("$$name");
+                this.StartPosition = this.Emitter.Output.Length;
+                this.Write(", ");
             }
             else
             {
-                this.Write("'" + name, "', ");
+                this.Write("'" + name, "'");
+                this.StartPosition = this.Emitter.Output.Length;
+                this.Write(", ");
             }            
             
             this.BeginBlock();
@@ -193,6 +204,14 @@ namespace Bridge.Translator
         {
             this.WriteNewLine();
             this.EndBlock();
+
+            var classStr = this.Emitter.Output.ToString().Substring(this.StartPosition);
+
+            if(Regex.IsMatch(classStr, ",\\s*\\{\\s*\\}", RegexOptions.Multiline))
+            {
+                this.Emitter.Output.Remove(this.StartPosition, this.Emitter.Output.Length - this.StartPosition);
+            }
+
             this.WriteCloseParentheses();
 
             if (this.IsGeneric)
