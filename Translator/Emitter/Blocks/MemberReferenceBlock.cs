@@ -94,6 +94,61 @@ namespace Bridge.Translator
             }
 
             MemberResolveResult member = resolveResult as MemberResolveResult;
+            var globalTarget = member != null ? this.Emitter.IsGlobalTarget(member.Member) : null;
+
+            if (globalTarget != null && globalTarget.Item1)
+            {
+                var target = globalTarget.Item2;
+                
+                if (!string.IsNullOrWhiteSpace(target))
+                {
+                    bool assign = false;
+                    var memberExpression = member.Member is IMethod ? memberReferenceExpression.Parent.Parent : memberReferenceExpression.Parent;
+                    var targetExpression = member.Member is IMethod ? memberReferenceExpression.Parent : memberReferenceExpression;
+                    var assignment = memberExpression as AssignmentExpression;
+                    if (assignment != null && assignment.Right == targetExpression)
+                    {
+                        assign = true;
+                    }
+                    else 
+                    {
+                        var varInit = memberExpression as VariableInitializer;
+                        if (varInit != null && varInit.Initializer == targetExpression)
+                        {
+                            assign = true;
+                        }
+                        else if (memberExpression is InvocationExpression)
+                        {
+                            var targetInvocation = (InvocationExpression)memberExpression;
+                            if (targetInvocation.Arguments.Any(a => a == targetExpression))
+                            {
+                                assign = true;
+                            }
+                        }
+                    }                    
+
+                    if(assign) 
+                    {
+                        if (resolveResult is InvocationResolveResult)
+                        {
+                            this.PushWriter(target);
+                        }
+                        else
+                        {
+                            this.Write(target);
+                        }
+
+                        return;
+                    }
+                }
+
+                if (resolveResult is InvocationResolveResult)
+                {
+                    this.PushWriter("");
+                }
+
+                return;
+            }
 
             string inline = member != null ? this.Emitter.GetInline(member.Member) : null;
             bool hasInline = !string.IsNullOrEmpty(inline);
@@ -332,8 +387,12 @@ namespace Bridge.Translator
                     }                    
                 }
 
+                var targetResolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Target, this.Emitter) as MemberResolveResult;
 
-                this.WriteDot();
+                if (targetResolveResult == null || this.Emitter.IsGlobalTarget(targetResolveResult.Member) == null)
+                {
+                    this.WriteDot();
+                }                
 
                 if (member == null)
                 {

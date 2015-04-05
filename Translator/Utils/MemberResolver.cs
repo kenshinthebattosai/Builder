@@ -106,17 +106,7 @@ namespace Bridge.Translator
                     }
                 }
 
-                if (!isInvocation && parentInvocation != null)
-                {
-                    var or1 = methodGroupResolveResult.PerformOverloadResolution(this.compilation, parentInvocation.GetArgumentsForCall().ToArray());
-                    if (or1.FoundApplicableCandidate)
-                    {
-                        method = or1.BestCandidate;
-                        return new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
-                    }
-                }
-
-                if (parentInvocation != null)
+                if (isInvocation && parentInvocation != null)
                 {
                     var or = methodGroupResolveResult.PerformOverloadResolution(this.compilation, parentInvocation.GetArgumentsForCall().ToArray());
                     if (or.FoundApplicableCandidate)

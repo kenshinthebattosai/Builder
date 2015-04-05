@@ -396,6 +396,12 @@ namespace Bridge.Translator
             return null;
         }
 
+        public Tuple<bool, string> IsGlobalTarget(IMember member)
+        {
+            var attr = this.GetAttribute(member.Attributes, Translator.Bridge_ASSEMBLY + ".GlobalTargetAttribute");
+            return attr != null ? new Tuple<bool, string>(true, (string)attr.PositionalArguments.First().ConstantValue) : null;            
+        }
+
         public virtual string GetInline(ICustomAttributeProvider provider)
         {
             var attr = this.GetAttribute(provider.CustomAttributes, Translator.Bridge_ASSEMBLY + ".TemplateAttribute");

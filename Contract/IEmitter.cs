@@ -92,5 +92,6 @@ namespace Bridge.Contract
         string GetFieldName(FieldDeclaration field);
         string GetEventName(EventDeclaration evt);
         Dictionary<string, bool> TempVariables { get; set; }
+        Tuple<bool, string> IsGlobalTarget(IMember member);
     }
 }
