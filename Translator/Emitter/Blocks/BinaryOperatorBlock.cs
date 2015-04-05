@@ -44,7 +44,7 @@ namespace Bridge.Translator
                 {
                     if (orr.IsLiftedOperator)
                     {
-                        this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.lift(");
+                        this.Write(Bridge.Translator.Emitter.ROOT + ".Nullable.lift(");
                     }
                     
                     this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
@@ -130,7 +130,7 @@ namespace Bridge.Translator
 
             if (nullable)
             {
-                this.Write(Bridge.Translator.Emitter.ROOT + ".nullable.");
+                this.Write(Bridge.Translator.Emitter.ROOT + ".Nullable.");
             }
             else
             {

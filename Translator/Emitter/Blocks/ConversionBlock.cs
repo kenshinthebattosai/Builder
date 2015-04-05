@@ -98,7 +98,7 @@ namespace Bridge.Translator
 
                 if (conversion.IsLifted)
                 {
-                    block.Write("Bridge.nullable.lift(");
+                    block.Write("Bridge.Nullable.lift(");
                 }
 
                 if (conversion.IsUserDefined)
