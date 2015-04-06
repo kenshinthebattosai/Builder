@@ -77,9 +77,9 @@ namespace Bridge.Translator
             }
 
             //var iteratorName = this.GetNextIteratorName();
-            var iteratorName = this.AddLocal("$i", AstType.Null);
+            var iteratorName = this.AddLocal(this.GetTempVarName(), AstType.Null);
 
-            this.WriteVar();
+            //this.WriteVar();
             this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
             this.WriteDot();
             this.Write(Bridge.Translator.Emitter.ENUMERATOR);
@@ -183,9 +183,9 @@ namespace Bridge.Translator
             }
 
             //var iteratorName = this.GetNextIteratorName();
-            var iteratorName = this.AddLocal("$i", AstType.Null);
+            var iteratorName = this.AddLocal(this.GetTempVarName(), AstType.Null);
 
-            this.WriteVar();
+            //this.WriteVar();
             this.Write(iteratorName, " = ", Bridge.Translator.Emitter.ROOT);
             this.WriteDot();
             this.Write(Bridge.Translator.Emitter.ENUMERATOR);

@@ -74,11 +74,24 @@ namespace Bridge.Translator
             }
 
             var injectors = this.GetInjectors();
-            if (this.TypeInfo.StaticConfig.HasMembers || injectors.Count() > 0)
+            IEnumerable<string> fieldsInjectors = null;
+
+            var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, true, true);
+            fieldBlock.Emit();
+
+            fieldsInjectors = fieldBlock.Injectors;
+
+            if (fieldBlock.WasEmitted)
+            {
+                this.Emitter.Comma = true;
+            }
+
+            if (this.TypeInfo.StaticConfig.HasConfigMembers || injectors.Any() || fieldsInjectors.Any())
             {
                 this.EnsureComma();
 
-                if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+                if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")) ||
+                    this.TypeInfo.StaticConfig.Fields.Any(m => m.GetName(this.Emitter) == "config"))
                 {
                     this.Write("$");
                 }
@@ -88,20 +101,25 @@ namespace Bridge.Translator
                 this.WriteColon();
                 this.BeginBlock();
 
-                if (this.TypeInfo.StaticConfig.HasMembers)
+                if (this.TypeInfo.StaticConfig.HasConfigMembers)
                 {
-                    var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, true);
-                    fieldBlock.Emit();
+                    var configBlock = new FieldBlock(this.Emitter, this.TypeInfo, true, false);
+                    configBlock.Emit();
 
-                    if (fieldBlock.Injectors.Count > 0)
+                    if (configBlock.Injectors.Count > 0)
                     {
-                        injectors = fieldBlock.Injectors.Concat(injectors);
+                        injectors = configBlock.Injectors.Concat(injectors);
                     }
 
-                    if (fieldBlock.WasEmitted)
+                    if (configBlock.WasEmitted)
                     {
                         this.Emitter.Comma = true;
                     }
+                }
+
+                if (fieldsInjectors.Any())
+                {
+                    injectors = fieldsInjectors.Concat(injectors);
                 }
 
                 if (injectors.Count() > 0)
@@ -131,17 +149,30 @@ namespace Bridge.Translator
         protected virtual void EmitInitMembers()
         {
             var injectors = this.GetInjectors();
+            IEnumerable<string> fieldsInjectors = null; 
 
-            if (!this.TypeInfo.InstanceConfig.HasMembers && injectors.Count() == 0)
+            var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, false, true);
+            fieldBlock.Emit();
+
+            fieldsInjectors = fieldBlock.Injectors;
+
+            if (fieldBlock.WasEmitted)
+            {
+                this.Emitter.Comma = true;
+            }            
+
+            if (!this.TypeInfo.InstanceConfig.HasConfigMembers && !injectors.Any() && !fieldsInjectors.Any())
             {
                 return;
             }
 
-            if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+            if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")) ||
+                this.TypeInfo.InstanceConfig.Fields.Any(m => m.GetName(this.Emitter) == "config"))
             {
                 this.Write("$");
             }
 
+            this.EnsureComma();
             this.Write("config");
 
             this.WriteColon();            
@@ -150,20 +181,25 @@ namespace Bridge.Translator
             var changeCase = this.Emitter.ChangeCase;
             var baseType = this.Emitter.GetBaseTypeDefinition();
 
-            if (this.TypeInfo.InstanceConfig.HasMembers)
+            if (this.TypeInfo.InstanceConfig.HasConfigMembers)
             {
-                var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, false);
-                fieldBlock.Emit();
+                var configBlock = new FieldBlock(this.Emitter, this.TypeInfo, false, false);
+                configBlock.Emit();
 
-                if (fieldBlock.Injectors.Count > 0)
+                if (configBlock.Injectors.Count > 0)
                 {
-                    injectors = fieldBlock.Injectors.Concat(injectors);
+                    injectors = configBlock.Injectors.Concat(injectors);
                 }
 
-                if (fieldBlock.WasEmitted)
+                if (configBlock.WasEmitted)
                 {
                     this.Emitter.Comma = true;
                 }
+            }
+
+            if (fieldsInjectors.Any())
+            {
+                injectors = fieldsInjectors.Concat(injectors);
             }
 
             if (injectors.Count() > 0)

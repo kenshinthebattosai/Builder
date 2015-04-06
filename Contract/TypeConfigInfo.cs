@@ -81,6 +81,14 @@ namespace Bridge.Contract
             }
         }
 
+        public bool HasConfigMembers
+        {
+            get
+            {
+                return this.Events.Count > 0 || this.Properties.Count > 0 || this.Alias.Count > 0;
+            }
+        }
+
         public List<TypeConfigItem> Fields
         {
             get;

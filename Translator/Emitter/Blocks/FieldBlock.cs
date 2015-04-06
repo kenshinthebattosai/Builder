@@ -6,11 +6,12 @@ namespace Bridge.Translator
 {
     public class FieldBlock : AbstractEmitterBlock
     {
-        public FieldBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock)
+        public FieldBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock, bool fieldsOnly)
         {
             this.Emitter = emitter;
             this.TypeInfo = typeInfo;
             this.StaticBlock = staticBlock;
+            this.FieldsOnly = fieldsOnly;
             this.Injectors = new List<string>();
         }
 
@@ -21,6 +22,12 @@ namespace Bridge.Translator
         }
 
         public bool StaticBlock
+        {
+            get;
+            set;
+        }
+
+        public bool FieldsOnly
         {
             get;
             set;
@@ -44,10 +51,24 @@ namespace Bridge.Translator
         }
 
         protected virtual void EmitFields(TypeConfigInfo info)
-        {            
-            if (info.Fields.Count > 0)
+        {
+            if (this.FieldsOnly)
             {
-                var hasProperties = this.WriteObject("fields", info.Fields, true);
+                if (info.Fields.Count > 0)
+                {
+                    var hasProperties = this.WriteObject(null, info.Fields, "this.{0} = {1};");
+                    if (hasProperties)
+                    {
+                        this.Emitter.Comma = true;
+                        this.WasEmitted = true;
+                    }
+                }
+                return;
+            }            
+
+            if (info.Events.Count > 0)
+            {
+                var hasProperties = this.WriteObject("events", info.Events, "Bridge.event(this, \"{0}\", {1});");
                 if (hasProperties)
                 {
                     this.Emitter.Comma = true;
@@ -55,16 +76,14 @@ namespace Bridge.Translator
                 }
             }
 
-            if (info.Events.Count > 0)
-            {
-                this.WriteObject("events", info.Events);
-                this.Emitter.Comma = true;
-            }
-
             if (info.Properties.Count > 0)
             {
-                this.WriteObject("properties", info.Properties);
-                this.Emitter.Comma = true;
+                var hasProperties = this.WriteObject("properties", info.Properties, "Bridge.property(this, \"{0}\", {1});");
+                if (hasProperties)
+                {
+                    this.Emitter.Comma = true;
+                    this.WasEmitted = true;
+                }
             }
 
             if (info.Alias.Count > 0)
@@ -74,9 +93,9 @@ namespace Bridge.Translator
             }
         }
 
-        protected virtual bool WriteObject(string objectName, List<TypeConfigItem> members, bool moveInitializer = false)
+        protected virtual bool WriteObject(string objectName, List<TypeConfigItem> members, string format)
         {
-            bool hasProperties = moveInitializer ? this.HasProperties(members) : true;
+            bool hasProperties = this.HasProperties(members);
 
             if (hasProperties && objectName != null)
             {
@@ -92,7 +111,7 @@ namespace Bridge.Translator
                 var primitiveExpr = member.Initializer as PrimitiveExpression;
                 var isNull = member.Initializer.IsNull || member.Initializer is NullReferenceExpression;
 
-                if (moveInitializer && !isNull && (primitiveExpr == null || (primitiveExpr.Value is AstType))) 
+                if (!isNull && (primitiveExpr == null || (primitiveExpr.Value is AstType))) 
                 {
                     string value = null;
 
@@ -109,7 +128,7 @@ namespace Bridge.Translator
                         value = "new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()";
                     }
 
-                    this.Injectors.Add(string.Format("this.{0} = {1};", member.GetName(this.Emitter), value));
+                    this.Injectors.Add(string.Format(format, member.GetName(this.Emitter), value));
                     continue;
                 }
 

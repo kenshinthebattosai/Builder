@@ -113,7 +113,7 @@ namespace Bridge.Translator
             }
             else
             {
-                var switchKey = this.AddLocal("$switchKey", AstType.Null);                
+                key = this.AddLocal(this.GetTempVarName(), AstType.Null);
                 this.Write(key);
                 this.Write(" = ");
                 switchStatement.Expression.AcceptVisitor(this.Emitter);
