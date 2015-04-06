@@ -33,16 +33,9 @@ namespace Bridge.Translator
             this.VisitInvocationExpression();
         }
 
-        protected virtual bool IsEmptyPartialInvoking(InvocationResolveResult invocationResult)
+        protected virtual bool IsEmptyPartialInvoking(IMethod method)
         {
-            if (invocationResult == null)
-            {
-                return false;
-            }
-
-            var resolvedMethod = invocationResult.Member as IMethod;
-
-            return resolvedMethod != null && resolvedMethod.IsPartial && !resolvedMethod.HasBody;
+            return method != null && method.IsPartial && !method.HasBody;
         }
 
         protected void WriteThisExtension(Expression target)
@@ -163,7 +156,7 @@ namespace Bridge.Translator
                     {
                         invocationResult = csharpInvocation.IsExtensionMethodInvocation ? csharpInvocation : null;
 
-                        if (this.IsEmptyPartialInvoking(csharpInvocation))
+                        if (this.IsEmptyPartialInvoking(csharpInvocation.Member as IMethod))
                         {
                             this.Emitter.SkipSemiColon = true;
                             this.Emitter.ReplaceAwaiterByVar = oldValue;
@@ -176,7 +169,7 @@ namespace Bridge.Translator
                     {
                         invocationResult = targetResolve as InvocationResolveResult;
 
-                        if (this.IsEmptyPartialInvoking(invocationResult))
+                        if (invocationResult != null && this.IsEmptyPartialInvoking(invocationResult.Member as IMethod))
                         {
                             this.Emitter.SkipSemiColon = true;
                             this.Emitter.ReplaceAwaiterByVar = oldValue;
@@ -299,9 +292,15 @@ namespace Bridge.Translator
             else
             {
                 var targetResolveResult = this.Emitter.Resolver.ResolveNode(invocationExpression.Target, this.Emitter);
-                var invocationResolveResult = targetResolveResult as InvocationResolveResult;
+                var invocationResolveResult = targetResolveResult as MemberResolveResult;
+                IMethod method = null;
 
-                if (this.IsEmptyPartialInvoking(invocationResolveResult))
+                if (invocationResolveResult != null)
+                {
+                    method = invocationResolveResult.Member as IMethod;
+                }
+
+                if (this.IsEmptyPartialInvoking(method))
                 {
                     this.Emitter.SkipSemiColon = true;
                     this.Emitter.ReplaceAwaiterByVar = oldValue;
@@ -325,7 +324,7 @@ namespace Bridge.Translator
                 {
                     var isIgnore = false;
 
-                    if(invocationResolveResult != null && invocationResolveResult.Member.DeclaringTypeDefinition != null && this.Emitter.Validator.IsIgnoreType(invocationResolveResult.Member.DeclaringTypeDefinition))
+                    if (method != null && method.DeclaringTypeDefinition != null && this.Emitter.Validator.IsIgnoreType(method.DeclaringTypeDefinition))
                     {
                         isIgnore = true;
                     }
