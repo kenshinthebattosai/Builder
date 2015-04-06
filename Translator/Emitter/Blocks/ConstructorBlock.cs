@@ -60,6 +60,7 @@ namespace Bridge.Translator
             if (ctor != null && ctor.Body.HasChildren)
             {
                 this.ResetLocals();
+                var prevNamesMap = this.BuildLocalsNamesMap();
                 this.Write("constructor");
                 this.WriteColon();
                 this.WriteFunction();
@@ -70,6 +71,7 @@ namespace Bridge.Translator
                 ctor.Body.AcceptChildren(this.Emitter);
 
                 this.EndBlock();
+                this.ClearLocalsNamesMap(prevNamesMap);
                 this.Emitter.Comma = true;
             }
 
