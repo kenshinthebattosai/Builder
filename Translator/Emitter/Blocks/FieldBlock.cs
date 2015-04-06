@@ -11,6 +11,7 @@ namespace Bridge.Translator
             this.Emitter = emitter;
             this.TypeInfo = typeInfo;
             this.StaticBlock = staticBlock;
+            this.Injectors = new List<string>();
         }
 
         public ITypeInfo TypeInfo 
@@ -25,17 +26,33 @@ namespace Bridge.Translator
             set;
         }
 
+        public List<string> Injectors
+        {
+            get;
+            private set;
+        }
+
+        public bool WasEmitted
+        {
+            get;
+            private set;
+        }
+
         public override void Emit()
         {
             this.EmitFields(this.StaticBlock ? this.TypeInfo.StaticConfig : this.TypeInfo.InstanceConfig);            
         }
 
         protected virtual void EmitFields(TypeConfigInfo info)
-        {
+        {            
             if (info.Fields.Count > 0)
             {
-                this.WriteObject("fields", info.Fields);
-                this.Emitter.Comma = true;
+                var hasProperties = this.WriteObject("fields", info.Fields, true);
+                if (hasProperties)
+                {
+                    this.Emitter.Comma = true;
+                    this.WasEmitted = true;
+                }
             }
 
             if (info.Events.Count > 0)
@@ -57,9 +74,11 @@ namespace Bridge.Translator
             }
         }
 
-        protected virtual void WriteObject(string objectName, List<TypeConfigItem> members)
+        protected virtual bool WriteObject(string objectName, List<TypeConfigItem> members, bool moveInitializer = false)
         {
-            if (objectName != null)
+            bool hasProperties = moveInitializer ? this.HasProperties(members) : true;
+
+            if (hasProperties && objectName != null)
             {
                 this.EnsureComma();
                 this.Write(objectName);
@@ -69,12 +88,34 @@ namespace Bridge.Translator
             }
 
             foreach (var member in members)
-            {
+            {                
+                var primitiveExpr = member.Initializer as PrimitiveExpression;
+                var isNull = member.Initializer.IsNull || member.Initializer is NullReferenceExpression;
+
+                if (moveInitializer && !isNull && (primitiveExpr == null || (primitiveExpr.Value is AstType))) 
+                {
+                    string value = null;
+
+                    if (primitiveExpr == null)
+                    {
+                        var oldWriter = this.SaveWriter();
+                        this.NewWriter();
+                        member.Initializer.AcceptVisitor(this.Emitter);
+                        value = this.Emitter.Output.ToString();
+                        this.RestoreWriter(oldWriter);
+                    }
+                    else
+                    {
+                        value = "new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()";
+                    }
+
+                    this.Injectors.Add(string.Format("this.{0} = {1};", member.GetName(this.Emitter), value));
+                    continue;
+                }
+
                 this.EnsureComma();
                 this.Write(member.GetName(this.Emitter));
-                this.WriteColon();
-
-                var primitiveExpr = member.Initializer as PrimitiveExpression;
+                this.WriteColon();                
 
                 if (primitiveExpr != null && primitiveExpr.Value is AstType)
                 {
@@ -88,8 +129,36 @@ namespace Bridge.Translator
                 this.Emitter.Comma = true;
             }
 
-            this.WriteNewLine();
-            this.EndBlock();
+            if (hasProperties && objectName != null)
+            {
+                this.WriteNewLine();
+                this.EndBlock();
+            }
+
+            return hasProperties;
+        }
+
+        protected virtual bool HasProperties(List<TypeConfigItem> members)
+        {
+            foreach (var member in members)
+            {
+                var primitiveExpr = member.Initializer as PrimitiveExpression;
+                var isNull = member.Initializer.IsNull || member.Initializer is NullReferenceExpression;
+
+                if (isNull)
+                {
+                    return true;
+                }
+
+                if (primitiveExpr == null || (primitiveExpr.Value is AstType))
+                {                    
+                    continue;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         protected virtual void WriteAlias(string objectName, List<TypeConfigItem> members)

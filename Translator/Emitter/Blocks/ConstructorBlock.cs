@@ -78,26 +78,30 @@ namespace Bridge.Translator
             {
                 this.EnsureComma();
 
-                /*if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+                if (this.TypeInfo.StaticMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
                 {
                     this.Write("$");
-                }*/
+                }
 
-                this.Write("$config");
+                this.Write("config");
 
                 this.WriteColon();
-                this.WriteFunction();
-                this.WriteOpenParentheses();
-                this.WriteCloseParentheses();
-                this.WriteSpace();
-                this.BeginBlock();
-                this.WriteReturn(true);
                 this.BeginBlock();
 
                 if (this.TypeInfo.StaticConfig.HasMembers)
                 {
-                    new FieldBlock(this.Emitter, this.TypeInfo, true).Emit();
-                    this.Emitter.Comma = true;
+                    var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, true);
+                    fieldBlock.Emit();
+
+                    if (fieldBlock.Injectors.Count > 0)
+                    {
+                        injectors = fieldBlock.Injectors.Concat(injectors);
+                    }
+
+                    if (fieldBlock.WasEmitted)
+                    {
+                        this.Emitter.Comma = true;
+                    }
                 }
 
                 if (injectors.Count() > 0)
@@ -121,9 +125,6 @@ namespace Bridge.Translator
                 }
                 this.WriteNewLine();
                 this.EndBlock();
-                this.WriteSemiColon();
-                this.WriteNewLine();
-                this.EndBlock();
             }
         }
 
@@ -136,29 +137,33 @@ namespace Bridge.Translator
                 return;
             }
 
-            /*if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
+            if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "config")))
             {
                 this.Write("$");
-            }*/
+            }
 
-            this.Write("$config");
+            this.Write("config");
 
-            this.WriteColon();
-            this.WriteFunction();
-            this.WriteOpenParentheses();
-            this.WriteCloseParentheses();
-            this.WriteSpace();
-            this.BeginBlock();
-            this.WriteReturn(true);
-            this.BeginBlock();
+            this.WriteColon();            
+            this.BeginBlock();            
 
             var changeCase = this.Emitter.ChangeCase;
             var baseType = this.Emitter.GetBaseTypeDefinition();
 
             if (this.TypeInfo.InstanceConfig.HasMembers)
             {
-                new FieldBlock(this.Emitter, this.TypeInfo, false).Emit();
-                this.Emitter.Comma = true;
+                var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, false);
+                fieldBlock.Emit();
+
+                if (fieldBlock.Injectors.Count > 0)
+                {
+                    injectors = fieldBlock.Injectors.Concat(injectors);
+                }
+
+                if (fieldBlock.WasEmitted)
+                {
+                    this.Emitter.Comma = true;
+                }
             }
 
             if (injectors.Count() > 0)
@@ -183,9 +188,6 @@ namespace Bridge.Translator
                 this.Emitter.Comma = true;
             }
 
-            this.WriteNewLine();
-            this.EndBlock();
-            this.WriteSemiColon();
             this.WriteNewLine();
             this.EndBlock();
 
