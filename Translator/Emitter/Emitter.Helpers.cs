@@ -399,6 +399,7 @@ namespace Bridge.Translator
         public Tuple<bool, string> IsGlobalTarget(IMember member)
         {
             var attr = this.GetAttribute(member.Attributes, Translator.Bridge_ASSEMBLY + ".GlobalTargetAttribute");
+
             return attr != null ? new Tuple<bool, string>(true, (string)attr.PositionalArguments.First().ConstantValue) : null;            
         }
 
