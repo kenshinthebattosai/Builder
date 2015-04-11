@@ -152,7 +152,7 @@ namespace Bridge.Translator
                             return false;
                         }
 
-                        block.Write(block.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
+                        block.Write(BridgeTypes.ToJsName(method.DeclaringType, block.Emitter));
                         block.WriteDot();
 
                         block.Write(OverloadsCollection.Create(block.Emitter, method).GetOverloadName());

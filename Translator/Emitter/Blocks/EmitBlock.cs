@@ -49,7 +49,7 @@ namespace Bridge.Translator
                 switch (this.Emitter.AssemblyInfo.OutputBy)
                 {
                     case OutputBy.ClassPath:
-                        fileName = typeInfo.FullName;
+                        fileName = typeInfo.Type.FullName;
                         break;
                     case OutputBy.Class:
                         fileName = this.GetIteractiveClassPath(typeInfo);
@@ -219,7 +219,7 @@ namespace Bridge.Translator
             // This should never happen but, just to be sure...
             if (curIterations >= maxIterations)
             {
-                throw new ArgumentOutOfRangeException("Iteration count for class '" + typeInfo.FullName + "' exceeded " +
+                throw new ArgumentOutOfRangeException("Iteration count for class '" + typeInfo.Type.FullName + "' exceeded " +
                     maxIterations + " depth iterations until root class!");
             }
 
@@ -241,10 +241,10 @@ namespace Bridge.Translator
                 this.InitEmitter();
 
                 ITypeInfo typeInfo;
-
-                if (this.Emitter.TypeInfoDefinitions.ContainsKey(type.GenericFullName))
+                
+                if (this.Emitter.TypeInfoDefinitions.ContainsKey(type.Key))
                 {
-                    typeInfo = this.Emitter.TypeInfoDefinitions[type.GenericFullName];
+                    typeInfo = this.Emitter.TypeInfoDefinitions[type.Key];
 
                     type.Module = typeInfo.Module;
                     type.FileName = typeInfo.FileName;

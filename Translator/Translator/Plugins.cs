@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,17 @@ namespace Bridge.Translator
 {
     public class Plugins : IPlugins
     {
-        public static IPlugins GetPlugins(ITranslator translator)
-        {            
-            var path = System.IO.Path.GetDirectoryName(translator.BridgeLocation) + @"\plugins\";
+        public static IPlugins GetPlugins(ITranslator translator, IAssemblyInfo config)
+        {
+            string path = null;
+            if (!string.IsNullOrWhiteSpace(config.PluginsFolder))
+            {
+                path = Path.Combine(Path.GetDirectoryName(translator.Location), config.PluginsFolder);
+            }
+            else
+            {
+                path = System.IO.Path.GetDirectoryName(translator.BridgeLocation) + @"\plugins\";
+            }
             
             if (!System.IO.Directory.Exists(path)) 
             {

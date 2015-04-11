@@ -62,7 +62,7 @@ namespace Bridge.Translator
             bool oldIsAssignment = this.Emitter.IsAssignment;
             bool oldUnary = this.Emitter.IsUnaryAccessor;
 
-            if (resolveResult == null && !(resolveResult is ErrorResolveResult))
+            if (resolveResult == null)
             {
                 this.Emitter.IsAssignment = false;
                 this.Emitter.IsUnaryAccessor = false;
@@ -70,7 +70,7 @@ namespace Bridge.Translator
                 this.Emitter.IsAssignment = oldIsAssignment;
                 this.Emitter.IsUnaryAccessor = oldUnary;
                 this.WriteDot();
-                string name = Helpers.GetScriptName(memberReferenceExpression, false);
+                string name = memberReferenceExpression.MemberName;
                 this.Write(name.ToLowerCamelCase());
 
                 return;
@@ -249,7 +249,7 @@ namespace Bridge.Translator
                 {
                     TypeResolveResult typeResolveResult = (TypeResolveResult)resolveResult;
 
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(typeResolveResult.Type)));
+                    this.Write(BridgeTypes.ToJsName(typeResolveResult.Type, this.Emitter));
                     
                     return;
                 }
@@ -283,7 +283,7 @@ namespace Bridge.Translator
 
                     if (isExtensionMethod)
                     {
-                        this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(resolvedMethod.DeclaringType)));
+                        this.Write(BridgeTypes.ToJsName(resolvedMethod.DeclaringType, this.Emitter));
                     }
                     else
                     {
@@ -396,7 +396,7 @@ namespace Bridge.Translator
 
                 if (member == null)
                 {
-                    this.Write(Helpers.GetScriptName(memberReferenceExpression, false));
+                    this.Write(memberReferenceExpression.MemberName.ToLowerCamelCase());
                 }
                 else if (!string.IsNullOrEmpty(inline))
                 {

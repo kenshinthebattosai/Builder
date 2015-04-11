@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.TypeSystem;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,12 @@ namespace Bridge.Contract
 {
     public interface ITypeInfo
     {
+        string Key
+        {
+            get;
+            set;
+        }
+
         TypeDeclaration TypeDeclaration
         {
             get;
@@ -40,16 +47,6 @@ namespace Bridge.Contract
         { 
             get; 
             set; 
-        }
-
-        string ParentName
-        {
-            get;
-        }
-
-        string ParentGenericName
-        {
-            get;
         }
 
         HashSet<string> Usings 
@@ -110,28 +107,12 @@ namespace Bridge.Contract
             get;
         }
 
-        string FullName
-        {
-            get;
-        }
-
-        string GenericFullName
-        {
-            get;
-        }
-
         int LastEnumValue
         {
             get;
         }
 
         bool IsEnum 
-        { 
-            get; 
-            set; 
-        }
-
-        string GenericName 
         { 
             get; 
             set; 
@@ -172,6 +153,12 @@ namespace Bridge.Contract
         }
 
         bool IsObjectLiteral
+        {
+            get;
+            set;
+        }
+
+        IType Type
         {
             get;
             set;

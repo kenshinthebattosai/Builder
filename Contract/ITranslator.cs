@@ -27,5 +27,6 @@ namespace Bridge.Contract
         System.Collections.Generic.List<ITypeInfo> Types { get; }
         IValidator Validator { get; }
         IPlugins Plugins { get; set; }
+        BridgeTypes BridgeTypes { get; set; }
     }
 }

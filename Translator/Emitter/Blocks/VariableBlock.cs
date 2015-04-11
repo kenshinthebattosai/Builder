@@ -104,7 +104,7 @@ namespace Bridge.Translator
                     }
                     else
                     {
-                        this.Write("new " + Helpers.TranslateTypeReference(this.VariableDeclarationStatement.Type, this.Emitter) + "()");
+                        this.Write("new " + BridgeTypes.ToJsName(this.VariableDeclarationStatement.Type, this.Emitter) + "()");
                     }
                     this.Emitter.ReplaceAwaiterByVar = oldValue;
 

@@ -27,7 +27,7 @@ namespace Bridge.Translator
             }
             else
             {
-                this.Write("Bridge.getDefaultValue(" + Helpers.TranslateTypeReference(DefaultValueExpression.Type, this.Emitter) + ")");
+                this.Write("Bridge.getDefaultValue(" + BridgeTypes.ToJsName(DefaultValueExpression.Type, this.Emitter) + ")");
             }
         }
     }

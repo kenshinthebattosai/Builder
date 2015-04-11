@@ -392,18 +392,6 @@ namespace Bridge.Translator
             return result;
         }
 
-        public virtual string GetMethodSignatureKey(MethodDefinition method) 
-        {
-            var list = new List<string>(method.Parameters.Count);
-
-            foreach (ParameterDefinition p in method.Parameters)
-            {
-                list.Add(p.ParameterType.FullName);
-            }
-            
-            return String.Join("$", list.ToArray());
-        }
-
         public virtual void CheckFileName(TypeDefinition type, ITranslator translator)
         {
             if (type.HasCustomAttributes)
@@ -482,7 +470,7 @@ namespace Bridge.Translator
 
         protected virtual ITypeInfo EnsureTypeInfo(TypeDefinition type, ITranslator translator)
         {
-            string key = Helpers.GetTypeMapKey(type);
+            string key = BridgeTypes.GetTypeDefinitionKey(type);
             ITypeInfo typeInfo = null;
 
             if (translator.TypeInfoDefinitions.ContainsKey(key))

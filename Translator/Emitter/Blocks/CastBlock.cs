@@ -202,7 +202,7 @@ namespace Bridge.Translator
 
             if (NullableType.IsNullable(resolveResult.Type))
             {
-                this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName((NullableType.GetUnderlyingType(resolveResult.Type)))));
+                this.Write(BridgeTypes.ToJsName(NullableType.GetUnderlyingType(resolveResult.Type), this.Emitter));
             }
             else
             {
@@ -214,7 +214,7 @@ namespace Bridge.Translator
         {
             if (NullableType.IsNullable(iType))
             {
-                this.Write(this.Emitter.ShortenTypeName(Helpers.ReplaceSpecialChars(NullableType.GetUnderlyingType(iType).FullName)));
+                this.Write(BridgeTypes.ToJsName(NullableType.GetUnderlyingType(iType), this.Emitter));
             }
             else if (iType.Kind == TypeKind.Array)
             {
@@ -222,7 +222,7 @@ namespace Bridge.Translator
             }
             else
             {
-                this.Write(this.Emitter.ShortenTypeName(Helpers.ReplaceSpecialChars(iType.FullName + (iType.TypeParameterCount > 0 ? ("$" + iType.TypeParameterCount) : ""))));
+                this.Write(BridgeTypes.ToJsName(iType, this.Emitter));
             }
         }
 

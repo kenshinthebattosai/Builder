@@ -124,5 +124,11 @@ namespace Bridge.Translator
             get;
             set;
         }
+
+        public string PluginsFolder 
+        { 
+            get; 
+            set; 
+        }
     }
 }

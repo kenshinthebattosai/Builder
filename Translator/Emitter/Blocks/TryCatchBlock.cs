@@ -70,7 +70,7 @@ namespace Bridge.Translator
                     varName = this.AddLocal(varName, clause.Type);
                 }
 
-                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, Helpers.TranslateTypeReference(clause.Type, this.Emitter), catchStep.Step));                
+                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, BridgeTypes.ToJsName(clause.Type, this.Emitter), catchStep.Step));                
 
                 this.Emitter.IgnoreBlock = clause.Body;
                 clause.Body.AcceptVisitor(this.Emitter);
@@ -131,7 +131,7 @@ namespace Bridge.Translator
             if(count > 0) 
             {
                 var firstClause = this.TryCatchStatement.CatchClauses.Count == 1 ? this.TryCatchStatement.CatchClauses.First() : null;
-                var exceptionType = (firstClause == null || firstClause.Type.IsNull) ? null : Helpers.TranslateTypeReference(firstClause.Type, this.Emitter);
+                var exceptionType = (firstClause == null || firstClause.Type.IsNull) ? null : BridgeTypes.ToJsName(firstClause.Type, this.Emitter);
                 var isBaseException = exceptionType == null || exceptionType == "Bridge.Exception";
 
                 if (count == 1 && isBaseException)
@@ -232,7 +232,7 @@ namespace Bridge.Translator
 
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
-                var exceptionType = clause.Type.IsNull ? null : Helpers.TranslateTypeReference(clause.Type, this.Emitter);
+                var exceptionType = clause.Type.IsNull ? null : BridgeTypes.ToJsName(clause.Type, this.Emitter);
                 var isBaseException = exceptionType == null || exceptionType == "Bridge.Exception";
 
                 if (!firstClause)

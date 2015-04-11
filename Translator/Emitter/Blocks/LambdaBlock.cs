@@ -127,6 +127,30 @@ namespace Bridge.Translator
 
             var savedPos = this.Emitter.Output.Length;
             var savedThisCount = this.Emitter.ThisRefCounter;
+            var wrap = false;
+            var invocation = context.GetParent<InvocationExpression>();
+
+            if (invocation != null)
+            {
+                var isMethod = false;
+                var target = context.GetParent(n => 
+                {
+                    if (n is LambdaExpression || n is AnonymousMethodExpression)
+                    {
+                        isMethod = true;
+                        return true;
+                    }
+                    return n.Parent != null && n.Parent is InvocationExpression && ((InvocationExpression)n.Parent).Target == n;
+                });
+                wrap = !isMethod && target != null;
+            }
+
+            int wrapSavedPos = -1;
+            if (wrap)
+            {
+                wrapSavedPos = this.Emitter.Output.Length;
+                this.WriteOpenParentheses();
+            }
 
             this.WriteFunction();
             this.EmitMethodParameters(parameters, context);
@@ -167,7 +191,16 @@ namespace Bridge.Translator
 
             if (this.Emitter.ThisRefCounter > savedThisCount)
             {
+                if (wrap)
+                {
+                    this.Emitter.Output.Remove(wrapSavedPos, 1);
+                }
+                
                 this.Emitter.Output.Insert(savedPos, Bridge.Translator.Emitter.ROOT + "." + Bridge.Translator.Emitter.DELEGATE_BIND + "(this, ");
+                this.WriteCloseParentheses();
+            }
+            else if (wrap)
+            {
                 this.WriteCloseParentheses();
             }
 

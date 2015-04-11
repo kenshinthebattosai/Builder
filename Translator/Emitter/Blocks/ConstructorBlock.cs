@@ -355,7 +355,7 @@ namespace Bridge.Translator
                     baseName = "$constructor";
                 }
 
-                this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(baseType)), ".prototype.");
+                this.Write(BridgeTypes.ToJsName(baseType, this.Emitter), ".prototype.");
                 this.Write(baseName);
                 this.Write(".call");
                 appendScope = true;

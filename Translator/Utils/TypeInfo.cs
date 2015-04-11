@@ -1,5 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
+using ICSharpCode.NRefactory.TypeSystem;
 using System;
 using System.Collections.Generic;
 
@@ -18,9 +19,14 @@ namespace Bridge.Translator
             this.Dependencies = new List<IPluginDependency>();
             this.Ctors = new List<ConstructorDeclaration>();
             this.Operators = new Dictionary<OperatorType, List<OperatorDeclaration>>();
-
             this.StaticConfig = new TypeConfigInfo();
             this.InstanceConfig = new TypeConfigInfo();
+        }
+
+        public string Key
+        {
+            get;
+            set;
         }
 
         public TypeConfigInfo StaticConfig
@@ -75,32 +81,6 @@ namespace Bridge.Translator
         { 
             get; 
             set; 
-        }
-
-        public string ParentName
-        {
-            get
-            {
-                if (this.ParentType == null)
-                {
-                    return this.Name;
-                }
-
-                return this.ParentType.ParentName + "." + this.Name;
-            }
-        }
-
-        public string ParentGenericName
-        {
-            get
-            {
-                if (this.ParentType == null)
-                {
-                    return this.GenericName;
-                }
-
-                return (this.ParentType.ParentGenericName ?? this.ParentType.ParentName) + "." + this.GenericName;
-            }
         }
 
         public HashSet<string> Usings 
@@ -174,30 +154,6 @@ namespace Bridge.Translator
             }
         }
 
-        public string FullName
-        {
-            get 
-            {
-                if (String.IsNullOrEmpty(this.Namespace))
-                {
-                    return this.ParentName;
-                }
-                return this.Namespace + "." + this.ParentName;
-            }
-        }
-
-        public string GenericFullName
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(this.Namespace))
-                {
-                    return this.ParentGenericName;
-                }
-                return this.Namespace + "." + this.ParentGenericName;
-            }
-        }
-
         private int enumValue = 0;
 
         public virtual int LastEnumValue
@@ -212,17 +168,6 @@ namespace Bridge.Translator
         { 
             get; 
             set; 
-        }
-
-        public string GenericName 
-        { 
-            get; set; 
-        }
-
-        public string FileName
-        {
-            get;
-            set;
         }
 
         public string Module
@@ -244,6 +189,19 @@ namespace Bridge.Translator
         }
 
         public bool IsObjectLiteral
+        {
+            get;
+            set;
+        }
+
+
+        public string FileName
+        {
+            get;
+            set;
+        }
+
+        public IType Type
         {
             get;
             set;

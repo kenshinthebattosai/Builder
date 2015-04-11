@@ -22,19 +22,18 @@ namespace Bridge.Translator
                 return 0;
             }
 
-            if (x.FullName == Emitter.ROOT)
+            if (x.Key == Emitter.ROOT)
             {
                 return -1;
             }
 
-            if (y.FullName == Emitter.ROOT)
+            if (y.Key == Emitter.ROOT)
             {
                 return 1;
             }
 
-            var xTypeDefinition = this.TypeDefinitions[Helpers.GetTypeMapKey(x)];
-            var yTypeDefinition = this.TypeDefinitions[Helpers.GetTypeMapKey(y)];
-            
+            var xTypeDefinition = this.TypeDefinitions[x.Key];
+            var yTypeDefinition = this.TypeDefinitions[y.Key];            
 
             if (Helpers.IsSubclassOf(xTypeDefinition, yTypeDefinition, this))
             {
@@ -65,71 +64,22 @@ namespace Bridge.Translator
             }
 
             return -xPriority.CompareTo(yPriority);
-            //return Comparer.Default.Compare(x.FullName, y.FullName);
         }
 
         public virtual TypeDefinition GetTypeDefinition()
         {
-            return this.TypeDefinitions[Helpers.GetTypeMapKey(this.TypeInfo)];
+            return this.TypeDefinitions[this.TypeInfo.Key];
         }
 
         public virtual TypeDefinition GetTypeDefinition(IType type)
         {
-            string name = Helpers.GetScriptFullName(type);
-            name = this.ResolveType(name, null);
-
-            if (this.TypeDefinitions.ContainsKey(name))
-            {
-                return this.TypeDefinitions[name];
-            }
-
-            return null;
+            return this.BridgeTypes.Get(type).TypeDefinition;
         }
 
-        public virtual TypeDefinition GetTypeDefinition(AstType reference, bool safe = false)
+        public virtual TypeDefinition GetTypeDefinition(AstType reference)
         {
-            string name = Helpers.GetScriptName(reference, true);
-            name = this.ResolveType(name, reference);
-
-            if (name.IsEmpty() || !this.TypeDefinitions.ContainsKey(name))
-            {
-                var resolveResult = this.Resolver.ResolveNode(reference, this) as TypeResolveResult;
-
-                if (resolveResult != null)
-                {
-                    var type = resolveResult.Type as DefaultTypeParameter;
-
-                    if (type != null && type.EffectiveBaseClass != null)
-                    {
-                        name = Helpers.GetScriptFullName(type.EffectiveBaseClass);
-                        name = this.ResolveType(name, reference);
-
-                        if (this.TypeDefinitions.ContainsKey(name))
-                        {
-                            return this.TypeDefinitions[name];
-                        }
-                    }
-                }
-
-                if (safe)
-                {
-                    return null;
-                }
-
-                throw new Exception("Type cannot be resolved: " + reference.ToString());
-            }
-
-            if (this.TypeDefinitions.ContainsKey(name))
-            {
-                return this.TypeDefinitions[name];
-            }
-
-            if (safe)
-            {
-                return null;
-            }
-
-            throw new Exception("Type cannot be resolved: " + reference.ToString());
+            var resolveResult = this.Resolver.ResolveNode(reference, this) as TypeResolveResult;
+            return this.BridgeTypes.Get(resolveResult.Type).TypeDefinition;
         }
 
         public virtual TypeDefinition GetBaseTypeDefinition()
@@ -138,15 +88,15 @@ namespace Bridge.Translator
         }
 
         public virtual TypeDefinition GetBaseTypeDefinition(TypeDefinition type)
-        {
-            var reference = this.TypeDefinitions[Helpers.GetTypeMapKey(type)].BaseType;
+        {            
+            var reference = type.BaseType;
 
             if (reference == null)
             {
                 return null;
             }
-
-            return this.TypeDefinitions[Helpers.GetTypeMapKey(reference)];
+            
+            return this.BridgeTypes.Get(reference).TypeDefinition;
         }
 
         public virtual TypeDefinition GetBaseMethodOwnerTypeDefinition(string methodName, int genericParamCount)
@@ -169,33 +119,6 @@ namespace Bridge.Translator
             }
         }
 
-        public string ShortenTypeName(string name)
-        {
-            var type = this.TypeDefinitions[name];
-            string module = null;
-
-            if (this.TypeInfo.FullName != name && this.TypeInfoDefinitions.ContainsKey(name))
-            {
-                var typeInfo = this.TypeInfoDefinitions[name];
-                module = typeInfo.Module;
-                if (typeInfo.Module != null && this.TypeInfo.Module != typeInfo.Module && !this.CurrentDependencies.Any(d => d.DependencyName == typeInfo.Module))
-                {
-                    this.CurrentDependencies.Add(new ModuleDependency { DependencyName = typeInfo.Module });
-                }
-            }
-
-            var customName = this.Validator.GetCustomTypeName(type);
-
-            name = !String.IsNullOrEmpty(customName) ? customName : name;
-
-            if (module.IsNotEmpty() && this.TypeInfo.GenericFullName != name && this.TypeInfo.Module != module)
-            {
-                name = module + "." + name;
-            }
-
-            return name;
-        }
-
         public virtual string GetTypeHierarchy()
         {
             StringBuilder sb = new StringBuilder();
@@ -205,7 +128,7 @@ namespace Bridge.Translator
             
             foreach (var t in this.TypeInfo.TypeDeclaration.BaseTypes)
             {
-                var name = Helpers.TranslateTypeReference(t, this);
+                var name = BridgeTypes.ToJsName(t, this);
 
                 list.Add(name);
             }
@@ -236,86 +159,7 @@ namespace Bridge.Translator
             sb.Append("]");
 
             return sb.ToString();
-        }
-
-        public virtual string ResolveNamespaceOrType(string id, bool allowNamespaces)
-        {
-            id = id.LeftOf('<').Replace("`", "$");
-
-            if (allowNamespaces && this.Namespaces.Contains(id))
-            {
-                return id;
-            }
-
-            if (this.TypeDefinitions.ContainsKey(id))
-            {
-                return id;
-            }
-
-            string guess;
-            string namespacePrefix = this.TypeInfo.Namespace;
-
-            if (!String.IsNullOrEmpty(namespacePrefix))
-            {
-                while (true)
-                {
-                    guess = namespacePrefix + "." + id;
-
-                    if (allowNamespaces && this.Namespaces.Contains(guess))
-                    {
-                        return guess;
-                    }
-
-                    if (this.TypeDefinitions.ContainsKey(guess))
-                    {
-                        return guess;
-                    }
-
-                    int index = namespacePrefix.LastIndexOf(".");
-
-                    if (index < 0)
-                    {
-                        break;
-                    }
-
-                    namespacePrefix = namespacePrefix.Substring(0, index);
-                }
-            }
-
-            foreach (string usingPrefix in this.TypeInfo.Usings)
-            {
-                guess = usingPrefix + "." + id;
-
-                if (this.TypeDefinitions.ContainsKey(guess))
-                {
-                    return guess;
-                }
-            }
-
-            return null;
-        }
-
-        public virtual string ResolveType(string id)
-        {
-            return this.ResolveNamespaceOrType(id, false);
-        }
-
-        public virtual string ResolveType(string id, AstNode type)
-        {
-            var name = this.ResolveNamespaceOrType(id, false);
-
-            if (name.IsEmpty())
-            {
-                var resolveResult = this.Resolver.ResolveNode(type, this) as TypeResolveResult;
-
-                if (resolveResult != null)
-                {
-                    name = resolveResult.Type.FullName;
-                }
-            }
-
-            return name;
-        }
+        }        
 
         public virtual int GetPriority(TypeDefinition type)
         {

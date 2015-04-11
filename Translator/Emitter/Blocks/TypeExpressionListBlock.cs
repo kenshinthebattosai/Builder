@@ -54,7 +54,7 @@ namespace Bridge.Translator
                 }
 
                 needComma = true;
-                this.Write(Helpers.TranslateTypeReference(expr.AstType, this.Emitter));
+                this.Write(BridgeTypes.ToJsName(expr.AstType, this.Emitter));
             }
         }
 
@@ -70,7 +70,7 @@ namespace Bridge.Translator
                 }
 
                 needComma = true;
-                this.Write(Helpers.TranslateTypeReference(type, this.Emitter));
+                this.Write(BridgeTypes.ToJsName(type, this.Emitter));
             }
         }
     }

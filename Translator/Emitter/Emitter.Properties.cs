@@ -353,5 +353,11 @@ namespace Bridge.Translator
             get;
             set;
         }
+
+        public BridgeTypes BridgeTypes
+        {
+            get;
+            set;
+        }
     }
 }

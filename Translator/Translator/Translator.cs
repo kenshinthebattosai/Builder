@@ -17,9 +17,10 @@ namespace Bridge.Translator
         }
 
         public Dictionary<string, string> Translate()
-        {
-            this.Plugins = Bridge.Translator.Plugins.GetPlugins(this);
+        {            
             var config = this.ReadConfig();
+            this.Plugins = Bridge.Translator.Plugins.GetPlugins(this, config);
+            this.Plugins.OnConfigRead(config);
 
             if (config != null && !string.IsNullOrWhiteSpace(config.BeforeBuild))
             {
@@ -40,10 +41,8 @@ namespace Bridge.Translator
             this.InspectTypes(resolver, config);
             
             resolver.CanFreeze = true;
-            var emitter = this.CreateEmitter();
-            emitter.TypeInfoDefinitions = this.TypeInfoDefinitions;
-            emitter.AssemblyInfo = this.AssemblyInfo;
-            emitter.Resolver = resolver;
+            var emitter = this.CreateEmitter(resolver);            
+            emitter.AssemblyInfo = this.AssemblyInfo;            
             emitter.ChangeCase = this.ChangeCase;
             emitter.References = references;
             emitter.SourceFiles = this.SourceFiles;
@@ -114,9 +113,9 @@ namespace Bridge.Translator
             }            
         }
 
-        protected virtual Emitter CreateEmitter()
+        protected virtual Emitter CreateEmitter(IMemberResolver resolver)
         {
-            return new Emitter(this.TypeDefinitions, this.Types, this.Validator);
+            return new Emitter(this.TypeDefinitions, this.BridgeTypes, this.Types, this.Validator, resolver, this.TypeInfoDefinitions);
         }
 
         protected virtual Validator CreateValidator()

@@ -25,7 +25,6 @@ namespace Bridge.Translator
             if (!File.Exists(path))
             {
                 var config = new AssemblyInfo();
-                this.Plugins.OnConfigRead(config);
                 return config;
             }
 
@@ -38,8 +37,7 @@ namespace Bridge.Translator
                 {
                     assemblyInfo = new AssemblyInfo();
                 }
-
-                this.Plugins.OnConfigRead(assemblyInfo);
+                
                 return assemblyInfo;
             }
             catch (Exception e)

@@ -40,7 +40,7 @@ namespace Bridge.Contract
         System.Collections.Generic.IEnumerable<string> GetScript(ICSharpCode.NRefactory.CSharp.EntityDeclaration method);
         int GetPriority(Mono.Cecil.TypeDefinition type);
         Mono.Cecil.TypeDefinition GetTypeDefinition();
-        Mono.Cecil.TypeDefinition GetTypeDefinition(ICSharpCode.NRefactory.CSharp.AstType reference, bool safe = false);
+        Mono.Cecil.TypeDefinition GetTypeDefinition(ICSharpCode.NRefactory.CSharp.AstType reference);
         Mono.Cecil.TypeDefinition GetTypeDefinition(IType type);
         string GetTypeHierarchy();
         ICSharpCode.NRefactory.CSharp.AstNode IgnoreBlock { get; set; }        
@@ -69,12 +69,8 @@ namespace Bridge.Contract
         System.Text.StringBuilder Output { get; set; }
         IEmitterOutputs Outputs { get; set; }
         System.Collections.Generic.IEnumerable<Mono.Cecil.AssemblyDefinition> References { get; set; }
-        bool ReplaceAwaiterByVar { get; set; }
-        string ResolveNamespaceOrType(string id, bool allowNamespaces);
+        bool ReplaceAwaiterByVar { get; set; }        
         IMemberResolver Resolver { get; set; }
-        string ResolveType(string id);
-        string ResolveType(string id, ICSharpCode.NRefactory.CSharp.AstNode type);
-        string ShortenTypeName(string name);
         bool SkipSemiColon { get; set; }
         System.Collections.Generic.IList<string> SourceFiles { get; set; }
         int ThisRefCounter { get; set; }
@@ -93,5 +89,6 @@ namespace Bridge.Contract
         string GetEventName(EventDeclaration evt);
         Dictionary<string, bool> TempVariables { get; set; }
         Tuple<bool, string> IsGlobalTarget(IMember member);
+        BridgeTypes BridgeTypes { get; set; }
     }
 }

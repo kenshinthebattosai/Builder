@@ -26,22 +26,7 @@ namespace Bridge.Translator
         protected virtual void EmitTypeReference()
         {
             AstType astType = this.Type;
-            this.Write(Helpers.TranslateTypeReference(astType, this.Emitter));
-        }        
-
-        public static string GetTypeName(IType type, IEmitter emitter)
-        {
-            if (type.Kind == TypeKind.Array)
-            {
-                return "Array";
-            }
-
-            if (type.Kind == TypeKind.Dynamic)
-            {
-                return "Object";
-            }
-
-            return emitter.ShortenTypeName(Helpers.GetScriptFullName(type));
+            this.Write(BridgeTypes.ToJsName(astType, this.Emitter));
         }
     }
 }

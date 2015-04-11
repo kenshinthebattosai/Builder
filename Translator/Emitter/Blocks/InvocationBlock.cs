@@ -199,7 +199,7 @@ namespace Bridge.Translator
                             }
                             else
                             {
-                                string name = this.Emitter.ShortenTypeName(Helpers.ReplaceSpecialChars(resolvedMethod.DeclaringType.FullName)) + "." + this.Emitter.GetEntityName(resolvedMethod);
+                                string name = BridgeTypes.ToJsName(resolvedMethod.DeclaringType, this.Emitter) + "." + this.Emitter.GetEntityName(resolvedMethod);
                                 var isIgnoreClass = resolvedMethod.DeclaringTypeDefinition != null && this.Emitter.Validator.IsIgnoreType(resolvedMethod.DeclaringTypeDefinition);
 
                                 this.Write(name);
@@ -245,8 +245,7 @@ namespace Bridge.Translator
                 {
                     throw (Exception)this.Emitter.CreateException(targetMember.Target, "Cannot call base method, because parent class code is ignored");
                 }
-
-                string baseMethod = Helpers.GetScriptName(targetMember, false);
+                
                 bool needComma = false;
 
                 var resolveResult = this.Emitter.Resolver.ResolveNode(targetMember, this.Emitter);
@@ -254,11 +253,12 @@ namespace Bridge.Translator
                 if (resolveResult != null && resolveResult is InvocationResolveResult)
                 {
                     InvocationResolveResult invocationResult = (InvocationResolveResult)resolveResult;
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(baseType)), ".prototype.", this.Emitter.GetEntityName(invocationResult.Member));
+                    this.Write(BridgeTypes.ToJsName(baseType, this.Emitter), ".prototype.", this.Emitter.GetEntityName(invocationResult.Member));
                 }
                 else
                 {
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(baseType)), ".prototype.", this.Emitter.ChangeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(baseMethod) : baseMethod);
+                    string baseMethod = targetMember.MemberName;
+                    this.Write(BridgeTypes.ToJsName(baseType, this.Emitter), ".prototype.", this.Emitter.ChangeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(baseMethod) : baseMethod);
                 }
 
                 if (!isIgnore && argsInfo.TypeArguments != null && argsInfo.TypeArguments.Length > 0)

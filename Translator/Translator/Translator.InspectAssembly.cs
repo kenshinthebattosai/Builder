@@ -44,7 +44,7 @@ namespace Bridge.Translator
         }
 
         protected virtual void AddNestedTypes(IEnumerable<TypeDefinition> types)
-        {
+        {            
             foreach (TypeDefinition type in types)
             {
                 if (type.FullName.Contains("<"))
@@ -53,11 +53,13 @@ namespace Bridge.Translator
                 }
 
                 this.Validator.CheckType(type, this);
-                this.TypeDefinitions.Add(Helpers.GetTypeMapKey(type), type);
+                this.TypeDefinitions.Add(BridgeTypes.GetTypeDefinitionKey(type), type);
+                string key = BridgeTypes.GetTypeDefinitionKey(type);
+                this.BridgeTypes.Add(key, new BridgeType(key) { TypeDefinition = type });
 
                 if (type.HasNestedTypes)
                 {
-                    InheritAttributes(type);
+                    Translator.InheritAttributes(type);
                     this.AddNestedTypes(type.NestedTypes);
                 }
             }
@@ -94,6 +96,7 @@ namespace Bridge.Translator
             var references = new List<AssemblyDefinition>();            
             var assembly = this.LoadAssembly(this.AssemblyLocation, references);
             this.TypeDefinitions = new Dictionary<string, TypeDefinition>();
+            this.BridgeTypes = new BridgeTypes();
             this.AssemblyDefinition = assembly;
             
             if (assembly.Name.Name != Translator.Bridge_ASSEMBLY)

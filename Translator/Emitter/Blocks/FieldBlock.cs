@@ -125,7 +125,7 @@ namespace Bridge.Translator
                     }
                     else
                     {
-                        value = "new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()";
+                        value = "new " + BridgeTypes.ToJsName((AstType)primitiveExpr.Value, this.Emitter) + "()";
                     }
 
                     this.Injectors.Add(string.Format(format, member.GetName(this.Emitter), value));
@@ -138,7 +138,7 @@ namespace Bridge.Translator
 
                 if (primitiveExpr != null && primitiveExpr.Value is AstType)
                 {
-                    this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
+                    this.Write("new " + BridgeTypes.ToJsName((AstType)primitiveExpr.Value, this.Emitter) + "()");
                 }
                 else
                 {

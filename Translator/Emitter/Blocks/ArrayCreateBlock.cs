@@ -48,7 +48,7 @@ namespace Bridge.Translator
                 
                 if (defaultInitializer == null)
                 {
-                    this.Write("Bridge.getDefaultValue(" + Helpers.TranslateTypeReference(arrayCreateExpression.Type, this.Emitter) + ")");
+                    this.Write("Bridge.getDefaultValue(" + BridgeTypes.ToJsName(arrayCreateExpression.Type, this.Emitter) + ")");
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace Bridge.Translator
 
                     if (primitiveExpr != null && primitiveExpr.Value is AstType)
                     {
-                        this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
+                        this.Write("new " + BridgeTypes.ToJsName((AstType)primitiveExpr.Value, this.Emitter) + "()");
                     }
                     else
                     {

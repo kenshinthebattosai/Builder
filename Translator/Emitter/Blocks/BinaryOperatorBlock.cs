@@ -46,8 +46,8 @@ namespace Bridge.Translator
                     {
                         this.Write(Bridge.Translator.Emitter.ROOT + ".Nullable.lift(");
                     }
-                    
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(method.DeclaringType)));
+
+                    this.Write(BridgeTypes.ToJsName(method.DeclaringType, this.Emitter));
                     this.WriteDot();
 
                     this.Write(OverloadsCollection.Create(this.Emitter, method).GetOverloadName());

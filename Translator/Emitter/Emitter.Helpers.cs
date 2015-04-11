@@ -124,106 +124,15 @@ namespace Bridge.Translator
             return this.GetAttribute(method.Attributes, "Delegate") != null;
         }
 
-        protected virtual Tuple<bool, bool, string> AltGetInlineCode(InvocationExpression node)
-        {
-            var parts = new List<string>();
-            Expression current = node.Target;
-            var genericCount = -1;
-
-            while (true)
-            {
-                MemberReferenceExpression member = current as MemberReferenceExpression;
-
-                if (member != null)
-                {
-                    parts.Insert(0, member.MemberName);
-                    current = member.Target;
-
-                    if (genericCount < 0)
-                    {
-                        genericCount = member.TypeArguments.Count;
-                    }
-
-                    continue;
-                }
-
-                IdentifierExpression id = current as IdentifierExpression;
-
-                if (id != null)
-                {
-                    parts.Insert(0, id.Identifier);
-
-                    if (genericCount < 0)
-                    {
-                        genericCount = id.TypeArguments.Count;
-                    }
-
-                    break;
-                }
-
-                TypeReferenceExpression typeRef = current as TypeReferenceExpression;
-
-                if (typeRef != null)
-                {
-                    parts.Insert(0, Helpers.GetScriptName(typeRef.Type, false));
-                    break;
-                }
-
-                break;
-            }
-
-            if (parts.Count < 1)
-            {
-                return null;
-            }
-
-            if (genericCount < 0)
-            {
-                genericCount = 0;
-            }
-
-            string typeName = parts.Count < 2
-                ? this.TypeInfo.GenericFullName
-                : this.ResolveType(String.Join(".", parts.ToArray(), 0, parts.Count - 1));
-
-            if (String.IsNullOrEmpty(typeName))
-            {
-                return null;
-            }
-
-            string methodName = parts[parts.Count - 1];
-
-            TypeDefinition type = this.TypeDefinitions[typeName];
-            var methods = type.Methods.Where(m => m.Name == methodName);
-
-            foreach (var method in methods)
-            {
-                if (method.Parameters.Count == node.Arguments.Count
-                    && method.GenericParameters.Count == genericCount)
-                {
-                    bool isInlineMethod = this.Validator.IsInlineMethod(method);
-                    string inlineCode = isInlineMethod ? null : this.Validator.GetInlineCode(method);
-
-                    return new Tuple<bool, bool, string>(method.IsStatic, isInlineMethod, inlineCode);
-                }
-            }
-
-            return null;
-        }
-
         public virtual Tuple<bool, bool, string> GetInlineCode(InvocationExpression node)
         {
             var resolveResult = this.Resolver.ResolveNode(node, this);
-            var invocationResolveResult = resolveResult as InvocationResolveResult;
+            var memberResolveResult = resolveResult as MemberResolveResult;
 
-            if (invocationResolveResult == null)
-            {
-                return this.AltGetInlineCode(node);
-            }
-
-            bool isInlineMethod = this.IsInlineMethod(invocationResolveResult.Member);
-            var inlineCode = isInlineMethod ? null : this.GetInline(invocationResolveResult.Member);
-            var isStatic = invocationResolveResult.Member.IsStatic;
+            var member = memberResolveResult.Member;
+            bool isInlineMethod = this.IsInlineMethod(member);
+            var inlineCode = isInlineMethod ? null : this.GetInline(member);
+            var isStatic = member.IsStatic;
 
             return new Tuple<bool, bool, string>(isStatic, isInlineMethod, inlineCode);
         }

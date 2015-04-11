@@ -58,9 +58,8 @@ namespace Bridge.Translator
             }
 
             var rr = this.Resolver.ResolveNode(typeDeclaration, null);
-            var fullName = Helpers.ReplaceSpecialChars(rr.Type.ReflectionName);
-            //var fullName = this.Namespace + "." + Helpers.GetScriptName(typeDeclaration, true);
-            var partialType = this.Types.FirstOrDefault(t => t.GenericFullName == fullName);
+            var fullName = rr.Type.ReflectionName;            
+            var partialType = this.Types.FirstOrDefault(t => t.Key == fullName);
             var add = true;
 
             if (partialType == null)
@@ -70,22 +69,23 @@ namespace Bridge.Translator
                 if (parentTypeDeclaration != null)
                 {
                     var rr1 = this.Resolver.ResolveNode(parentTypeDeclaration, null);
-                    var parentName = Helpers.ReplaceSpecialChars(rr1.Type.ReflectionName);
-                    parentTypeInfo = this.Types.FirstOrDefault(t => t.GenericFullName == parentName);
+                    var parentName = rr1.Type.ReflectionName;
+                    parentTypeInfo = this.Types.FirstOrDefault(t => t.Key == parentName);
                 }                
 
                 this.CurrentType = new TypeInfo()
                 {
+                    Key = rr.Type.ReflectionName,
                     TypeDeclaration = typeDeclaration,
                     ParentType = parentTypeInfo,
-                    Name = Helpers.GetScriptName(typeDeclaration, false),
-                    GenericName = Helpers.GetScriptName(typeDeclaration, true),
+                    Name = typeDeclaration.Name,
                     ClassType = typeDeclaration.ClassType,
                     Namespace = this.Namespace,
                     Usings = new HashSet<string>(Usings),
                     IsEnum = typeDeclaration.ClassType == ClassType.Enum,
                     IsStatic = typeDeclaration.ClassType == ClassType.Enum || typeDeclaration.HasModifier(Modifiers.Static),
-                    IsObjectLiteral = this.IsObjectLiteral(typeDeclaration)
+                    IsObjectLiteral = this.IsObjectLiteral(typeDeclaration),
+                    Type = rr.Type
                 };
 
                 if (parentTypeInfo != null && Emitter.reservedStaticNames.Any(n => String.Equals(this.CurrentType.Name, n, StringComparison.InvariantCultureIgnoreCase)))
@@ -244,7 +244,7 @@ namespace Bridge.Translator
                 ? CurrentType.StaticMethods
                 : CurrentType.InstanceMethods;
 
-            var key = Helpers.GetScriptName(methodDeclaration, false);
+            var key = methodDeclaration.Name;
 
             if (dict.ContainsKey(key))
             {                

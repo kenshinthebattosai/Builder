@@ -119,7 +119,6 @@ namespace Bridge.Translator
             }
 
             var id = identifierExpression.Identifier;
-            //this.Emitter.Validator.CheckIdentifier(id, identifierExpression);
 
             var isResolved = resolveResult != null && !(resolveResult is ErrorResolveResult);
             var memberResult = resolveResult as MemberResolveResult;
@@ -197,7 +196,7 @@ namespace Bridge.Translator
 
                 if (isStatic)
                 {
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(member.DeclaringType)));
+                    this.Write(BridgeTypes.ToJsName(member.DeclaringType, this.Emitter));
                 }
                 else
                 {
@@ -287,17 +286,9 @@ namespace Bridge.Translator
                 return;
             }
 
-            string resolved = this.Emitter.ResolveNamespaceOrType(id, true);
-
-            if (!String.IsNullOrEmpty(resolved))
+            if (resolveResult is TypeResolveResult)
             {
-                if (this.Emitter.TypeDefinitions.ContainsKey(resolved))
-                {
-                    resolved = this.Emitter.ShortenTypeName(resolved);
-                }
-
-                this.Write(resolved);
-
+                this.Write(BridgeTypes.ToJsName(resolveResult.Type, this.Emitter));
                 return;
             }
 
@@ -313,7 +304,7 @@ namespace Bridge.Translator
 
                 if (memberResult.Member.IsStatic)
                 {
-                    this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(memberResult.Member.DeclaringType)));
+                    this.Write(BridgeTypes.ToJsName(memberResult.Member.DeclaringType, this.Emitter));
                 }
                 else
                 {
@@ -470,7 +461,7 @@ namespace Bridge.Translator
 
                     if (memberResult.Member.IsStatic)
                     {
-                        trg = this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(memberResult.Member.DeclaringType));
+                        trg = BridgeTypes.ToJsName(memberResult.Member.DeclaringType, this.Emitter);
                     }
                     else
                     {
@@ -518,7 +509,7 @@ namespace Bridge.Translator
                     {
                         var typeResolveResult = (TypeResolveResult)resolveResult;
 
-                        this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(typeResolveResult.Type)));
+                        this.Write(BridgeTypes.ToJsName(typeResolveResult.Type, this.Emitter));
 
                         if (typeResolveResult.Type.TypeParameterCount > 0)
                         {
@@ -555,7 +546,7 @@ namespace Bridge.Translator
         {
             if (memberResult.Member.IsStatic)
             {
-                this.Write(this.Emitter.ShortenTypeName(Helpers.GetScriptFullName(memberResult.Member.DeclaringType)));
+                this.Write(BridgeTypes.ToJsName(memberResult.Member.DeclaringType, this.Emitter));
             }
             else
             {

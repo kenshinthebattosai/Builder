@@ -90,12 +90,12 @@ namespace Bridge.Translator
 
         protected virtual void EmitStructMethods()
         {
-            var typeDef = this.Emitter.TypeDefinitions[this.TypeInfo.GenericFullName];
+            var typeDef = this.Emitter.GetTypeDefinition();
             string structName = this.Emitter.Validator.GetCustomTypeName(typeDef);
 
             if (structName.IsEmpty())
             {
-                structName = this.TypeInfo.GenericFullName;
+                structName = BridgeTypes.ToJsName(this.TypeInfo.Type, this.Emitter);
             }
 
             if (this.TypeInfo.InstanceConfig.Fields.Count == 0)

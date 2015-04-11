@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BridgeType.cs" />
     <Compile Include="Helpers.Cecil.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IAbstractEmitterBlock.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="ITranslator.cs" />
     <Compile Include="IEmitter.cs" />
     <Compile Include="IPlugin.cs" />
+    <Compile Include="ModuleDependency.cs" />
     <Compile Include="TypeConfigInfo.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="IVisitorException.cs" />

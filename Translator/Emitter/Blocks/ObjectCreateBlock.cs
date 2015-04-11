@@ -241,46 +241,50 @@ namespace Bridge.Translator
                 }
             }
 
-            if (this.Emitter.Validator.IsObjectLiteral(type))
+            if (this.Emitter.Validator.IsObjectLiteral(type) && !this.Emitter.Validator.IsIgnoreType(type))
             {
-                var typeName = Helpers.ReplaceSpecialChars(type.FullName);
-                var tinfo = this.Emitter.Types.FirstOrDefault(t => t.GenericFullName == typeName);
-                var members = tinfo.InstanceConfig.Fields.Concat(tinfo.InstanceConfig.Properties);
+                var key = BridgeTypes.GetTypeDefinitionKey(type);
+                var tinfo = this.Emitter.Types.FirstOrDefault(t => t.Key == key);
 
-                if (members.Any())
+                if (tinfo != null)
                 {
-                    foreach (var member in members)
+                    var members = tinfo.InstanceConfig.Fields.Concat(tinfo.InstanceConfig.Properties);
+
+                    if (members.Any())
                     {
-                        var name = member.GetName(this.Emitter);
-
-                        if (changeCase)
+                        foreach (var member in members)
                         {
-                            name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
-                        }
+                            var name = member.GetName(this.Emitter);
 
-                        if (names.Contains(name))
-                        {
-                            continue;
-                        }
+                            if (changeCase)
+                            {
+                                name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
+                            }
 
-                        if (needComma)
-                        {
-                            this.WriteComma();
-                        }
+                            if (names.Contains(name))
+                            {
+                                continue;
+                            }
 
-                        needComma = true;                       
-                        
-                        this.Write(name, ": ");
+                            if (needComma)
+                            {
+                                this.WriteComma();
+                            }
 
-                        var primitiveExpr = member.Initializer as PrimitiveExpression;
+                            needComma = true;
 
-                        if (primitiveExpr != null && primitiveExpr.Value is AstType)
-                        {
-                            this.Write("new " + Helpers.TranslateTypeReference((AstType)primitiveExpr.Value, this.Emitter) + "()");
-                        }
-                        else
-                        {
-                            member.Initializer.AcceptVisitor(this.Emitter);
+                            this.Write(name, ": ");
+
+                            var primitiveExpr = member.Initializer as PrimitiveExpression;
+
+                            if (primitiveExpr != null && primitiveExpr.Value is AstType)
+                            {
+                                this.Write("new " + BridgeTypes.ToJsName((AstType)primitiveExpr.Value, this.Emitter) + "()");
+                            }
+                            else
+                            {
+                                member.Initializer.AcceptVisitor(this.Emitter);
+                            }
                         }
                     }
                 }

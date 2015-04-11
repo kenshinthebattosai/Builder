@@ -23,8 +23,7 @@ namespace Bridge.Contract
         string GetCustomTypeName(Mono.Cecil.TypeDefinition type);
         string GetCustomTypeName(ICSharpCode.NRefactory.TypeSystem.IType type);
         string GetInlineCode(Mono.Cecil.MethodDefinition method);
-        string GetInlineCode(Mono.Cecil.PropertyDefinition property);
-        string GetMethodSignatureKey(Mono.Cecil.MethodDefinition method);
+        string GetInlineCode(Mono.Cecil.PropertyDefinition property);        
         System.Collections.Generic.HashSet<string> GetParentTypes(System.Collections.Generic.IDictionary<string, Mono.Cecil.TypeDefinition> allTypes);
         bool HasAttribute(System.Collections.Generic.IEnumerable<ICSharpCode.NRefactory.TypeSystem.IAttribute> attributes, string name);
         bool HasAttribute(System.Collections.Generic.IEnumerable<Mono.Cecil.CustomAttribute> attributes, string name);
