@@ -125,7 +125,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public string PluginsFolder 
+        public string PluginsPath 
         { 
             get; 
             set; 

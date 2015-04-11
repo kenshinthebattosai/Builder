@@ -72,6 +72,6 @@ namespace Bridge.Contract
         string BeforeBuild { get; set; }
         string AfterBuild { get; set; }
         bool AutoPropertyToField { get; set; }
-        string PluginsFolder { get; set; }
+        string PluginsPath { get; set; }
     }
 }

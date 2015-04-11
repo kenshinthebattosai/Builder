@@ -15,13 +15,13 @@ namespace Bridge.Translator
         public static IPlugins GetPlugins(ITranslator translator, IAssemblyInfo config)
         {
             string path = null;
-            if (!string.IsNullOrWhiteSpace(config.PluginsFolder))
+            if (!string.IsNullOrWhiteSpace(config.PluginsPath))
             {
-                path = Path.Combine(Path.GetDirectoryName(translator.Location), config.PluginsFolder);
+                path = Path.Combine(Path.GetDirectoryName(translator.Location), config.PluginsPath);
             }
             else
             {
-                path = System.IO.Path.GetDirectoryName(translator.BridgeLocation) + @"\plugins\";
+                path = Path.Combine(Path.GetDirectoryName(translator.Location), "Bridge\\plugins");
             }
             
             if (!System.IO.Directory.Exists(path)) 
