@@ -141,6 +141,12 @@ namespace Bridge.Contract
             private set;
         }
 
+        public string AltJsName
+        {
+            get;
+            private set;
+        }
+
         public string ParametersCount
         {
             get;
@@ -217,6 +223,7 @@ namespace Bridge.Contract
             this.Emitter = emitter;
             this.Name = eventDeclaration.Name;
             this.JsName = Helpers.GetEventRef(eventDeclaration, emitter, remove, true);
+            this.AltJsName = Helpers.GetEventRef(eventDeclaration, emitter, !remove, true);
             this.Inherit = !eventDeclaration.HasModifier(Modifiers.Static);
             this.CancelChangeCase = true;
             this.IsSetter = remove;
@@ -225,7 +232,7 @@ namespace Bridge.Contract
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
             this.InitMembers();
-            this.Emitter.OverloadsCache[eventDeclaration.GetHashCode().ToString()] = this;
+            this.Emitter.OverloadsCache[eventDeclaration.GetHashCode().ToString() + remove.GetHashCode().ToString()] = this;
         }
 
         private OverloadsCollection(IEmitter emitter, MethodDeclaration methodDeclaration)
@@ -262,6 +269,7 @@ namespace Bridge.Contract
             this.Emitter = emitter;
             this.Name = propDeclaration.Name;
             this.JsName = Helpers.GetPropertyRef(propDeclaration, emitter, isSetter, true, true);
+            this.AltJsName = Helpers.GetPropertyRef(propDeclaration, emitter, !isSetter, true, true);
             this.Inherit = !propDeclaration.HasModifier(Modifiers.Static);
             this.Static = propDeclaration.HasModifier(Modifiers.Static);
             this.CancelChangeCase = !Helpers.IsFieldProperty(propDeclaration, emitter);
@@ -270,7 +278,7 @@ namespace Bridge.Contract
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
             this.InitMembers();            
-            this.Emitter.OverloadsCache[propDeclaration.GetHashCode().ToString()] = this;
+            this.Emitter.OverloadsCache[propDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString()] = this;
         }
 
         private OverloadsCollection(IEmitter emitter, IndexerDeclaration indexerDeclaration, bool isSetter)
@@ -278,6 +286,7 @@ namespace Bridge.Contract
             this.Emitter = emitter;
             this.Name = indexerDeclaration.Name;
             this.JsName = Helpers.GetPropertyRef(indexerDeclaration, emitter, isSetter, true, true);
+            this.AltJsName = Helpers.GetPropertyRef(indexerDeclaration, emitter, !isSetter, true, true);
             this.Inherit = true;
             this.Static = false;
             this.CancelChangeCase = true;
@@ -286,7 +295,7 @@ namespace Bridge.Contract
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
             this.InitMembers();
-            this.Emitter.OverloadsCache[indexerDeclaration.GetHashCode().ToString()] = this;
+            this.Emitter.OverloadsCache[indexerDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString()] = this;
         }       
 
         private OverloadsCollection(IEmitter emitter, OperatorDeclaration operatorDeclaration)
@@ -326,11 +335,13 @@ namespace Bridge.Contract
             {
                 this.CancelChangeCase = !Helpers.IsFieldProperty(member, emitter);
                 this.JsName = Helpers.GetPropertyRef(member, emitter, isSetter, true, true);
+                this.AltJsName = Helpers.GetPropertyRef(member, emitter, !isSetter, true, true);
             }
             else if (member is IEvent)
             {
                 this.CancelChangeCase = true;
                 this.JsName = Helpers.GetEventRef(member, emitter, isSetter, true, true);
+                this.AltJsName = Helpers.GetEventRef(member, emitter, !isSetter, true, true);
             }
             else
             {                
@@ -342,7 +353,8 @@ namespace Bridge.Contract
             this.Type = this.Member.DeclaringType;
             this.IsSetter = isSetter;
             this.InitMembers();
-            this.Emitter.OverloadsCache[member.ToString()] = this;
+            string key = (member.MemberDefinition != null ? member.MemberDefinition.GetHashCode().ToString() : member.GetHashCode().ToString()) + isSetter.GetHashCode().ToString();
+            this.Emitter.OverloadsCache[key] = this;
         }
 
 
@@ -544,7 +556,14 @@ namespace Bridge.Contract
             {
                 var methods = typeDef.Methods.Where(m =>
                 {
-                    if (this.Emitter.GetEntityName(m, false, true) == this.JsName && m.IsStatic == this.Static &&
+                    var inline = this.Emitter.GetInline(m);
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
+                    var name = this.Emitter.GetEntityName(m, false, true);
+                    if ((name == this.JsName || name == this.AltJsName) && m.IsStatic == this.Static &&
                         ((m.IsConstructor && this.JsName == "$constructor") || m.IsConstructor == this.Constructor))
                     {
                         if (m.IsConstructor != this.Constructor)
@@ -596,14 +615,28 @@ namespace Bridge.Contract
             {
                 var properties = typeDef.Properties.Where(p =>
                 {
+                    var inline = p.Getter != null ? this.Emitter.GetInline(p.Getter) : null;
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
+                    inline = p.Setter != null ? this.Emitter.GetInline(p.Setter) : null;
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
                     bool eq = false;
                     if (p.IsStatic == this.Static)
                     {
-                        if (p.Getter != null && (Helpers.GetPropertyRef(p, this.Emitter, false, true, true) == this.JsName))
+                        var getterName = p.Getter != null ? Helpers.GetPropertyRef(p, this.Emitter, false, true, true) : null;
+                        var setterName = p.Setter != null ? Helpers.GetPropertyRef(p, this.Emitter, true, true, true) : null;
+                        if (getterName != null && (getterName == this.JsName || getterName == this.AltJsName))
                         {
                             eq = true;
                         }
-                        else if (p.Setter != null && (Helpers.GetPropertyRef(p, this.Emitter, true, true, true) == this.JsName))
+                        else if (setterName != null && (setterName == this.JsName || setterName == this.AltJsName))
                         {
                             eq = true;
                         }
@@ -655,7 +688,14 @@ namespace Bridge.Contract
             {
                 var fields = typeDef.Fields.Where(f =>
                 {
-                    if (this.Emitter.GetEntityName(f) == this.JsName && f.IsStatic == this.Static)
+                    var inline = this.Emitter.GetInline(f);
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
+                    var name = this.Emitter.GetEntityName(f);
+                    if ((name == this.JsName || name == this.AltJsName) && f.IsStatic == this.Static)
                     {
                         return true;
                     }
@@ -696,14 +736,28 @@ namespace Bridge.Contract
             {
                 var events = typeDef.Events.Where(e =>
                 {
+                    var inline = e.AddAccessor != null ? this.Emitter.GetInline(e.AddAccessor) : null;
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
+                    inline = e.RemoveAccessor != null ? this.Emitter.GetInline(e.RemoveAccessor) : null;
+                    if (!string.IsNullOrWhiteSpace(inline))
+                    {
+                        return false;
+                    }
+
                     bool eq = false;
                     if (e.IsStatic == this.Static)
                     {
-                        if (e.AddAccessor != null && (Helpers.GetEventRef(e, this.Emitter, false, true, true) == this.JsName))
+                        var addName = e.AddAccessor != null ? Helpers.GetEventRef(e, this.Emitter, false, true, true) : null;
+                        var removeName = e.RemoveAccessor != null ? Helpers.GetEventRef(e, this.Emitter, true, true, true) : null;
+                        if (addName != null && (addName == this.JsName || addName == this.AltJsName))
                         {
                             eq = true;
                         }
-                        else if (e.RemoveAccessor != null && (Helpers.GetEventRef(e, this.Emitter, true, true, true) == this.JsName))
+                        else if (removeName != null && (removeName == this.JsName || removeName == this.AltJsName))
                         {
                             eq = true;
                         }
