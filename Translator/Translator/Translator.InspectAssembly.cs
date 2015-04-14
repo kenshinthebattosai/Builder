@@ -72,12 +72,20 @@ namespace Bridge.Translator
         /// <param name="type"></param>
         protected static void InheritAttributes(TypeDefinition type)
         {
-            var attrList = new List<string> { "FileNameAttribute", "ModuleAttribute", "NamespaceAttribute" };
+            // List of attribute names that are meant to be inherited by sub-classes.
+            var attrList = new List<string>
+            {
+                "FileNameAttribute",
+                "ModuleAttribute",
+                "NamespaceAttribute"
+            };
+
             foreach (var attribute in attrList)
             {
                 if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
                 {
                     var FAt = type.CustomAttributes.First(ca => ca.AttributeType.Name == attribute);
+
                     foreach (var nestedType in type.NestedTypes)
                     {
                         if (!nestedType.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
