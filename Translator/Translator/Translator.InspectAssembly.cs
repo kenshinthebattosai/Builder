@@ -72,7 +72,7 @@ namespace Bridge.Translator
         /// <param name="type"></param>
         protected static void InheritAttributes(TypeDefinition type)
         {
-            var attrList = new List<string> { "FileNameAttribute", "ModuleAttribute" };
+            var attrList = new List<string> { "FileNameAttribute", "ModuleAttribute", "NamespaceAttribute" };
             foreach (var attribute in attrList)
             {
                 if (type.CustomAttributes.Any(ca => ca.AttributeType.Name == attribute))
