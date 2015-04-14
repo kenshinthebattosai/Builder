@@ -59,7 +59,7 @@ namespace Bridge.Translator
                         break;
                     case OutputBy.NamespacePath:
                     case OutputBy.Namespace:
-                        fileName = typeInfo.Namespace;
+                        fileName = this.getNamespaceFilename(typeInfo);
                         break;
                     default:
                         break;
@@ -195,6 +195,25 @@ namespace Bridge.Translator
             this.Emitter.CurrentDependencies = dependencies;
 
             return moduleOutput;
+        }
+
+        private string getNamespaceFilename(ITypeInfo typeInfo)
+        {
+            var cas = this.Emitter.BridgeTypes.Get(typeInfo.Key).TypeDefinition.CustomAttributes;
+
+            // Search for an 'NamespaceAttribute' entry
+            foreach (var ca in cas)
+            {
+                if (ca.AttributeType.Name == "NamespaceAttribute" &&
+                    ca.ConstructorArguments.Count > 0 &&
+                    ca.ConstructorArguments[0].Value is string &&
+                    !string.IsNullOrWhiteSpace(ca.ConstructorArguments[0].Value.ToString()))
+                {
+                    return ca.ConstructorArguments[0].Value.ToString();
+                }
+            }
+
+            return typeInfo.Namespace;
         }
 
         /// <summary>
