@@ -60,24 +60,20 @@ namespace Bridge.Translator
                 this.PushLocals();
                 var varName = clause.VariableName;
 
-                if (String.IsNullOrEmpty(varName))
-                {
-                    varName = "$e";                    
-                }
-
-                if (!this.Emitter.Locals.ContainsKey(varName))
+                if (!String.IsNullOrEmpty(varName) && !this.Emitter.Locals.ContainsKey(varName))
                 {
                     varName = this.AddLocal(varName, clause.Type);
                 }
 
-                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, BridgeTypes.ToJsName(clause.Type, this.Emitter), catchStep.Step));                
+                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, clause.Type.IsNull ? "Bridge.Exception" : BridgeTypes.ToJsName(clause.Type, this.Emitter), catchStep.Step));                
 
                 this.Emitter.IgnoreBlock = clause.Body;
                 clause.Body.AcceptVisitor(this.Emitter);
                 this.PopLocals();
+                this.WriteNewLine();
             }
 
-            if (tryCatchStatement.CatchClauses.Count == 0 && !this.Emitter.Locals.ContainsKey("$e"))
+            if (/*tryCatchStatement.CatchClauses.Count == 0 && */!this.Emitter.Locals.ContainsKey("$e"))
             {
                 this.AddLocal("$e", AstType.Null);
             }
@@ -85,20 +81,85 @@ namespace Bridge.Translator
             IAsyncStep finalyStep = null;
             if (!tryCatchStatement.FinallyBlock.IsNull)
             {
-                finalyStep = this.Emitter.AsyncBlock.AddAsyncStep();
+                finalyStep = this.Emitter.AsyncBlock.AddAsyncStep(tryCatchStatement.FinallyBlock);
                 this.Emitter.IgnoreBlock = tryCatchStatement.FinallyBlock;
                 tryCatchStatement.FinallyBlock.AcceptVisitor(this.Emitter);
 
-                if (catchSteps.Count == 0)
-                {
-                    this.WriteNewLine();
-                    this.Write("throw $e;");
+                var finallyNode = this.GetParentFinallyBlock(tryCatchStatement, false);
+                
+                this.WriteNewLine();
 
-                    if (!this.Emitter.Locals.ContainsKey("$e"))
-                    {
-                        this.AddLocal("$e", AstType.Null);
-                    }
+                this.WriteIf();
+                this.WriteOpenParentheses();
+                this.Write("$jumpFromFinally > -1");
+                this.WriteCloseParentheses();
+                this.WriteSpace();
+                this.BeginBlock();
+                if (finallyNode != null)
+                {
+                    var hashcode = finallyNode.GetHashCode();
+                    this.Emitter.AsyncBlock.JumpLabels.Add(new AsyncJumpLabel { Node = finallyNode, Output = this.Emitter.Output });
+                    this.Write("$step = ${" + hashcode + "};");
+                    this.WriteNewLine();
+                    this.Write("continue;");
                 }
+                else
+                {
+                    this.Write("$step = $jumpFromFinally;");
+                    this.WriteNewLine();
+                    this.Write("$jumpFromFinally = null;");
+                }
+                
+                this.WriteNewLine();
+                this.EndBlock();
+
+                this.WriteSpace();
+                this.WriteElse();
+                this.WriteIf();
+                this.WriteOpenParentheses();
+                this.Write("$e");
+                this.WriteCloseParentheses();
+                this.WriteSpace();
+                this.BeginBlock();
+                this.Write("$returnTask.setError($e);");
+                this.WriteNewLine();
+                this.WriteReturn(false);
+                this.WriteSemiColon();
+                this.WriteNewLine();
+                this.EndBlock();
+
+                this.WriteSpace();
+                this.WriteElse();
+                this.WriteIf();
+                this.WriteOpenParentheses();
+                this.Write("Bridge.isDefined($returnValue)");
+                this.WriteCloseParentheses();
+                this.WriteSpace();
+                this.BeginBlock();                
+
+                if (finallyNode != null)
+                {
+                    var hashcode = finallyNode.GetHashCode();
+                    this.Emitter.AsyncBlock.JumpLabels.Add(new AsyncJumpLabel { Node = finallyNode, Output = this.Emitter.Output });
+                    this.Write("$step = ${" + hashcode + "};");
+                    this.WriteNewLine();
+                    this.Write("continue;");
+                }
+                else
+                {
+                    this.Write("$returnTask.setResult($returnValue);");
+                    this.WriteNewLine();
+                    this.WriteReturn(false);
+                    this.WriteSemiColon();
+                }                
+                
+                this.WriteNewLine();
+                this.EndBlock();
+
+                if (!this.Emitter.Locals.ContainsKey("$e"))
+                {
+                    this.AddLocal("$e", AstType.Null);
+                }                
             }
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();

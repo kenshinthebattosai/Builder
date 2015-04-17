@@ -61,7 +61,11 @@ namespace Bridge.Translator
                 this.Emitter.IgnoreBlock = ifElseStatement.TrueStatement;
                 this.WriteSpace();
                 this.BeginBlock();
+                this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
+                this.WriteNewLine();
+                this.Write("continue;");
                 var writer = this.SaveWriter();
+                var bodyStep = this.Emitter.AsyncBlock.AddAsyncStep();
                 ifElseStatement.TrueStatement.AcceptVisitor(this.Emitter);
 
                 if (this.Emitter.AsyncBlock.Steps.Count > startCount)
@@ -92,7 +96,11 @@ namespace Bridge.Translator
                     this.Emitter.IgnoreBlock = ifElseStatement.FalseStatement;
                     this.WriteSpace();
                     this.BeginBlock();
+                    this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
+                    this.WriteNewLine();
+                    this.Write("continue;");
                     var writer = this.SaveWriter();
+                    var bodyStep = this.Emitter.AsyncBlock.AddAsyncStep();
                     ifElseStatement.FalseStatement.AcceptVisitor(this.Emitter);
 
                     if (this.Emitter.AsyncBlock.Steps.Count > elseCount)

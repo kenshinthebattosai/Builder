@@ -73,6 +73,7 @@
     <Compile Include="IAbstractEmitterBlock.cs" />
     <Compile Include="IAssemblyInfo.cs" />
     <Compile Include="IAsyncBlock.cs" />
+    <Compile Include="IAsyncJumpLabel.cs" />
     <Compile Include="IAsyncStep.cs" />
     <Compile Include="IAsyncTryInfo.cs" />
     <Compile Include="IConstructorBlock.cs" />

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ICSharpCode.NRefactory.CSharp;
+using System;
 namespace Bridge.Contract
 {
     public interface IAsyncBlock
     {
         IAsyncStep AddAsyncStep(int fromTaskNumber = -1);
+        IAsyncStep AddAsyncStep(AstNode fromNode);
         ICSharpCode.NRefactory.CSharp.AnonymousMethodExpression AnonymousMethodExpression { get; set; }
         ICSharpCode.NRefactory.CSharp.Expression[] AwaitExpressions { get; set; }
         ICSharpCode.NRefactory.CSharp.AstNode Body { get; }
@@ -21,5 +23,6 @@ namespace Bridge.Contract
         int Step { get; set; }
         System.Collections.Generic.List<IAsyncStep> Steps { get; set; }
         System.Collections.Generic.List<IAsyncTryInfo> TryInfos { get; set; }
+        System.Collections.Generic.List<IAsyncJumpLabel> JumpLabels { get; set; }        
     }
 }

@@ -73,9 +73,10 @@ namespace Bridge.Translator
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
             conditionStep.JumpToStep = nextStep.Step;
-
+            
             if (this.Emitter.JumpStatements.Count > 0)
             {
+                this.Emitter.JumpStatements.Sort((j1, j2) => -j1.Position.CompareTo(j2.Position));
                 foreach (var jump in this.Emitter.JumpStatements)
                 {
                     jump.Output.Insert(jump.Position, jump.Break ? nextStep.Step : conditionStep.Step);
@@ -98,11 +99,11 @@ namespace Bridge.Translator
             }
 
             this.WriteWhile();
-            this.WriteOpenCloseParentheses();
+            this.WriteOpenParentheses();
 
             doWhileStatement.Condition.AcceptVisitor(this.Emitter);
 
-            this.WriteOpenCloseParentheses();
+            this.WriteCloseParentheses();
             this.WriteSemiColon();
 
             this.WriteNewLine();

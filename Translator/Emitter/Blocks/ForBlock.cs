@@ -79,11 +79,16 @@ namespace Bridge.Translator
             this.Emitter.ReplaceAwaiterByVar = oldValue;
 
             this.WriteSpace();
-            this.BeginBlock();
+            this.BeginBlock();                        
+            this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
+            this.WriteNewLine();
+            this.Write("continue;");
 
             this.EmittedAsyncSteps = this.Emitter.AsyncBlock.EmittedAsyncSteps;
             this.Emitter.AsyncBlock.EmittedAsyncSteps = new List<IAsyncStep>();
             var writer = this.SaveWriter();
+            
+            var bodyStep = this.Emitter.AsyncBlock.AddAsyncStep();
             this.Emitter.IgnoreBlock = forStatement.EmbeddedStatement;
             var startCount = this.Emitter.AsyncBlock.Steps.Count;
             forStatement.EmbeddedStatement.AcceptVisitor(this.Emitter);
@@ -156,6 +161,7 @@ namespace Bridge.Translator
 
             if (this.Emitter.JumpStatements.Count > 0)
             {
+                this.Emitter.JumpStatements.Sort((j1, j2) => -j1.Position.CompareTo(j2.Position));
                 foreach (var jump in this.Emitter.JumpStatements)
                 {
                     jump.Output.Insert(jump.Position, jump.Break ? nextStep.Step : iteratorsStep.Step);                    

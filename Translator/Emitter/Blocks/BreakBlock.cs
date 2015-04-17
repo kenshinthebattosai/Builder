@@ -21,18 +21,35 @@ namespace Bridge.Translator
         {
             if (this.Emitter.JumpStatements != null)
             {
-                this.Write("$step = ");
-                this.Emitter.JumpStatements.Add(new JumpInfo(this.Emitter.Output, this.Emitter.Output.Length, true));
+                var finallyNode = this.GetParentFinallyBlock(this.BreakStatement, true);
 
-                this.WriteSemiColon();
-                this.WriteNewLine();
+                if (finallyNode != null)
+                {
+                    var hashcode = finallyNode.GetHashCode();
+                    this.Emitter.AsyncBlock.JumpLabels.Add(new AsyncJumpLabel { Node = finallyNode, Output = this.Emitter.Output });
+                    this.Write("$step = ${" + hashcode + "};");
+                    this.WriteNewLine();
+                    this.Write("$jumpFromFinally = ");
+                    this.Emitter.JumpStatements.Add(new JumpInfo(this.Emitter.Output, this.Emitter.Output.Length, true));
+                    this.WriteSemiColon();
+                    this.WriteNewLine();
+                }
+                else
+                {
+                    this.Write("$step = ");
+                    this.Emitter.JumpStatements.Add(new JumpInfo(this.Emitter.Output, this.Emitter.Output.Length, true));
+
+                    this.WriteSemiColon();
+                    this.WriteNewLine();
+                }
+
                 this.Write("continue");
             }
             else
             {
                 this.Write("break");
             }
-
+            
             this.WriteSemiColon();
             this.WriteNewLine();
         }

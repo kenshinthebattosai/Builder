@@ -70,6 +70,12 @@ namespace Bridge.Translator
             set;
         }
 
+        public List<IAsyncJumpLabel> JumpLabels 
+        { 
+            get; 
+            set; 
+        }
+
         public AstNode Body
         {
             get
@@ -178,6 +184,7 @@ namespace Bridge.Translator
 
             this.Steps = new List<IAsyncStep>();
             this.TryInfos = new List<IAsyncTryInfo>();
+            this.JumpLabels = new List<IAsyncJumpLabel>();
         }
 
         protected void DetectReturnType()
@@ -325,6 +332,7 @@ namespace Bridge.Translator
             this.Node.AcceptVisitor(asyncTryVisitor);
             var needTry = asyncTryVisitor.Found || this.IsTaskReturn;
 
+            this.Emitter.AsyncVariables.Add("$jumpFromFinally");                
             if (needTry)
             {
                 if (this.IsTaskReturn)
@@ -332,6 +340,8 @@ namespace Bridge.Translator
                     this.Emitter.AsyncVariables.Add("$returnTask = new Bridge.Task()");
                 }
 
+                this.Emitter.AsyncVariables.Add("$returnValue");
+                
                 this.Write("try");
                 this.WriteSpace();
                 this.BeginBlock();
@@ -383,92 +393,114 @@ namespace Bridge.Translator
 
             foreach (var info in infos)
             {
-                this.WriteIf();
-                this.WriteOpenParentheses(true);
-                this.Write(string.Format("$step >= {0} && $step <= {1}", info.StartStep, info.EndStep));
-                this.WriteCloseParentheses(true);
-                this.BeginBlock();
-                var firstClause = true;
-
-                for (int i = 0; i < info.CatchBlocks.Count; i++)
-                {
-                    var clause = info.CatchBlocks[i];
-                    var varName = clause.Item1;
-                    var exceptionType = clause.Item2;
-                    var step = clause.Item3;
-
-                    if (info.CatchBlocks.Count == 1 && exceptionType == "Bridge.Exception")
-                    {
-                        if (!string.IsNullOrEmpty(varName))
-                        {
-                            this.Write(varName + " = $e1;");
-                        }
-                        else
-                        {
-                            this.Write("$e = $e1;");
-                        }
-
-                        this.WriteNewLine();
-                        this.Write("$step = " + step + ";");
-                    }
-                    else
-                    {
-                        var isBaseException = exceptionType == "Bridge.Exception";
-
-                        if (!firstClause)
-                        {
-                            this.WriteSpace();
-                            this.WriteElse();
-                        }
-
-                        if (!isBaseException)
-                        {
-                            this.WriteIf();
-                            this.WriteOpenParentheses();
-                            this.Write("Bridge.is($e1, " + exceptionType + ")");
-                            this.WriteCloseParentheses();
-                            this.WriteSpace();
-                        }
-
-                        firstClause = false;
-
-                        this.BeginBlock();
-
-                        if (!string.IsNullOrEmpty(varName))
-                        {
-                            this.Write(varName + " = $e1;");
-                        }
-                        else
-                        {
-                            this.Write("$e = $e1;");
-                        }
-
-                        this.WriteNewLine();
-                        this.Write("$step = " + step + ";");
-
-                        this.WriteNewLine();
-                        this.EndBlock();
-                         
-                    }
-                }
-
-                this.WriteNewLine();
-                this.Write("setTimeout($asyncBody, 0);");
-                this.WriteNewLine();
-                this.Write("return;");
-
-                this.WriteNewLine();
-                this.EndBlock();
-                this.WriteNewLine();
-
-                if (info.FinallyStep > 0)
+                if (info.CatchBlocks.Count > 0)
                 {
                     this.WriteIf();
                     this.WriteOpenParentheses(true);
-                    this.Write(string.Format("$step >= {0} && $step <= {1}", info.StartStep, info.CatchBlocks.Count > 0 ? info.CatchBlocks.Last().Item3 : info.EndStep));
+                    this.Write(string.Format("$step >= {0} && $step <= {1}", info.StartStep, info.EndStep));
                     this.WriteCloseParentheses(true);
                     this.BeginBlock();
+                    var firstClause = true;
 
+                    for (int i = 0; i < info.CatchBlocks.Count; i++)
+                    {
+                        var clause = info.CatchBlocks[i];
+                        var varName = clause.Item1;
+                        var exceptionType = clause.Item2;
+                        var step = clause.Item3;
+                        var isBaseException = exceptionType == "Bridge.Exception";
+
+                        if (info.CatchBlocks.Count == 1 && isBaseException)
+                        {
+                            if (!string.IsNullOrEmpty(varName))
+                            {
+                                this.Write(varName + " = $e1;");
+                                this.WriteNewLine();
+                            }
+                            /*else
+                            {
+                                if (!this.Emitter.Locals.ContainsKey("$e"))
+                                {
+                                    this.AddLocal("$e", AstType.Null);
+                                }
+                                this.Write("$e = $e1;");
+                            }*/
+                            
+                            this.Write("$step = " + step + ";");
+
+                            this.WriteNewLine();
+                            this.Write("setTimeout($asyncBody, 0);");
+                            this.WriteNewLine();
+                            this.Write("return;");
+                        }
+                        else
+                        {
+                            if (!firstClause)
+                            {
+                                this.WriteSpace();
+                                this.WriteElse();
+                            }
+
+                            if (!isBaseException)
+                            {
+                                this.WriteIf();
+                                this.WriteOpenParentheses();
+                                this.Write("Bridge.is($e1, " + exceptionType + ")");
+                                this.WriteCloseParentheses();
+                                this.WriteSpace();
+                            }
+
+                            firstClause = false;
+
+                            this.BeginBlock();
+
+                            if (!string.IsNullOrEmpty(varName))
+                            {
+                                this.Write(varName + " = $e1;");
+                                this.WriteNewLine();
+                            }
+                            /*else
+                            {
+                                if (!this.Emitter.Locals.ContainsKey("$e"))
+                                {
+                                    this.AddLocal("$e", AstType.Null);
+                                }
+                                this.Write("$e = $e1;");
+                            }*/
+
+                            
+                            this.Write("$step = " + step + ";");
+
+                            this.WriteNewLine();
+                            this.Write("setTimeout($asyncBody, 0);");
+                            this.WriteNewLine();
+                            this.Write("return;");
+                            this.WriteNewLine();
+                            this.EndBlock();
+
+                        }
+                    }                   
+
+                    this.WriteNewLine();
+                    this.EndBlock();
+                    this.WriteNewLine();
+                }
+
+                if (info.FinallyStep > 0)
+                {
+                    if (!this.Emitter.Locals.ContainsKey("$e"))
+                    {
+                        this.AddLocal("$e", AstType.Null);
+                    }
+                    
+                    this.WriteIf();
+                    this.WriteOpenParentheses();
+                    this.Write(string.Format("$step >= {0} && $step <= {1}", info.StartStep, info.CatchBlocks.Count > 0 ? info.CatchBlocks.Last().Item3 : info.EndStep));
+                    this.WriteCloseParentheses();
+                    this.BeginBlock();
+
+                    this.Write("$e = $e1;");
+                    this.WriteNewLine();
                     this.Write("$step = " + info.FinallyStep + ";");
 
                     this.WriteNewLine();
@@ -494,6 +526,12 @@ namespace Bridge.Translator
 
         protected void InjectSteps()
         {
+            foreach (var label in this.JumpLabels)
+            {
+                var tostep = this.Steps.First(s => s.Node == label.Node);
+                label.Output.Replace("${" + label.Node.GetHashCode() + "}", tostep.Step.ToString());
+            }
+            
             for (int i = 0; i < this.Steps.Count; i++)
             {
                 var step = this.Steps[i];
@@ -552,6 +590,19 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.Write("continue;");
                 }
+                else if (step.JumpToNode != null && !AbstractEmitterBlock.IsJumpStatementLast(output))
+                {
+                    var tostep = this.Steps.First(s => s.Node == step.JumpToNode);
+                    
+                    if (addNewLine)
+                    {
+                        this.WriteNewLine();
+                    }
+
+                    this.Write("$step = " + tostep.Step + ";");
+                    this.WriteNewLine();
+                    this.Write("continue;");
+                }
                 else if (i == (this.Steps.Count - 1) && !AbstractEmitterBlock.IsReturnLast(output))
                 {
                     if (addNewLine)
@@ -592,6 +643,14 @@ namespace Bridge.Translator
             var step = this.Step++;
             var asyncStep = new AsyncStep(this.Emitter, step, fromTaskNumber);
             this.Steps.Add(asyncStep);
+
+            return asyncStep;
+        }
+
+        public IAsyncStep AddAsyncStep(AstNode node)
+        {
+            var asyncStep = this.AddAsyncStep();
+            asyncStep.Node = node;
 
             return asyncStep;
         }
@@ -655,6 +714,18 @@ namespace Bridge.Translator
             set;
         }
 
+        public AstNode JumpToNode
+        {
+            get;
+            set;
+        }
+
+        public AstNode Node
+        {
+            get;
+            set;
+        }
+
         public int Step
         {
             get;
@@ -671,6 +742,21 @@ namespace Bridge.Translator
         {
             get;
             set;
+        }
+    }
+
+    public class AsyncJumpLabel : IAsyncJumpLabel
+    {
+        public StringBuilder Output 
+        { 
+            get; 
+            set; 
+        }
+        
+        public AstNode Node 
+        { 
+            get; 
+            set; 
         }
     }
 }

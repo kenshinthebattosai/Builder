@@ -44,6 +44,8 @@ namespace Bridge.Translator
             string valueVar = null;
             bool isStatement = false;
 
+            var targetrr = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Target, this.Emitter);
+
             if (memberReferenceExpression.Parent is InvocationExpression && (((InvocationExpression)(memberReferenceExpression.Parent)).Target == memberReferenceExpression))
             {
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Parent, this.Emitter);
@@ -336,8 +338,7 @@ namespace Bridge.Translator
                         }
 
                         if (writeTargetVar)
-                        {
-                            var targetrr = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Target, this.Emitter);
+                        {                            
                             var memberTargetrr = targetrr as MemberResolveResult;
                             bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
                             
@@ -387,7 +388,7 @@ namespace Bridge.Translator
                     }                    
                 }
 
-                var targetResolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Target, this.Emitter) as MemberResolveResult;
+                var targetResolveResult = targetrr as MemberResolveResult;
 
                 if (targetResolveResult == null || this.Emitter.IsGlobalTarget(targetResolveResult.Member) == null)
                 {
@@ -396,7 +397,14 @@ namespace Bridge.Translator
 
                 if (member == null)
                 {
-                    this.Write(memberReferenceExpression.MemberName.ToLowerCamelCase());
+                    if (targetrr != null && targetrr.Type.Kind == TypeKind.Dynamic)
+                    {
+                        this.Write(memberReferenceExpression.MemberName);
+                    }
+                    else
+                    {
+                        this.Write(memberReferenceExpression.MemberName.ToLowerCamelCase());
+                    }
                 }
                 else if (!string.IsNullOrEmpty(inline))
                 {

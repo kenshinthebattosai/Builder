@@ -129,6 +129,11 @@ namespace Bridge.Translator
             var resolveResult = this.Resolver.ResolveNode(node, this);
             var memberResolveResult = resolveResult as MemberResolveResult;
 
+            if (memberResolveResult == null)
+            {
+                return new Tuple<bool, bool, string>(false, false, null);
+            }
+
             var member = memberResolveResult.Member;
             bool isInlineMethod = this.IsInlineMethod(member);
             var inlineCode = isInlineMethod ? null : this.GetInline(member);

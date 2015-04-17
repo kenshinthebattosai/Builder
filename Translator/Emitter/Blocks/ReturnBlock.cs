@@ -1,5 +1,6 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
+using System.Linq;
 
 namespace Bridge.Translator
 {
@@ -28,11 +29,20 @@ namespace Bridge.Translator
 
             if (this.Emitter.IsAsync)
             {
+                var finallyNode = this.GetParentFinallyBlock(returnStatement, false);
+
                 if (this.Emitter.AsyncBlock != null && this.Emitter.AsyncBlock.IsTaskReturn)
                 {
                     this.WriteAwaiters(returnStatement.Expression);
-                    
-                    this.Write("$returnTask.setResult(");
+
+                    if (finallyNode != null)
+                    {                        
+                        this.Write("$returnValue = ");
+                    }
+                    else
+                    {
+                        this.Write("$returnTask.setResult(");   
+                    }
 
                     if (!returnStatement.Expression.IsNull)
                     {
@@ -46,14 +56,33 @@ namespace Bridge.Translator
                         this.Write("null");
                     }
 
-                    this.Write(");");
+                    if (finallyNode != null)
+                    {
+                        this.Write(";");
+                    }
+                    else
+                    {
+                        this.Write(");");
+                    }
+                    
 
                     this.WriteNewLine();
                 }
 
-                this.WriteReturn(false);
-                this.WriteSemiColon();
-                this.WriteNewLine();
+                if (finallyNode != null) 
+                {
+                    var hashcode = finallyNode.GetHashCode();
+                    this.Emitter.AsyncBlock.JumpLabels.Add(new AsyncJumpLabel { Node = finallyNode, Output = this.Emitter.Output });
+                    this.Write("$step = ${" + hashcode + "};");
+                    this.WriteNewLine();
+                    this.Write("continue;");
+                }
+                else
+                {
+                    this.WriteReturn(false);
+                    this.WriteSemiColon();
+                    this.WriteNewLine();
+                }                
             }
             else
             {

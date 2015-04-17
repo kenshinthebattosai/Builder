@@ -199,7 +199,7 @@ namespace Bridge.Translator
                 this.WriteNewLine();
             }
 
-            if (this.IsMethodBlock)
+            if (this.IsMethodBlock && !this.Emitter.IsAsync)
             {
                 this.EmitTempVars(this.BeginPosition);
             }

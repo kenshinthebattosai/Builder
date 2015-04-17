@@ -88,7 +88,16 @@ namespace Bridge.Translator
             this.WriteNewLine();
             this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
             this.WriteNewLine();
-            this.Write("$task" + index + ".continueWith($asyncBody);");
+
+            if (this.Emitter.AsyncBlock.IsTaskReturn)
+            {
+                this.Write("$task" + index + ".continueWith($asyncBody);");
+            }
+            else
+            {
+                this.Write("$task" + index + ".continueWith($asyncBody, true);");
+            }
+            
             this.WriteNewLine();
             this.Write("return;");
 
@@ -118,6 +127,33 @@ namespace Bridge.Translator
 
                 this.Emitter.AsyncExpressionHandling = oldValue;
             }
+        }
+
+        public AstNode GetParentFinallyBlock(AstNode node, bool stopOnLoops)
+        {
+            var insideTryFinally = false;
+            var target = node.GetParent(n =>
+            {
+                if (n is LambdaExpression || n is AnonymousMethodExpression || n is MethodDeclaration)
+                {
+                    return true;
+                }
+
+                if (stopOnLoops && (n is WhileStatement || n is ForeachStatement || n is ForStatement || n is DoWhileStatement))
+                {
+                    return true;
+                }
+
+                if (n is TryCatchStatement && !((TryCatchStatement)n).FinallyBlock.IsNull)
+                {
+                    insideTryFinally = true;
+                    return true;
+                }
+
+                return false;
+            });
+
+            return insideTryFinally ? ((TryCatchStatement)target).FinallyBlock : null;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ICSharpCode.NRefactory.CSharp;
+using System;
 using System.Text;
 namespace Bridge.Contract
 {
@@ -6,7 +7,9 @@ namespace Bridge.Contract
     {
         int FromTaskNumber { get; set; }
         int JumpToStep { get; set; }
+        AstNode JumpToNode { get; set; }
         StringBuilder Output { get; set; }
         int Step { get; set; }
+        AstNode Node { get; set; }
     }
 }

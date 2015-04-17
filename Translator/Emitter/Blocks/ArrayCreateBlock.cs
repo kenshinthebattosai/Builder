@@ -78,6 +78,10 @@ namespace Bridge.Translator
             {
                 this.Write("null");
             }
+            else
+            {
+                this.Write("[]");
+            }
 
             if (at.Dimensions > 1)
             {

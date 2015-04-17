@@ -166,6 +166,11 @@ namespace Bridge.Translator
         protected virtual void IntroduceTempVar(string name)
         {
             this.Emitter.TempVariables[name] = true;
+
+            if (this.Emitter.IsAsync && !this.Emitter.AsyncVariables.Contains(name))
+            {
+                this.Emitter.AsyncVariables.Add(name);
+            }
         }
 
         protected virtual void RemoveTempVar(string name)
