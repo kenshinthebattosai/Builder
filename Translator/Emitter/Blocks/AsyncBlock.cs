@@ -542,6 +542,13 @@ namespace Bridge.Translator
                 }
 
                 this.Write("case " + i + ": ");
+                var output = step.Output.ToString();
+
+                if (string.IsNullOrWhiteSpace(output) && step.JumpToStep == (i+1))
+                {
+                    continue;
+                }
+
                 this.BeginBlock();                
                 
                 bool addNewLine = false;
@@ -560,9 +567,7 @@ namespace Bridge.Translator
                     }
 
                     addNewLine = true;
-                }
-
-                var output = step.Output.ToString();
+                }                
 
                 if (!string.IsNullOrWhiteSpace(output))
                 {
