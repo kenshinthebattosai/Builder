@@ -89,6 +89,12 @@ namespace Bridge.Translator
             protected set; 
         }
 
+        public IList<ParsedSourceFile> ParsedSourceFiles
+        {
+            get;
+            protected set;
+        }
+
         private bool rebuild = true;
 
         public bool Rebuild 

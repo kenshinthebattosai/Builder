@@ -36,7 +36,8 @@ namespace Bridge.Translator
 
             var references = this.InspectReferences();            
 
-            var resolver = new MemberResolver(this.SourceFiles, Emitter.ToAssemblyReferences(references));
+            this.BuildSyntaxTree();
+            var resolver = new MemberResolver(this.ParsedSourceFiles, Emitter.ToAssemblyReferences(references));
 
             this.InspectTypes(resolver, config);
             

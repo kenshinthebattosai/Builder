@@ -17,6 +17,7 @@ namespace Bridge.Translator
 
             this.BuildAssemblyLocation(doc, manager);
             this.SourceFiles = this.GetSourceFiles(doc, manager);
+            this.ParsedSourceFiles = new List<ParsedSourceFile>();
         }
 
         protected virtual void BuildAssemblyLocation(XmlDocument doc, XmlNamespaceManager manager)

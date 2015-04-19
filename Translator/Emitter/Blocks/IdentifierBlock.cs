@@ -173,6 +173,7 @@ namespace Bridge.Translator
 
                     if (memberResult != null &&
                          memberResult.Member is IMethod &&
+                         !(memberResult is InvocationResolveResult) &&
                          !(
                             identifierExpression.Parent is InvocationExpression &&
                             identifierExpression.NextSibling != null &&

@@ -124,7 +124,7 @@ namespace Bridge.Translator
                                 s = s.Trim('"');
                             }
 
-                            this.Write(s);
+                            this.Write(this.WriteIndentToString(s));
                         }
                     }
                     else if (typeParams != null)

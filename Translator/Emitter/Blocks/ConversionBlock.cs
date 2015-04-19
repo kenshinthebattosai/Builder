@@ -21,7 +21,7 @@ namespace Bridge.Translator
 
             var isConversion = false;
             bool check = expression != null && !expression.IsNull && expression.Parent != null;
-
+            
             if (check)
             {
                 isConversion = this.CheckConversion(expression);   

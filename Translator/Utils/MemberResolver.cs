@@ -13,7 +13,7 @@ namespace Bridge.Translator
     public class MemberResolver : IMemberResolver
     {
         private string lastFileName;
-        private IList<string> sourceFiles;
+        private IList<ParsedSourceFile> sourceFiles;
         private ICompilation compilation;
         private CSharpAstResolver resolver;
         private IProjectContent project;
@@ -40,7 +40,7 @@ namespace Bridge.Translator
             }
         }
 
-        public MemberResolver(IList<string> sourceFiles, IEnumerable<IAssemblyReference> assemblies)
+        public MemberResolver(IList<ParsedSourceFile> sourceFiles, IEnumerable<IAssemblyReference> assemblies)
         {            
             this.project = null;
             this.lastFileName = null;
@@ -57,8 +57,7 @@ namespace Bridge.Translator
             
             Parallel.For(0, unresolvedFiles.Length, i =>
             {
-                var file = this.sourceFiles[i];
-                var syntaxTree = new CSharpParser().Parse(System.IO.File.ReadAllText(file), file);
+                var syntaxTree = this.sourceFiles[i].SyntaxTree;
                 
                 if (this.CanFreeze)
                 {

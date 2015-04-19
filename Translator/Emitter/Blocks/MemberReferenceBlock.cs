@@ -257,6 +257,7 @@ namespace Bridge.Translator
                 }
                 else if (member != null &&
                          member.Member is IMethod &&
+                         !(member is InvocationResolveResult) &&
                          !(
                             memberReferenceExpression.Parent is InvocationExpression &&
                             memberReferenceExpression.NextSibling != null &&

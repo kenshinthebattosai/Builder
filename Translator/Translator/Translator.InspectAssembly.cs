@@ -5,6 +5,7 @@ using ICSharpCode.NRefactory.CSharp;
 using System.Linq;
 using System;
 using Bridge.Contract;
+using ICSharpCode.NRefactory.CSharp.TypeSystem;
 
 namespace Bridge.Translator
 {
@@ -128,15 +129,14 @@ namespace Bridge.Translator
         }
 
         protected virtual void InspectTypes(MemberResolver resolver, IAssemblyInfo config)
-        {
-            
+        {            
             Inspector inspector = this.CreateInspector();
             inspector.AssemblyInfo = config;
             inspector.Resolver = resolver;
 
-            for (int i = 0; i < this.SourceFiles.Count; i++)
+            for (int i = 0; i < this.ParsedSourceFiles.Count; i++)
             {
-                inspector.VisitSyntaxTree(this.GetSyntaxTree(this.SourceFiles[i]));
+                inspector.VisitSyntaxTree(this.ParsedSourceFiles[i].SyntaxTree);
             }
 
             this.AssemblyInfo = inspector.AssemblyInfo;
@@ -146,6 +146,36 @@ namespace Bridge.Translator
         protected virtual Inspector CreateInspector()
         {
             return new Inspector();
+        }
+
+        protected void BuildSyntaxTree()
+        {
+            for (int i = 0; i < this.SourceFiles.Count; i++)
+            {
+                var fileName = this.SourceFiles[i];
+
+                using (var reader = new StreamReader(fileName))
+                {
+                    var parser = new ICSharpCode.NRefactory.CSharp.CSharpParser();
+                    var syntaxTree = parser.Parse(reader, fileName);
+
+                    if (parser.HasErrors)
+                    {
+                        foreach (var error in parser.Errors)
+                        {
+                            Bridge.Translator.Exception.Throw("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString());
+                        }
+                    }
+
+                    var expandResult = new QueryExpressionExpander().ExpandQueryExpressions(syntaxTree);
+                    syntaxTree = (expandResult != null ? (SyntaxTree)expandResult.AstNode : syntaxTree);
+                    var f = new ParsedSourceFile(syntaxTree, new CSharpUnresolvedFile { FileName = fileName });
+                    this.ParsedSourceFiles.Add(f);
+
+                    var tcv = new TypeSystemConvertVisitor(f.ParsedFile);
+                    f.SyntaxTree.AcceptVisitor(tcv);
+                }
+            }
         }
 
         protected virtual SyntaxTree GetSyntaxTree(string fileName)
@@ -162,6 +192,15 @@ namespace Bridge.Translator
                         Bridge.Translator.Exception.Throw("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString());
                     }                    
                 }
+
+                var expandResult = new QueryExpressionExpander().ExpandQueryExpressions(syntaxTree);
+                syntaxTree = (expandResult != null ? (SyntaxTree)expandResult.AstNode : syntaxTree);
+                var f = new ParsedSourceFile(syntaxTree, new CSharpUnresolvedFile {FileName = fileName});
+                this.ParsedSourceFiles.Add(f);
+
+                var tcv = new TypeSystemConvertVisitor(f.ParsedFile);
+                f.SyntaxTree.AcceptVisitor(tcv);
+
                 
                 return syntaxTree;
             }

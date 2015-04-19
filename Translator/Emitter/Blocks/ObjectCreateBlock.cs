@@ -41,7 +41,24 @@ namespace Bridge.Translator
 
             if (type.BaseType != null && type.BaseType.FullName == "System.MulticastDelegate")
             {
+                bool wrap = false;
+                var parent = objectCreateExpression.Parent as InvocationExpression;
+                if (parent != null && parent.Target == objectCreateExpression)
+                {
+                    wrap = true;
+                }
+
+                if (wrap)
+                {
+                    this.WriteOpenParentheses();
+                }
+
                 objectCreateExpression.Arguments.First().AcceptVisitor(this.Emitter);
+
+                if (wrap)
+                {
+                    this.WriteCloseParentheses();
+                }
                 return;
             }
 
@@ -184,6 +201,11 @@ namespace Bridge.Translator
 
                             this.Write("]");
                             this.Emitter.Comma = false;
+                        }
+                        else if (item is IdentifierExpression)
+                        {
+                            var identifierExpression = (IdentifierExpression)item;
+                            new IdentifierBlock(this.Emitter, identifierExpression).Emit();
                         }
                     }
 
