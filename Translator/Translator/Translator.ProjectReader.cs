@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Bridge.Translator
@@ -11,9 +12,51 @@ namespace Bridge.Translator
         {
             var doc = XDocument.Load(Location, LoadOptions.SetLineInfo);
 
+            ValidateProject(doc);
+
             this.BuildAssemblyLocation(doc);
             this.SourceFiles = this.GetSourceFiles(doc);
             this.ParsedSourceFiles = new List<ParsedSourceFile>();
+        }
+
+        private void ValidateProject(XDocument doc)
+        {
+            var valid = true;
+            var failList = new HashSet<string>();
+            var failNodeList = new List<XElement>();
+            var combined_tags = from x in doc.Descendants()
+                                where x.Name.LocalName == "RootNamespace" || x.Name.LocalName == "AssemblyName"
+                                select x;
+
+            foreach (var tag in combined_tags)
+            {
+                if (tag.Value == "Bridge" || tag.Value.StartsWith("Bridge."))
+                {
+                    valid = false;
+                    if (!failList.Contains(tag.Value))
+                    {
+                        failList.Add(tag.Value);
+                        failNodeList.Add(tag);
+                    }
+                }
+            }
+
+            if (!valid)
+            {
+                var offendingSettings = "";
+                foreach (var tag in failNodeList)
+                {
+                    offendingSettings += "Line " + ((IXmlLineInfo)tag).LineNumber + ": <" + tag.Name.LocalName + ">" +
+                        tag.Value + "</" + tag.Name.LocalName + ">\n";
+                }
+
+                throw new Bridge.Translator.Exception("'Bridge' or 'Bridge.*' names are reserved and may not " +
+                    "be used as project names, root namespaces or namespaces.\n" +
+                    "Please verify your project settings and rename where it applies.\n" +
+                    "Project file: " + this.Location + "\n" +
+                    "Offending settings:\n" + offendingSettings
+                );
+            }
         }
 
         protected virtual void BuildAssemblyLocation(XDocument doc)
