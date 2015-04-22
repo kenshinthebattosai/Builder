@@ -6,7 +6,7 @@ using System.Xml.Linq;
 namespace Bridge.Translator
 {
     public partial class Translator
-    {   
+    {
         protected virtual void ReadProjectFile()
         {
             var doc = XDocument.Load(Location, LoadOptions.SetLineInfo);
@@ -16,9 +16,8 @@ namespace Bridge.Translator
             this.ParsedSourceFiles = new List<ParsedSourceFile>();
         }
 
-
         protected virtual void BuildAssemblyLocation(XDocument doc)
-        {            
+        {
             if (this.AssemblyLocation == null || this.AssemblyLocation.Length == 0)
             {
                 this.Configuration = this.Configuration ?? "Debug";
@@ -75,7 +74,7 @@ namespace Bridge.Translator
             {
                 result.Add(node.Attribute("Include").Value);
             }
-            
+
             return result;
         }
 
@@ -84,13 +83,13 @@ namespace Bridge.Translator
             var nodes = from n in doc.Descendants()
                         where n.Name.LocalName == "AssemblyName"
                         select n;
-            
+
             if (nodes.Count() != 1)
             {
                 Bridge.Translator.Exception.Throw("Unable to determine assembly name");
             }
-            
+
             return nodes.First().Value;
-        }        
+        }
     }
 }
