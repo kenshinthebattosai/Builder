@@ -31,6 +31,8 @@ namespace Bridge.Translator
                 throw (Exception)this.CreateException(namespaceDeclaration, "Nested namespaces are not supported");
             }
 
+            ValidateNamespace(namespaceDeclaration);
+
             var prevNamespace = this.Namespace;
             var prevUsings = this.Usings;
 
@@ -51,6 +53,8 @@ namespace Bridge.Translator
                 this.NestedTypes.Add(new Tuple<TypeDeclaration, ITypeInfo>(typeDeclaration, this.CurrentType));
                 return;
             }
+
+            ValidateNamespace(typeDeclaration);
 
             if (this.HasIgnore(typeDeclaration))
             {

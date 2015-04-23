@@ -6,6 +6,9 @@ using Object.Net.Utilities;
 using ICSharpCode.NRefactory;
 using Bridge.Contract;
 
+using NRAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
+using BrException = Bridge.Translator.Exception;
+
 namespace Bridge.Translator 
 {
     public partial class Inspector : Visitor
@@ -37,6 +40,27 @@ namespace Bridge.Translator
                 }
             }
 
+            return false;
+        }
+
+        protected virtual bool TryGetAttribute(EntityDeclaration type, string attributeName, out NRAttribute attribute)
+        {
+            foreach (var i in type.Attributes)
+            {
+                foreach (var j in i.Attributes)
+                {
+                    if (j.Type.ToString() == attributeName)
+                    {
+                        attribute = j;
+                        return true;
+                    }
+
+                    // FIXME: Will not try to get the attribute via Resolver.ResolveNode() (see above): it returns a
+                    //        different type, without minimum information needed to make a full NRAttribute -fzm
+                }
+            }
+
+            attribute = default(NRAttribute);
             return false;
         }
 
@@ -151,6 +175,51 @@ namespace Bridge.Translator
                 body.InsertChildBefore(body.FirstChild, varState, new Role<VariableDeclarationStatement>("Statement"));
                 
             }*/
+        }
+
+        /// <summary>
+        /// Checks if the namespace name is likely to conflict with Bridge.NET namespace.
+        /// </summary>
+        /// <param name="namespaceName"></param>
+        /// <returns></returns>
+        protected static bool IsConflictingNamespace(string namespaceName)
+        {
+            return (namespaceName == "Bridge" || namespaceName.StartsWith("Bridge."));
+        }
+
+        /// <summary>
+        /// Validates the type's namespace attribute (if present) against conflicts with Bridge.NET's namespaces.
+        /// </summary>
+        /// <param name="type">The TypeDefinition object of the validated item.</param>
+        private void ValidateNamespace(TypeDeclaration tpDecl)
+        {
+            ICSharpCode.NRefactory.CSharp.Attribute nsAt;
+            if (this.TryGetAttribute(tpDecl, "Namespace", out nsAt))
+            {
+                var nsName = nsAt.Arguments.FirstOrNullObject().ToString().Trim('"');
+                if (Bridge.Translator.Inspector.IsConflictingNamespace(nsName))
+                {
+                    throw new BrException(tpDecl.GetParent<SyntaxTree>().FileName + ":" +
+                        tpDecl.StartLocation.Line + ": Custom attribute '[" + nsAt.ToString() +
+                        "]' uses reserved namespace names 'Bridge' or 'Bridge.*'.\n" +
+                        "These names are reserved for Bridge.NET core and frameworks.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the namespace name against conflicts with Bridge.NET's namespaces.
+        /// </summary>
+        /// <param name="type">The NamespaceDefinition object of the validated item.</param>
+        private void ValidateNamespace(NamespaceDeclaration nsDecl)
+        {
+            if (Bridge.Translator.Inspector.IsConflictingNamespace(nsDecl.FullName))
+            {
+                throw new BrException(nsDecl.GetParent<SyntaxTree>().FileName + ":" +
+                    nsDecl.StartLocation.Line + ": Namespace '" + nsDecl.FullName +
+                    "' uses reserved names 'Bridge' or 'Bridge.*'.\n" +
+                    "These names are reserved for Bridge.NET core and frameworks.");
+            }
         }
     }
 }
