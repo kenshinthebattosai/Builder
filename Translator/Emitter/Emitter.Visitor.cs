@@ -309,9 +309,14 @@ namespace Bridge.Translator
             new YieldBlock(this, yieldBreakStatement).Emit();
         }
 
-        public virtual void VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement)
+        public override void VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement)
         {
             new YieldBlock(this, yieldReturnStatement).Emit();
+        }
+
+        public override void VisitUsingStatement(UsingStatement usingStatement)
+        {
+            new UsingBlock(this, usingStatement).Emit();
         }
     }
 }
