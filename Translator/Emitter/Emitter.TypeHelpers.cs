@@ -15,7 +15,7 @@ namespace Bridge.Translator
 {
     public partial class Emitter
     {
-        public virtual int CompareTypeInfos(ITypeInfo x, ITypeInfo y)
+        public virtual int CompareTypeInfosByNameAndPriority(ITypeInfo x, ITypeInfo y)
         {
             if (x == y)
             {
@@ -35,26 +35,6 @@ namespace Bridge.Translator
             var xTypeDefinition = this.TypeDefinitions[x.Key];
             var yTypeDefinition = this.TypeDefinitions[y.Key];            
 
-            if (Helpers.IsSubclassOf(xTypeDefinition, yTypeDefinition, this))
-            {
-                return 1;
-            }
-
-            if (Helpers.IsSubclassOf(yTypeDefinition, xTypeDefinition, this))
-            {
-                return -1;
-            }
-            
-            if (xTypeDefinition.IsInterface && Helpers.IsImplementationOf(yTypeDefinition, xTypeDefinition, this))
-            {
-                return -1;
-            }
-
-            if (yTypeDefinition.IsInterface && Helpers.IsImplementationOf(xTypeDefinition, yTypeDefinition, this))
-            {
-                return 1;
-            }
-
             var xPriority = this.GetPriority(xTypeDefinition);
             var yPriority = this.GetPriority(yTypeDefinition);
 
@@ -64,6 +44,46 @@ namespace Bridge.Translator
             }
 
             return -xPriority.CompareTo(yPriority);
+        }
+
+        public virtual bool IsInheritedFrom(ITypeInfo x, ITypeInfo y)
+        {
+            if (x == y)
+            {
+                return false;
+            }
+
+            var inherits = false;
+            var xTypeDefinition = this.TypeDefinitions[x.Key];
+            var yTypeDefinition = this.TypeDefinitions[y.Key];
+
+            if (Helpers.IsSubclassOf(xTypeDefinition, yTypeDefinition, this) ||
+                (xTypeDefinition.IsInterface && Helpers.IsImplementationOf(xTypeDefinition, yTypeDefinition, this)))
+            {
+                inherits = true;
+            }
+
+            return inherits;
+        }
+
+        public virtual void SortTypesByInheritance()
+        {
+            var clonedTypes = new List<ITypeInfo>(this.Types);
+
+            foreach (var t in clonedTypes)
+            {
+                for (int i = this.Types.Count - 1; i > -1; i--)
+                {
+                    var x = this.Types[i];
+
+                    if (this.IsInheritedFrom(t, x))
+                    {
+                        this.Types.Remove(t);
+                        this.Types.Insert(i, t);
+                        break;
+                    }
+                }
+            }
         }
 
         public virtual TypeDefinition GetTypeDefinition()

@@ -21,7 +21,9 @@ namespace Bridge.Contract
         System.Collections.Generic.List<string> AsyncVariables { get; set; }
         bool ChangeCase { get; set; }
         bool Comma { get; set; }
-        int CompareTypeInfos(ITypeInfo x, ITypeInfo y);
+        int CompareTypeInfosByNameAndPriority(ITypeInfo x, ITypeInfo y);
+        bool IsInheritedFrom(ITypeInfo x, ITypeInfo y);
+        void SortTypesByInheritance();
         System.Collections.Generic.List<IPluginDependency> CurrentDependencies { get; set; }
         System.Collections.Generic.Dictionary<string, string> Emit();
         bool EnableSemicolon { get; set; }

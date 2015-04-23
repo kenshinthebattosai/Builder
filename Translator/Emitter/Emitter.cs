@@ -20,8 +20,8 @@ namespace Bridge.Translator
             this.Types = types;
             this.BridgeTypes = bridgeTypes;
             this.BridgeTypes.InitItems(this);
-
-            this.Types.Sort(this.CompareTypeInfos);
+            this.Types.Sort(this.CompareTypeInfosByNameAndPriority);
+            this.SortTypesByInheritance();
             this.Validator = validator;
             this.AssignmentType = ICSharpCode.NRefactory.CSharp.AssignmentOperatorType.Any;
             this.UnaryOperatorType = ICSharpCode.NRefactory.CSharp.UnaryOperatorType.Any;            
