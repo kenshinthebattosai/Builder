@@ -303,5 +303,15 @@ namespace Bridge.Translator
                 this.IsNewLine = true;
             }
         }
+
+        public override void VisitYieldBreakStatement(YieldBreakStatement yieldBreakStatement)
+        {
+            new YieldBlock(this, yieldBreakStatement).Emit();
+        }
+
+        public virtual void VisitYieldReturnStatement(YieldReturnStatement yieldReturnStatement)
+        {
+            new YieldBlock(this, yieldReturnStatement).Emit();
+        }
     }
 }

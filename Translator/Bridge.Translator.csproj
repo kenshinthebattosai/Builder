@@ -96,6 +96,7 @@
     <Compile Include="Emitter\Blocks\ConversionBlock.cs" />
     <Compile Include="Emitter\Blocks\ConstructorBlock.Events.cs" />
     <Compile Include="Emitter\Blocks\EmitBlock.cs" />
+    <Compile Include="Emitter\Blocks\YieldBlock.cs" />
     <Compile Include="Emitter\Blocks\TypeExpressionListBlock.cs" />
     <Compile Include="Emitter\Blocks\NullReferenceBlock.cs" />
     <Compile Include="Emitter\Blocks\DefaultValueBlock.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Emitter\EmitterOutput.cs" />
     <Compile Include="Translator\Plugins.cs" />
     <Compile Include="Translator\Translator.Config.cs" />
+    <Compile Include="Utils\YieldSearchVisitor.cs" />
     <Compile Include="Utils\LambdaVisitor.cs" />
     <Compile Include="Utils\ParsedSourceFile.cs" />
     <Compile Include="Utils\ReferenceArgumentVisitor.cs" />

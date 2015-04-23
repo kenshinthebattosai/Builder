@@ -1,6 +1,7 @@
 ﻿using Bridge.Contract;
 using ICSharpCode.NRefactory.CSharp;
 using System.Linq;
+using ICSharpCode.NRefactory.TypeSystem;
 
 namespace Bridge.Translator
 {
@@ -59,6 +60,18 @@ namespace Bridge.Translator
         }
 
         public bool IsMethodBlock
+        {
+            get;
+            set;
+        }
+
+        public bool IsYield
+        {
+            get;
+            set;
+        }
+
+        public IType ReturnType
         {
             get;
             set;
@@ -136,17 +149,29 @@ namespace Bridge.Translator
             if (this.BlockStatement.Parent is MethodDeclaration)
             {
                 this.IsMethodBlock = true;
-                this.ConvertParamsToReferences(((MethodDeclaration)this.BlockStatement.Parent).Parameters);
+                var methodDeclaration = (MethodDeclaration) this.BlockStatement.Parent;
+                if (!methodDeclaration.ReturnType.IsNull)
+                {
+                    var rr = this.Emitter.Resolver.ResolveNode(methodDeclaration.ReturnType, this.Emitter);
+                    this.ReturnType = rr.Type;
+                }
+                this.ConvertParamsToReferences(methodDeclaration.Parameters);
             }
             else if (this.BlockStatement.Parent is AnonymousMethodExpression)
             {
                 this.IsMethodBlock = true;
-                this.ConvertParamsToReferences(((AnonymousMethodExpression)this.BlockStatement.Parent).Parameters);
+                var methodDeclaration = (AnonymousMethodExpression)this.BlockStatement.Parent;
+                var rr = this.Emitter.Resolver.ResolveNode(methodDeclaration, this.Emitter);
+                this.ReturnType = rr.Type;
+                this.ConvertParamsToReferences(methodDeclaration.Parameters);
             }
             else if (this.BlockStatement.Parent is LambdaExpression)
             {
                 this.IsMethodBlock = true;
-                this.ConvertParamsToReferences(((LambdaExpression)this.BlockStatement.Parent).Parameters);
+                var methodDeclaration = (LambdaExpression)this.BlockStatement.Parent;
+                var rr = this.Emitter.Resolver.ResolveNode(methodDeclaration, this.Emitter);
+                this.ReturnType = rr.Type;
+                this.ConvertParamsToReferences(methodDeclaration.Parameters);
             }
             else if (this.BlockStatement.Parent is ConstructorDeclaration)
             {
@@ -161,11 +186,28 @@ namespace Bridge.Translator
             else if (this.BlockStatement.Parent is Accessor)
             {
                 this.IsMethodBlock = true;
+                var role = this.BlockStatement.Parent.Role.ToString();
 
-                if (this.BlockStatement.Parent.Role.ToString() == "Setter")
+                if (role == "Setter")
                 {
-                    this.ConvertParamsToReferences(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } });
+                    this.ConvertParamsToReferences(new ParameterDeclaration[]
+                    {new ParameterDeclaration {Name = "value"}});
                 }
+                else if (role == "Getter")
+                {
+                    var methodDeclaration = (Accessor)this.BlockStatement.Parent;
+                    if (!methodDeclaration.ReturnType.IsNull)
+                    {
+                        var rr = this.Emitter.Resolver.ResolveNode(methodDeclaration.ReturnType, this.Emitter);
+                        this.ReturnType = rr.Type;
+                    }
+                }
+            }
+
+            if (this.IsMethodBlock && YieldBlock.HasYield(this.BlockStatement))
+            {
+                this.IsYield = true;
+                YieldBlock.EmitYield(this, this.ReturnType);
             }
 
             this.BlockStatement.Children.ToList().ForEach(child => child.AcceptVisitor(this.Emitter));
@@ -174,6 +216,11 @@ namespace Bridge.Translator
         public void EndEmitBlock()
         {
             var blockWasEnded = false;
+
+            if (this.IsYield)
+            {
+                YieldBlock.EmitYieldReturn(this, this.ReturnType);
+            }
 
             if (!this.NoBraces && (!this.Emitter.IsAsync || (!this.AsyncNoBraces && this.BlockStatement.Parent != this.Emitter.AsyncBlock.Node)))
             {

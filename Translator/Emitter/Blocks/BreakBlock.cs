@@ -11,17 +11,29 @@ namespace Bridge.Translator
             this.BreakStatement = breakStatement;
         }
 
+        public BreakBlock(IEmitter emitter, YieldBreakStatement breakStatement)
+        {
+            this.Emitter = emitter;
+            this.YieldBreakStatement = breakStatement;
+        }
+
         public BreakStatement BreakStatement 
         { 
             get; 
             set; 
         }
 
+        public YieldBreakStatement YieldBreakStatement
+        {
+            get;
+            set;
+        }
+
         public override void Emit()
         {
             if (this.Emitter.JumpStatements != null)
             {
-                var finallyNode = this.GetParentFinallyBlock(this.BreakStatement, true);
+                var finallyNode = this.GetParentFinallyBlock(this.BreakStatement ?? (AstNode)this.YieldBreakStatement, true);
 
                 if (finallyNode != null)
                 {
