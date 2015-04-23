@@ -19,6 +19,10 @@ namespace Bridge.Translator
             this.ParsedSourceFiles = new List<ParsedSourceFile>();
         }
 
+        /// <summary>
+        /// Validates project and namespace names against conflicts with Bridge.NET namespaces.
+        /// </summary>
+        /// <param name="doc">XDocument reference of the .csproj file.</param>
         private void ValidateProject(XDocument doc)
         {
             var valid = true;
