@@ -82,5 +82,9 @@ namespace Bridge.Translator
                 throw (Exception)this.CreateException(memberType);
             }*/
         }
+
+        public virtual void VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration)
+        {
+        }
     }
 }

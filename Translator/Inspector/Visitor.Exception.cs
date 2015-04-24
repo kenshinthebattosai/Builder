@@ -774,14 +774,6 @@ namespace Bridge.Translator
 			}
         }
 
-        public virtual void VisitUsingAliasDeclaration(UsingAliasDeclaration usingAliasDeclaration)
-        {
-            if (this.ThrowException)
-			{
-				throw (Exception)this.CreateException(usingAliasDeclaration);
-			}
-        }
-
         public virtual void VisitUsingDeclaration(UsingDeclaration usingDeclaration)
         {
             if (this.ThrowException)
