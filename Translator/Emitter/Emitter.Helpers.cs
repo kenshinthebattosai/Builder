@@ -262,7 +262,7 @@ namespace Bridge.Translator
         public virtual string GetEntityName(IEntity member, bool cancelChangeCase = false, bool ignoreInterface = false)
         {
             bool changeCase = !this.IsNativeMember(member.FullName) ? this.ChangeCase : true;
-            if (member is IMember && this.IsMemberConst((IMember)member))
+            if (member is IMember && this.IsMemberConst((IMember)member)/* || member.DeclaringType.Kind == TypeKind.Anonymous*/)
             {
                 changeCase = false;
             }
@@ -304,14 +304,9 @@ namespace Bridge.Translator
         {
             var rr = this.Resolver.ResolveNode(entity, this) as MemberResolveResult;
 
-
-
             if (rr != null) 
             {
-
-
                 return this.GetEntityName(rr.Member, cancelChangeCase, ignoreInterface);
-
             }
 
             return null;

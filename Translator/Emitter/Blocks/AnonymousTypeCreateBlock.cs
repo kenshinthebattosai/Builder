@@ -32,7 +32,7 @@ namespace Bridge.Translator
 
             if (anonymousTypeCreateExpression.Initializers.Count > 0)
             {
-                this.WriteObjectInitializer(anonymousTypeCreateExpression.Initializers, false);
+                this.WriteObjectInitializer(anonymousTypeCreateExpression.Initializers, true);
 
                 this.WriteSpace();
                 this.WriteCloseBrace();
