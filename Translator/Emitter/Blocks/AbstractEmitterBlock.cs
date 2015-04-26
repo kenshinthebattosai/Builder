@@ -4,13 +4,37 @@ using ICSharpCode.NRefactory.CSharp;
 namespace Bridge.Translator
 {
     public abstract partial class AbstractEmitterBlock : IAbstractEmitterBlock
-    {        
-        public abstract void Emit();
+    {
+        private AstNode previousNode;
+        public AbstractEmitterBlock(IEmitter emitter, AstNode node)
+        {
+            this.Emitter = emitter;
+            this.previousNode = this.Emitter.Translator.EmitNode;
+            this.Emitter.Translator.EmitNode = node;
+        }
+
+        protected abstract void DoEmit();
 
         public IEmitter Emitter
         {
             get;
             set;
+        }
+
+        public virtual void Emit()
+        {
+            this.BeginEmit();
+            this.DoEmit();
+            this.EndEmit();
+        }
+
+        protected virtual void BeginEmit()
+        {
+        }
+
+        protected virtual void EndEmit()
+        {
+            this.Emitter.Translator.EmitNode = this.previousNode;
         }
 
         public virtual void EmitBlockOrIndentedLine(AstNode node)

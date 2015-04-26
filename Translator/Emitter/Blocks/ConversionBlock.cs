@@ -7,7 +7,12 @@ namespace Bridge.Translator
 {
     public abstract class ConversionBlock : AbstractEmitterBlock
     {
-        public sealed override void Emit()
+        public ConversionBlock(IEmitter emitter, AstNode node) : base(emitter, node)
+        {
+            
+        }
+
+        protected sealed override void DoEmit()
         {
             var expression = this.GetExpression();
 

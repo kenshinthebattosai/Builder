@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class AnonymousTypeCreateBlock : AbstractObjectCreateBlock
     {
         public AnonymousTypeCreateBlock(IEmitter emitter, AnonymousTypeCreateExpression anonymousTypeCreateExpression)
+            : base(emitter, anonymousTypeCreateExpression)
         {
             this.Emitter = emitter;
             this.AnonymousTypeCreateExpression = anonymousTypeCreateExpression;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitAnonymousTypeCreateExpression();
         }

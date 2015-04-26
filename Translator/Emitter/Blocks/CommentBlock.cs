@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class CommentBlock : AbstractEmitterBlock
     {
         public CommentBlock(IEmitter emitter, Comment comment)
+            : base(emitter, comment)
         {
             this.Emitter = emitter;
             this.Comment = comment;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitComment();
         }

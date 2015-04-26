@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class WhileBlock : AbstractEmitterBlock
     {
         public WhileBlock(IEmitter emitter, WhileStatement whileStatement)
+            : base(emitter, whileStatement)
         {
             this.Emitter = emitter;
             this.WhileStatement = whileStatement;
@@ -19,7 +20,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.WhileStatement) : null;
 

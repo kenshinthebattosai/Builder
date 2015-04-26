@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class TypeBlock : AbstractEmitterBlock
     {
         public TypeBlock(IEmitter emitter, AstType type)
+            : base(emitter, type)
         {
             this.Emitter = emitter;
             this.Type = type;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitTypeReference();
         }

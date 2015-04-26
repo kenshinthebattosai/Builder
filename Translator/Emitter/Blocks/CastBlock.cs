@@ -12,30 +12,35 @@ namespace Bridge.Translator
     public class CastBlock : ConversionBlock
     {
         public CastBlock(IEmitter emitter, CastExpression castExpression)
+            : base(emitter, castExpression)
         {
             this.Emitter = emitter;
             this.CastExpression = castExpression;
         }
 
         public CastBlock(IEmitter emitter, AsExpression asExpression)
+            : base(emitter, asExpression)
         {
             this.Emitter = emitter;
             this.AsExpression = asExpression;
         }
 
         public CastBlock(IEmitter emitter, IsExpression isExpression)
+            : base(emitter, isExpression)
         {
             this.Emitter = emitter;
             this.IsExpression = isExpression;
         }
 
         public CastBlock(IEmitter emitter, IType iType)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.IType = iType;
         }
 
         public CastBlock(IEmitter emitter, AstType astType)
+            : base(emitter, astType)
         {
             this.Emitter = emitter;
             this.AstType = astType;

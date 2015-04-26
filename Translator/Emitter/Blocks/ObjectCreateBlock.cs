@@ -12,6 +12,7 @@ namespace Bridge.Translator
     public class ObjectCreateBlock : ConversionBlock
     {
         public ObjectCreateBlock(IEmitter emitter, ObjectCreateExpression objectCreateExpression)
+            : base(emitter, objectCreateExpression)
         {
             this.Emitter = emitter;
             this.ObjectCreateExpression = objectCreateExpression;

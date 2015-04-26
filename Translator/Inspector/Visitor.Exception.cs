@@ -13,8 +13,8 @@ namespace Bridge.Translator
             {
                 message = String.Format("Language construction {0} is not supported", node.GetType().Name);
             }
-            string file = node.GetParent<SyntaxTree>().FileName;
-            return Exception.Create("{0} {1} {2}: {3}", file, message, node.StartLocation, node.ToString()); 
+
+            return new EmitterException(node, message);
         }
 
         public virtual IVisitorException CreateException(AstNode node) 

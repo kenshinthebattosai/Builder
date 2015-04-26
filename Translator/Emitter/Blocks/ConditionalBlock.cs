@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class ConditionalBlock : AbstractEmitterBlock
     {
         public ConditionalBlock(IEmitter emitter, ConditionalExpression conditionalExpression)
+            : base(emitter, conditionalExpression)
         {
             this.Emitter = emitter;
             this.ConditionalExpression = conditionalExpression;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var conditionalExpression = this.ConditionalExpression;
 

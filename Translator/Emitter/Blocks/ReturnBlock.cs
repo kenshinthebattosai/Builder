@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class ReturnBlock : AbstractEmitterBlock
     {
         public ReturnBlock(IEmitter emitter, ReturnStatement returnStatement)
+            : base(emitter, returnStatement)
         {
             this.Emitter = emitter;
             this.ReturnStatement = returnStatement;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitReturnStatement();
         }

@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class BaseReferenceBlock : ConversionBlock
     {
         public BaseReferenceBlock(IEmitter emitter, BaseReferenceExpression baseReferenceExpression)
+            : base(emitter, baseReferenceExpression)
         {
             this.Emitter = emitter;
             this.BaseReferenceExpression = baseReferenceExpression;

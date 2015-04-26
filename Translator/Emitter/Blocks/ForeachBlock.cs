@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class ForeachBlock : AbstractEmitterBlock
     {
         public ForeachBlock(IEmitter emitter, ForeachStatement foreachStatement)
+            : base(emitter, foreachStatement)
         {
             this.Emitter = emitter;
             this.ForeachStatement = foreachStatement;
@@ -19,7 +20,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.ForeachStatement) : null;
 

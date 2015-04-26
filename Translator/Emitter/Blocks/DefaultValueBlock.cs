@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class DefaultValueBlock : AbstractEmitterBlock
     {
         public DefaultValueBlock(IEmitter emitter, DefaultValueExpression defaultValueExpression)
+            : base(emitter, defaultValueExpression)
         {
             this.Emitter = emitter;
             this.DefaultValueExpression = defaultValueExpression;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var resolveResult = this.Emitter.Resolver.ResolveNode(this.DefaultValueExpression.Type, this.Emitter);
 

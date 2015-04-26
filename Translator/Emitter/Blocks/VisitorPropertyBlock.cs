@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class VisitorPropertyBlock : AbstractMethodBlock
     {
         public VisitorPropertyBlock(IEmitter emitter, PropertyDeclaration propertyDeclaration)
+            : base(emitter, propertyDeclaration)
         {
             this.Emitter = emitter;
             this.PropertyDeclaration = propertyDeclaration;
@@ -19,7 +20,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.PropertyDeclaration.Getter.Body.IsNull && this.PropertyDeclaration.Setter.Body.IsNull)
             {

@@ -130,14 +130,14 @@ namespace Bridge.Translator
                 {
                     var extMethods = methodGroupResolveResult.GetEligibleExtensionMethods(false);
 
-                    if (extMethods.Count() == 0)
+                    if (!extMethods.Any())
                     {
                         extMethods = methodGroupResolveResult.GetExtensionMethods();
                     }
 
-                    if (extMethods.Count() == 0 || extMethods.First().Count() == 0)
+                    if (!extMethods.Any() || !extMethods.First().Any())
                     {
-                        throw new Exception("Cannot find method defintion for " + node.ToString());
+                        throw new EmitterException(node, "Cannot find method defintion");
                     }
 
                     method = extMethods.First().First();

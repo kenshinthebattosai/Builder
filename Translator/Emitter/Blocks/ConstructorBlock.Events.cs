@@ -5,6 +5,7 @@ using ICSharpCode.NRefactory.TypeSystem.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bridge.Contract;
 
 namespace Bridge.Translator
 {
@@ -33,7 +34,7 @@ namespace Bridge.Translator
                                 {
                                     if (methodGroup.Value.Count > 1)
                                     {
-                                        throw new Exception("Overloaded method cannot be event handler");
+                                        throw new EmitterException(attr, "Overloaded method cannot be event handler");
                                     }
 
                                     string eventName = methodGroup.Key;

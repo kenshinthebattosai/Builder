@@ -12,18 +12,21 @@ namespace Bridge.Translator
     public class AsyncBlock : AbstractEmitterBlock, IAsyncBlock
     {
         public AsyncBlock(IEmitter emitter, MethodDeclaration methodDeclaration)
+            : base(emitter, methodDeclaration)
         {
             this.Emitter = emitter;
             this.MethodDeclaration = methodDeclaration;
         }
 
-        public AsyncBlock(IEmitter emitter, LambdaExpression lambdaExpression) 
+        public AsyncBlock(IEmitter emitter, LambdaExpression lambdaExpression)
+            : base(emitter, lambdaExpression)
         {
             this.Emitter = emitter;
             this.LambdaExpression = lambdaExpression;
         }
 
         public AsyncBlock(IEmitter emitter, AnonymousMethodExpression anonymousMethodExpression)
+            : base(emitter, anonymousMethodExpression)
         {
             this.Emitter = emitter;
             this.AnonymousMethodExpression = anonymousMethodExpression;
@@ -261,7 +264,7 @@ namespace Bridge.Translator
             this.Emitter.ReplaceAwaiterByVar = this.ReplaceAwaiterByVar;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.Emit(false);
         }

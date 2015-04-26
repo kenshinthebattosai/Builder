@@ -12,11 +12,14 @@ namespace Bridge.Translator
         }
 
         public NameBlock(IEmitter emitter, string name, Expression namedExpression, Expression expression)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.NamedExpression = namedExpression;
             this.Expression = expression;
             this.Name = name;
+
+            this.Emitter.Translator.EmitNode = namedExpression ?? expression;
         }
 
         public string Name
@@ -37,7 +40,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitNameExpression(this.Name, this.NamedExpression, this.Expression);
         }

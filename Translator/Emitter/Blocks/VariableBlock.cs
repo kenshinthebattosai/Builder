@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class VariableBlock : AbstractEmitterBlock
     {
         public VariableBlock(IEmitter emitter, VariableDeclarationStatement variableDeclarationStatement)
+            : base(emitter, variableDeclarationStatement)
         {
             this.Emitter = emitter;
             this.VariableDeclarationStatement = variableDeclarationStatement;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitVariableDeclarationStatement();
         }

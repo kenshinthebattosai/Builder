@@ -12,6 +12,7 @@ namespace Bridge.Translator
     public class InvocationBlock : ConversionBlock
     {
         public InvocationBlock(IEmitter emitter, InvocationExpression invocationExpression)
+            : base(emitter, invocationExpression)
         {
             this.Emitter = emitter;
             this.InvocationExpression = invocationExpression;
@@ -87,7 +88,7 @@ namespace Bridge.Translator
 
                         if (inlineExpression == null)
                         {
-                            throw (Exception)this.Emitter.CreateException(invocationExpression, "Only primitive expression can be inlined");
+                            throw new EmitterException(invocationExpression, "Only primitive expression can be inlined");
                         }
 
                         string value = inlineExpression.Value.ToString().Trim();
@@ -141,7 +142,7 @@ namespace Bridge.Translator
 
                 if (member != null && member.Type.Kind == TypeKind.Delegate)
                 {
-                    throw (Exception)this.Emitter.CreateException(invocationExpression, "Delegate's methods are not supported. Please use direct delegate invoke.");
+                    throw new EmitterException(invocationExpression, "Delegate's methods are not supported. Please use direct delegate invoke.");
                 }
 
                 var targetResolve = this.Emitter.Resolver.ResolveNode(targetMember, this.Emitter);

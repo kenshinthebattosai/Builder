@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class ExpressionListBlock : AbstractEmitterBlock
     {
         public ExpressionListBlock(IEmitter emitter, IEnumerable<Expression> expressions, Expression paramArg)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.Expressions = expressions;
@@ -25,7 +26,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitExpressionList(this.Expressions, this.ParamExpression);
         }
@@ -37,6 +38,7 @@ namespace Bridge.Translator
 
             foreach (var expr in expressions)
             {
+                this.Emitter.Translator.EmitNode = expr;
                 if (needComma)
                 {
                     this.WriteComma();

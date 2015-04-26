@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class VisitorCustomEventBlock : AbstractMethodBlock
     {
         public VisitorCustomEventBlock(IEmitter emitter, CustomEventDeclaration customEventDeclaration)
+            : base(emitter, customEventDeclaration)
         {
             this.Emitter = emitter;
             this.CustomEventDeclaration = customEventDeclaration;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitPropertyMethod(this.CustomEventDeclaration, this.CustomEventDeclaration.AddAccessor, false);
             this.EmitPropertyMethod(this.CustomEventDeclaration, this.CustomEventDeclaration.RemoveAccessor, true);

@@ -13,6 +13,7 @@ namespace Bridge.Translator
     public class IdentifierBlock : ConversionBlock
     {
         public IdentifierBlock(IEmitter emitter, IdentifierExpression identifierExpression)
+            : base(emitter, identifierExpression)
         {
             this.Emitter = emitter;
             this.IdentifierExpression = identifierExpression;
@@ -538,7 +539,7 @@ namespace Bridge.Translator
                 }
                 else
                 {
-                    throw (Exception)this.Emitter.CreateException(identifierExpression, "Cannot resolve identifier: " + id);
+                    throw new EmitterException(identifierExpression, "Cannot resolve identifier: " + id);
                 }
             }
         }

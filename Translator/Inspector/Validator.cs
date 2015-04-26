@@ -41,13 +41,6 @@ namespace Bridge.Translator
                 return;
             }
 
-            /*
-            if (type.IsNested)
-            {
-                Exception.Throw("Nested types are not supported: {0}", type);
-            }
-            */
-
             this.CheckConstructors(type, translator);
             this.CheckFields(type, translator);
             this.CheckMethods(type, translator);
@@ -346,11 +339,6 @@ namespace Bridge.Translator
                     continue;
                 }
 
-                /*if (!method.IsConstructor && method.Name.Contains("."))
-                {
-                    Bridge.NET.Exception.Throw("Explicit interface implementations are not supported: {0}", method);
-                }*/
-
                 this.CheckMethodArguments(method);
 
                 if (!method.IsConstructor && !method.IsGetter && !method.IsSetter)
@@ -494,7 +482,7 @@ namespace Bridge.Translator
         {
             if (Helpers.IsReservedWord(name))
             {
-                Bridge.Translator.Exception.Throw("Cannot use '{0}' as identifier {1}: {2}", name, context.StartLocation, context.ToString());
+                throw new EmitterException(context, "Cannot use '" + name + "' as identifier");
             }
         }
     }

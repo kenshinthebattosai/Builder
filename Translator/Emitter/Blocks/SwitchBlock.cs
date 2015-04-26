@@ -9,18 +9,21 @@ namespace Bridge.Translator
     public class SwitchBlock : AbstractEmitterBlock
     {
         public SwitchBlock(IEmitter emitter, SwitchStatement switchStatement)
+            : base(emitter, switchStatement)
         {
             this.Emitter = emitter;
             this.SwitchStatement = switchStatement;
         }
 
         public SwitchBlock(IEmitter emitter, SwitchSection switchSection)
+            : base(emitter, switchSection)
         {
             this.Emitter = emitter;
             this.SwitchSection = switchSection;
         }
 
         public SwitchBlock(IEmitter emitter, CaseLabel caseLabel)
+            : base(emitter, caseLabel)
         {
             this.Emitter = emitter;
             this.CaseLabel = caseLabel;
@@ -50,7 +53,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {            
             if (this.SwitchStatement != null)
             {
@@ -69,7 +72,7 @@ namespace Bridge.Translator
             {
                 if (this.Emitter.AsyncSwitch != null)
                 {
-                    throw new Exception("Async switch section must be handled by VisitAsyncSwitchStatement method");
+                    throw new EmitterException(this.SwitchSection, "Async switch section must be handled by VisitAsyncSwitchStatement method");
                 }
                 else
                 {
@@ -80,7 +83,7 @@ namespace Bridge.Translator
             {
                 if (this.Emitter.AsyncSwitch != null)
                 {
-                    throw new Exception("Async case label must be handled by VisitAsyncSwitchStatement method");
+                    throw new EmitterException(this.CaseLabel, "Async case label must be handled by VisitAsyncSwitchStatement method");
                 }
                 else
                 {

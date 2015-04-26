@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class VisitorMethodBlock : AbstractMethodBlock
     {
         public VisitorMethodBlock(IEmitter emitter, MethodDeclaration methodDeclaration)
+            : base(emitter, methodDeclaration)
         {
             this.Emitter = emitter;
             this.MethodDeclaration = methodDeclaration;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitMethodDeclaration(this.MethodDeclaration);
         }

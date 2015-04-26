@@ -1,10 +1,16 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
 using System.Collections.Generic;
+using Bridge.Contract;
 
 namespace Bridge.Translator
 {
     public abstract class AbstractObjectCreateBlock : AbstractEmitterBlock
     {
+        public AbstractObjectCreateBlock(IEmitter emitter, AstNode node)
+            : base(emitter, node)
+        {
+        }
+
         protected virtual void WriteObjectInitializer(IEnumerable<Expression> expressions, bool changeCase)
         {
             bool needComma = false;

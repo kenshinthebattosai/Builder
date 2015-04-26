@@ -8,12 +8,14 @@ namespace Bridge.Translator
     public class YieldBlock : AbstractEmitterBlock
     {
         public YieldBlock(IEmitter emitter, YieldBreakStatement yieldBreakStatement)
+            : base(emitter, yieldBreakStatement)
         {
             this.Emitter = emitter;
             this.YieldBreakStatement = yieldBreakStatement;
         }
 
         public YieldBlock(IEmitter emitter, YieldReturnStatement yieldReturnStatement)
+            : base(emitter, yieldReturnStatement)
         {
             this.Emitter = emitter;
             this.YieldReturnStatement = yieldReturnStatement;
@@ -31,7 +33,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.YieldReturnStatement != null)
             {

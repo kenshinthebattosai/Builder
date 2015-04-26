@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class VisitorIndexerBlock : AbstractMethodBlock
     {
         public VisitorIndexerBlock(IEmitter emitter, IndexerDeclaration indexerDeclaration)
+            : base(emitter, indexerDeclaration)
         {
             this.Emitter = emitter;
             this.IndexerDeclaration = indexerDeclaration;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitIndexerMethod(this.IndexerDeclaration, this.IndexerDeclaration.Getter, false);
             this.EmitIndexerMethod(this.IndexerDeclaration, this.IndexerDeclaration.Setter, true);

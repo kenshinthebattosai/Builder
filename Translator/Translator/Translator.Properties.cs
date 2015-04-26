@@ -2,6 +2,7 @@
 using Mono.Cecil;
 using System;
 using System.Collections.Generic;
+using ICSharpCode.NRefactory.CSharp;
 
 namespace Bridge.Translator
 {
@@ -142,6 +143,12 @@ namespace Bridge.Translator
         public BridgeTypes BridgeTypes
         {
             get;
+            set;
+        }
+
+        public AstNode EmitNode
+        {
+            get; 
             set;
         }
     }

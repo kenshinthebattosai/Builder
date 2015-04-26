@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class ExpressionBlock : AbstractEmitterBlock
     {
         public ExpressionBlock(IEmitter emitter, ExpressionStatement expressionStatement)
+            : base(emitter, expressionStatement)
         {
             this.Emitter = emitter;
             this.ExpressionStatement = expressionStatement;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.ExpressionStatement.IsNull)
             {

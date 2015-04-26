@@ -7,12 +7,14 @@ namespace Bridge.Translator
     public class TypeExpressionListBlock : AbstractEmitterBlock
     {
         public TypeExpressionListBlock(IEmitter emitter, IEnumerable<TypeParamExpression> expressions)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.Expressions = expressions;
         }
 
         public TypeExpressionListBlock(IEmitter emitter, IEnumerable<AstType> types)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.Types = types;
@@ -30,7 +32,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.Expressions != null)
             {
@@ -48,6 +50,7 @@ namespace Bridge.Translator
 
             foreach (var expr in expressions)
             {
+                this.Emitter.Translator.EmitNode = expr.AstType;
                 if (needComma)
                 {
                     this.WriteComma();
@@ -64,6 +67,7 @@ namespace Bridge.Translator
 
             foreach (var type in types)
             {
+                this.Emitter.Translator.EmitNode = type;
                 if (needComma)
                 {
                     this.WriteComma();

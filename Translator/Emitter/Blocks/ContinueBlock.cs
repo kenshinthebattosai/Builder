@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class ContinueBlock : AbstractEmitterBlock
     {
         public ContinueBlock(IEmitter emitter, ContinueStatement continueStatement)
+            : base(emitter, continueStatement)
         {
             this.Emitter = emitter;
             this.ContinueStatement = continueStatement;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.Emitter.JumpStatements != null)
             {

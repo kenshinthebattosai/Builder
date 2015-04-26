@@ -7,7 +7,7 @@ namespace Bridge.Translator
 {
     public class ForBlock : AbstractEmitterBlock
     {
-        public ForBlock(IEmitter emitter, ForStatement forStatement)
+        public ForBlock(IEmitter emitter, ForStatement forStatement) : base(emitter, forStatement)
         {
             this.Emitter = emitter;
             this.ForStatement = forStatement;
@@ -25,7 +25,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.ForStatement) : null;
 
@@ -177,7 +177,7 @@ namespace Bridge.Translator
 
             if (forStatement.Initializers.Count > 1)
             {
-                throw (Exception)this.Emitter.CreateException(forStatement, "Too many initializers");
+                throw new EmitterException(forStatement, "Too many initializers");
             }
 
             this.PushLocals();

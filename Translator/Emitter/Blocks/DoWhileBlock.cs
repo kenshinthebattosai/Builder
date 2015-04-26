@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class DoWhileBlock : AbstractEmitterBlock
     {
         public DoWhileBlock(IEmitter emitter, DoWhileStatement doWhileStatement)
+            : base(emitter, doWhileStatement)
         {
             this.Emitter = emitter;
             this.DoWhileStatement = doWhileStatement;
@@ -19,7 +20,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.DoWhileStatement) : null;
 

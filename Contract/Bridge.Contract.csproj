@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BridgeType.cs" />
+    <Compile Include="EmitterException.cs" />
     <Compile Include="Helpers.Cecil.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="IAbstractEmitterBlock.cs" />

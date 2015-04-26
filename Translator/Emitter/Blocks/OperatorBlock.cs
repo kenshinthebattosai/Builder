@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class OperatorBlock : AbstractMethodBlock
     {
         public OperatorBlock(IEmitter emitter, OperatorDeclaration operatorDeclaration)
+            : base(emitter, operatorDeclaration)
         {
             this.Emitter = emitter;
             this.OperatorDeclaration = operatorDeclaration;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitOperatorDeclaration(this.OperatorDeclaration);
         }

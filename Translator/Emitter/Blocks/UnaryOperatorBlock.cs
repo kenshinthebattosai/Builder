@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class UnaryOperatorBlock : ConversionBlock
     {
         public UnaryOperatorBlock(IEmitter emitter, UnaryOperatorExpression unaryOperatorExpression)
+            : base(emitter, unaryOperatorExpression)
         {
             this.Emitter = emitter;
             this.UnaryOperatorExpression = unaryOperatorExpression;
@@ -287,7 +288,7 @@ namespace Bridge.Translator
                         }
                         break;
                     default:
-                        throw (Exception)this.Emitter.CreateException(unaryOperatorExpression, "Unsupported unary operator: " + unaryOperatorExpression.Operator.ToString());
+                        throw new EmitterException(unaryOperatorExpression, "Unsupported unary operator: " + unaryOperatorExpression.Operator.ToString());
                 }
             }
 

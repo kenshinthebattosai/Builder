@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class EventBlock : AbstractEmitterBlock
     {
         public EventBlock(IEmitter emitter, IEnumerable<EventDeclaration> events)
+            : base(emitter, null)
         {
             this.Emitter = emitter;
             this.Events = events;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitEvents(this.Events);
         }
@@ -29,6 +30,7 @@ namespace Bridge.Translator
             {
                 foreach (var evtVar in evt.Variables)
                 {
+                    this.Emitter.Translator.EmitNode = evtVar;
                     string name = this.Emitter.GetEntityName(evt);
 
                     this.Write("this.", name, " = ");

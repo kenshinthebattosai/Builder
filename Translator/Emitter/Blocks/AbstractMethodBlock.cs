@@ -1,10 +1,16 @@
 ﻿using ICSharpCode.NRefactory.CSharp;
 using System.Collections.Generic;
+using Bridge.Contract;
 
 namespace Bridge.Translator
 {
     public abstract class AbstractMethodBlock : AbstractEmitterBlock
     {
+        public AbstractMethodBlock(IEmitter emitter, AstNode node)
+            : base(emitter, node)
+        {
+        }
+
         protected virtual void EmitMethodParameters(IEnumerable<ParameterDeclaration> declarations, AstNode context, bool skipCloseParentheses = false)
         {
             this.WriteOpenParentheses();

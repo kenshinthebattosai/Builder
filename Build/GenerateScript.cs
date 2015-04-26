@@ -2,6 +2,7 @@
 using Microsoft.Build.Utilities;
 using System;
 using System.IO;
+using Bridge.Contract;
 
 namespace Bridge.Build
 {
@@ -82,10 +83,10 @@ namespace Bridge.Build
         public override bool Execute()
         {
             var success = true;
-
+            Bridge.Translator.Translator translator = null;
             try
             {
-                var translator = new Bridge.Translator.Translator(this.ProjectPath);
+                translator = new Bridge.Translator.Translator(this.ProjectPath);
                 translator.Configuration = this.Configuration;
                 translator.BridgeLocation = Path.Combine(this.AssembliesPath, "Bridge.dll");
                 translator.Rebuild = false;
@@ -95,10 +96,10 @@ namespace Bridge.Build
 
                 string fileName = Path.GetFileNameWithoutExtension(this.Assembly.ItemSpec);
 
-                string outputPath = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ?
-                                        Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.Output) :
-                                        this.OutputPath;
-                
+                string outputPath = !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output)
+                    ? Path.Combine(Path.GetDirectoryName(this.ProjectPath), translator.AssemblyInfo.Output)
+                    : this.OutputPath;
+
                 translator.SaveTo(outputPath, fileName);
 
                 if (!this.NoCore)
@@ -111,9 +112,24 @@ namespace Bridge.Build
                     translator.RunEvent(translator.AssemblyInfo.AfterBuild);
                 }
             }
+            catch (EmitterException e)
+            {
+                this.Log.LogError(null, null, null, e.FileName, e.StartLine + 1, e.StartColumn + 1, e.EndLine + 1, e.EndColumn + 1, "Error: {0} {1}", e.Message, e.StackTrace);
+                success = false;
+            }
             catch (Exception e)
             {
-                this.Log.LogError("Error: {0}", e.Message);
+                var ee = translator != null ? translator.CreateExceptionFromLastNode() : null;
+
+                if (ee != null)
+                {
+                    this.Log.LogError(null, null, null, ee.FileName, ee.StartLine + 1, ee.StartColumn + 1, ee.EndLine + 1, ee.EndColumn + 1, "Error: {0} {1}", e.Message, e.StackTrace);
+                }
+                else
+                {
+                    this.Log.LogError("Error: {0} {1}", e.Message, e.StackTrace);
+                }
+
                 success = false;
             }
 

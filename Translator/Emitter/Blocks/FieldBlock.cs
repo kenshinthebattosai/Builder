@@ -6,7 +6,7 @@ namespace Bridge.Translator
 {
     public class FieldBlock : AbstractEmitterBlock
     {
-        public FieldBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock, bool fieldsOnly)
+        public FieldBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock, bool fieldsOnly) : base(emitter, typeInfo.TypeDeclaration)
         {
             this.Emitter = emitter;
             this.TypeInfo = typeInfo;
@@ -45,7 +45,7 @@ namespace Bridge.Translator
             private set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitFields(this.StaticBlock ? this.TypeInfo.StaticConfig : this.TypeInfo.InstanceConfig);            
         }

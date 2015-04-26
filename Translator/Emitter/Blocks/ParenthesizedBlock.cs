@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class ParenthesizedBlock : AbstractEmitterBlock
     {
         public ParenthesizedBlock(IEmitter emitter, ParenthesizedExpression parenthesizedExpression)
+            : base(emitter, parenthesizedExpression)
         {
             this.Emitter = emitter;
             this.ParenthesizedExpression = parenthesizedExpression;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var ignoreParentheses = this.IgnoreParentheses(this.ParenthesizedExpression.Expression);
 

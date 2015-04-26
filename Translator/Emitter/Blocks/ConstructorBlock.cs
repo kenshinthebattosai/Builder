@@ -16,6 +16,7 @@ namespace Bridge.Translator
     public partial class ConstructorBlock : AbstractMethodBlock, IConstructorBlock
     {
         public ConstructorBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock)
+            : base(emitter, typeInfo.TypeDeclaration)
         {
             this.Emitter = emitter;
             this.TypeInfo = typeInfo;
@@ -34,7 +35,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.StaticBlock)
             {

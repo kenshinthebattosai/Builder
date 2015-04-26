@@ -8,7 +8,7 @@ namespace Bridge.Translator
 {
     public class EmitBlock : AbstractEmitterBlock
     {
-        public EmitBlock(IEmitter emitter)
+        public EmitBlock(IEmitter emitter) : base(emitter, null)
         {
             this.Emitter = emitter;
         }
@@ -59,7 +59,7 @@ namespace Bridge.Translator
                         break;
                     case OutputBy.NamespacePath:
                     case OutputBy.Namespace:
-                        fileName = this.getNamespaceFilename(typeInfo);
+                        fileName = this.GetNamespaceFilename(typeInfo);
                         break;
                     default:
                         break;
@@ -197,7 +197,7 @@ namespace Bridge.Translator
             return moduleOutput;
         }
 
-        private string getNamespaceFilename(ITypeInfo typeInfo)
+        private string GetNamespaceFilename(ITypeInfo typeInfo)
         {
             var cas = this.Emitter.BridgeTypes.Get(typeInfo.Key).TypeDefinition.CustomAttributes;
 
@@ -238,20 +238,21 @@ namespace Bridge.Translator
             // This should never happen but, just to be sure...
             if (curIterations >= maxIterations)
             {
-                throw new ArgumentOutOfRangeException("Iteration count for class '" + typeInfo.Type.FullName + "' exceeded " +
+                throw new EmitterException(typeInfo.TypeDeclaration, "Iteration count for class '" + typeInfo.Type.FullName + "' exceeded " +
                     maxIterations + " depth iterations until root class!");
             }
 
             return fullClassName;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool, Action>>();
             this.Emitter.Outputs = new EmitterOutputs();
 
             foreach (var type in this.Emitter.Types)
             {
+                this.Emitter.Translator.EmitNode = type.TypeDeclaration;
                 if (type.IsObjectLiteral)
                 {
                     continue;

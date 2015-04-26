@@ -5,7 +5,7 @@ namespace Bridge.Translator
 {
     public class ThrowBlock : AbstractEmitterBlock
     {
-        public ThrowBlock(IEmitter emitter, ThrowStatement throwStatement)
+        public ThrowBlock(IEmitter emitter, ThrowStatement throwStatement) : base(emitter, throwStatement)
         {
             this.Emitter = emitter;
             this.ThrowStatement = throwStatement;
@@ -17,7 +17,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
 

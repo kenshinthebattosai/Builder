@@ -17,6 +17,7 @@ namespace Bridge.Translator
         }
 
         public LambdaBlock(IEmitter emitter, IEnumerable<ParameterDeclaration> parameters, AstNode body, AstNode context, bool isAsync)
+            : base(emitter, context)
         {
             this.Emitter = emitter;
             this.Parameters = parameters;
@@ -73,7 +74,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var oldVars = this.Emitter.TempVariables;
             this.Emitter.TempVariables = new Dictionary<string, bool>();

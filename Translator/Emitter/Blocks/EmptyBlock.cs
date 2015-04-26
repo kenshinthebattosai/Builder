@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class EmptyBlock : AbstractEmitterBlock
     {
         public EmptyBlock(IEmitter emitter, EmptyStatement emptyStatement)
+            : base(emitter, emptyStatement)
         {
             this.Emitter = emitter;
             this.EmptyStatement = emptyStatement;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.WriteSemiColon(true);   
         }

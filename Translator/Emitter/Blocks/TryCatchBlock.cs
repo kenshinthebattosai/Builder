@@ -10,6 +10,7 @@ namespace Bridge.Translator
     public class TryCatchBlock : AbstractEmitterBlock
     {
         public TryCatchBlock(IEmitter emitter, TryCatchStatement tryCatchStatement)
+            : base(emitter, tryCatchStatement)
         {
             this.Emitter = emitter;
             this.TryCatchStatement = tryCatchStatement;
@@ -21,7 +22,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.TryCatchStatement) : null;
 

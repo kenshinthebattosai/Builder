@@ -12,7 +12,7 @@ namespace Bridge.Translator
 {
     public class MemberReferenceBlock : ConversionBlock
     {
-        public MemberReferenceBlock(IEmitter emitter, MemberReferenceExpression memberReferenceExpression)
+        public MemberReferenceBlock(IEmitter emitter, MemberReferenceExpression memberReferenceExpression) : base(emitter, memberReferenceExpression)
         {
             this.Emitter = emitter;
             this.MemberReferenceExpression = memberReferenceExpression;

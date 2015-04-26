@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class EventDeclarationBlock : AbstractEmitterBlock
     {
         public EventDeclarationBlock(IEmitter emitter, EventDeclaration eventDeclaration)
+            : base(emitter, eventDeclaration)
         {
             this.Emitter = emitter;
             this.EventDeclaration = eventDeclaration;
@@ -17,7 +18,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var vars = this.EventDeclaration.Variables;
         }

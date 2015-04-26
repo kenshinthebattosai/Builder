@@ -6,12 +6,14 @@ namespace Bridge.Translator
     public class BreakBlock : AbstractEmitterBlock
     {
         public BreakBlock(IEmitter emitter, BreakStatement breakStatement)
+            : base(emitter, breakStatement)
         {
             this.Emitter = emitter;
             this.BreakStatement = breakStatement;
         }
 
         public BreakBlock(IEmitter emitter, YieldBreakStatement breakStatement)
+            : base(emitter, breakStatement)
         {
             this.Emitter = emitter;
             this.YieldBreakStatement = breakStatement;
@@ -29,7 +31,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.Emitter.JumpStatements != null)
             {

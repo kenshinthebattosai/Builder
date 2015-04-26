@@ -199,8 +199,7 @@ namespace Bridge.Translator
                 var nsName = nsAt.Arguments.FirstOrNullObject().ToString().Trim('"');
                 if (Bridge.Translator.Inspector.IsConflictingNamespace(nsName))
                 {
-                    throw new BrException(tpDecl.GetParent<SyntaxTree>().FileName + ":" +
-                        tpDecl.StartLocation.Line + ": Custom attribute '[" + nsAt.ToString() +
+                    throw new EmitterException(nsAt,"Custom attribute '[" + nsAt.ToString() +
                         "]' uses reserved namespace names 'Bridge' or 'Bridge.*'.\n" +
                         "These names are reserved for Bridge.NET core and frameworks.");
                 }
@@ -215,8 +214,7 @@ namespace Bridge.Translator
         {
             if (Bridge.Translator.Inspector.IsConflictingNamespace(nsDecl.FullName))
             {
-                throw new BrException(nsDecl.GetParent<SyntaxTree>().FileName + ":" +
-                    nsDecl.StartLocation.Line + ": Namespace '" + nsDecl.FullName +
+                throw new EmitterException(nsDecl, "Namespace '" + nsDecl.FullName +
                     "' uses reserved names 'Bridge' or 'Bridge.*'.\n" +
                     "These names are reserved for Bridge.NET core and frameworks.");
             }

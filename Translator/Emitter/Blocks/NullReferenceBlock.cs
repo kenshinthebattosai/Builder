@@ -5,7 +5,7 @@ namespace Bridge.Translator
 {
     public class NullReferenceBlock : AbstractEmitterBlock
     {
-        public NullReferenceBlock(IEmitter emitter, AstNode nullNode)
+        public NullReferenceBlock(IEmitter emitter, AstNode nullNode) : base(emitter, nullNode)
         {
             this.Emitter = emitter;
             this.NullNode = nullNode;
@@ -17,7 +17,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.Write("null");
         }

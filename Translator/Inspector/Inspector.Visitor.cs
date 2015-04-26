@@ -94,7 +94,7 @@ namespace Bridge.Translator
 
                 if (parentTypeInfo != null && Emitter.reservedStaticNames.Any(n => String.Equals(this.CurrentType.Name, n, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    throw new Exception("Nested class cannot have such name: " + this.CurrentType.Name + ". Please rename it.");
+                    throw new EmitterException(typeDeclaration, "Nested class cannot have such name: " + this.CurrentType.Name + ". Please rename it.");
                 }
             }
             else

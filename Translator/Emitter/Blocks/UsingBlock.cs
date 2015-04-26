@@ -10,6 +10,7 @@ namespace Bridge.Translator
     public class UsingBlock : AbstractEmitterBlock
     {
         public UsingBlock(IEmitter emitter, UsingStatement usingStatement)
+            : base(emitter, usingStatement)
         {
             this.Emitter = emitter;
             this.UsingStatement = usingStatement;
@@ -21,7 +22,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             IEnumerable<AstNode> inner = null;
 

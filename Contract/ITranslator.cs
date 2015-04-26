@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ICSharpCode.NRefactory.CSharp;
 
 namespace Bridge.Contract
 {
@@ -28,5 +29,7 @@ namespace Bridge.Contract
         IValidator Validator { get; }
         IPlugins Plugins { get; set; }
         BridgeTypes BridgeTypes { get; set; }
+        AstNode EmitNode { get; set; }
+        EmitterException CreateExceptionFromLastNode();
     }
 }

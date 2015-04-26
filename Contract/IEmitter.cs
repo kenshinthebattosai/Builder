@@ -92,5 +92,6 @@ namespace Bridge.Contract
         Dictionary<string, bool> TempVariables { get; set; }
         Tuple<bool, string> IsGlobalTarget(IMember member);
         BridgeTypes BridgeTypes { get; set; }
+        ITranslator Translator { get; set; }
     }
 }

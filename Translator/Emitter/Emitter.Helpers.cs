@@ -144,7 +144,7 @@ namespace Bridge.Translator
 
         public virtual IEnumerable<string> GetScript(EntityDeclaration method)
         {
-            var attr = this.GetAttribute(method.Attributes, Translator.Bridge_ASSEMBLY + ".Script");
+            var attr = this.GetAttribute(method.Attributes, Bridge.Translator.Translator.Bridge_ASSEMBLY + ".Script");
 
             return this.GetScriptArguments(attr);
         }
@@ -159,7 +159,7 @@ namespace Bridge.Translator
                     changeCase = false;
                 }
             }
-            string attrName = Translator.Bridge_ASSEMBLY + ".NameAttribute";
+            string attrName = Bridge.Translator.Translator.Bridge_ASSEMBLY + ".NameAttribute";
             var attr = member.CustomAttributes.FirstOrDefault(a => a.AttributeType.FullName == attrName);
             bool isIgnore = this.Validator.IsIgnoreType(member.DeclaringType);
             string name = member.Name;
@@ -229,7 +229,7 @@ namespace Bridge.Translator
             {
                 changeCase = false;
             }
-            var attr = member.Attributes.FirstOrDefault(a => a.AttributeType.FullName == Translator.Bridge_ASSEMBLY + ".NameAttribute");
+            var attr = member.Attributes.FirstOrDefault(a => a.AttributeType.FullName == Bridge.Translator.Translator.Bridge_ASSEMBLY + ".NameAttribute");
             bool isIgnore = member.DeclaringTypeDefinition != null && this.Validator.IsIgnoreType(member.DeclaringTypeDefinition);            
             string name = member.Name;
             if (member is IMethod && ((IMethod)member).IsConstructor)
@@ -312,28 +312,28 @@ namespace Bridge.Translator
 
         public Tuple<bool, string> IsGlobalTarget(IMember member)
         {
-            var attr = this.GetAttribute(member.Attributes, Translator.Bridge_ASSEMBLY + ".GlobalTargetAttribute");
+            var attr = this.GetAttribute(member.Attributes, Bridge.Translator.Translator.Bridge_ASSEMBLY + ".GlobalTargetAttribute");
 
             return attr != null ? new Tuple<bool, string>(true, (string)attr.PositionalArguments.First().ConstantValue) : null;            
         }
 
         public virtual string GetInline(ICustomAttributeProvider provider)
         {
-            var attr = this.GetAttribute(provider.CustomAttributes, Translator.Bridge_ASSEMBLY + ".TemplateAttribute");
+            var attr = this.GetAttribute(provider.CustomAttributes, Bridge.Translator.Translator.Bridge_ASSEMBLY + ".TemplateAttribute");
 
             return attr != null ? ((string)attr.ConstructorArguments.First().Value) : null;
         }
 
         public virtual string GetInline(EntityDeclaration method)
         {
-            var attr = this.GetAttribute(method.Attributes, Translator.Bridge_ASSEMBLY + ".Template");
+            var attr = this.GetAttribute(method.Attributes, Bridge.Translator.Translator.Bridge_ASSEMBLY + ".Template");
 
             return attr != null ? ((string)((PrimitiveExpression)attr.Arguments.First()).Value) : null;
         }
 
         public virtual string GetInline(IEntity entity)
         {
-            string attrName = Translator.Bridge_ASSEMBLY + ".TemplateAttribute";
+            string attrName = Bridge.Translator.Translator.Bridge_ASSEMBLY + ".TemplateAttribute";
 
             if (entity.SymbolKind == SymbolKind.Property)
             {
@@ -357,7 +357,7 @@ namespace Bridge.Translator
 
         protected virtual bool IsInlineMethod(IEntity entity)
         {
-            string attrName = Translator.Bridge_ASSEMBLY + ".TemplateAttribute";
+            string attrName = Bridge.Translator.Translator.Bridge_ASSEMBLY + ".TemplateAttribute";
 
             if (entity != null)
             {
@@ -393,7 +393,7 @@ namespace Bridge.Translator
 
         public virtual bool IsNativeMember(string fullName)
         {
-            return fullName.Contains(Translator.Bridge_ASSEMBLY) || fullName.StartsWith("System");
+            return fullName.Contains(Bridge.Translator.Translator.Bridge_ASSEMBLY) || fullName.StartsWith("System");
         }
 
         public virtual bool IsMemberConst(IMember member)
@@ -407,7 +407,7 @@ namespace Bridge.Translator
 
             if (isConst)
             {
-                var attr = this.GetAttribute(member.Attributes, Translator.Bridge_ASSEMBLY + ".InlineConstAttribute");
+                var attr = this.GetAttribute(member.Attributes, Bridge.Translator.Translator.Bridge_ASSEMBLY + ".InlineConstAttribute");
 
                 if (attr != null)
                 {

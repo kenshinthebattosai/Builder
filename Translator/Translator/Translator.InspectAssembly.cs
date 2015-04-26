@@ -163,7 +163,7 @@ namespace Bridge.Translator
                     {
                         foreach (var error in parser.Errors)
                         {
-                            Bridge.Translator.Exception.Throw("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString());
+                            throw new EmitterException(syntaxTree, string.Format("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString()));
                         }
                     }
 
@@ -189,7 +189,7 @@ namespace Bridge.Translator
                 {
                     foreach (var error in parser.Errors)
                     {
-                        Bridge.Translator.Exception.Throw("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString());
+                        throw new EmitterException(syntaxTree, string.Format("Parsing error in a file {0} {2}: {1}", fileName, error.Message, error.Region.Begin.ToString()));
                     }                    
                 }
 

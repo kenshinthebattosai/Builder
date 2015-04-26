@@ -11,6 +11,7 @@ namespace Bridge.Translator
     public class InlineArgumentsBlock : AbstractEmitterBlock
     {
         public InlineArgumentsBlock(IEmitter emitter, ArgumentsInfo argsInfo, string inline)
+            : base(emitter, argsInfo.Expression)
         {
             this.Emitter = emitter;
             this.ArgumentsInfo = argsInfo;
@@ -31,7 +32,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.EmitInlineExpressionList(this.ArgumentsInfo, this.InlineCode);
         }

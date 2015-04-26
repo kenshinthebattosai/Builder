@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class IfElseBlock : AbstractEmitterBlock
     {
         public IfElseBlock(IEmitter emitter, IfElseStatement ifElseStatement)
+            : base(emitter, ifElseStatement)
         {
             this.Emitter = emitter;
             this.IfElseStatement = ifElseStatement;
@@ -25,7 +26,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitIfElseStatement();
         }

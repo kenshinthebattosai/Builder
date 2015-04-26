@@ -42,7 +42,8 @@ namespace Bridge.Translator
             this.InspectTypes(resolver, config);
             
             resolver.CanFreeze = true;
-            var emitter = this.CreateEmitter(resolver);            
+            var emitter = this.CreateEmitter(resolver);
+            emitter.Translator = this;
             emitter.AssemblyInfo = this.AssemblyInfo;            
             emitter.ChangeCase = this.ChangeCase;
             emitter.References = references;
@@ -154,6 +155,11 @@ namespace Bridge.Translator
                     }
                 }
             }
+        }
+
+        public EmitterException CreateExceptionFromLastNode()
+        {
+            return this.EmitNode != null ? new EmitterException(this.EmitNode) : null;
         }
     }
 }

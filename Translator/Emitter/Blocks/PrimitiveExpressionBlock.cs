@@ -6,6 +6,7 @@ namespace Bridge.Translator
     public class PrimitiveExpressionBlock : ConversionBlock
     {
         public PrimitiveExpressionBlock(IEmitter emitter, PrimitiveExpression primitiveExpression)
+            : base(emitter, primitiveExpression)
         {
             this.Emitter = emitter;
             this.PrimitiveExpression = primitiveExpression;

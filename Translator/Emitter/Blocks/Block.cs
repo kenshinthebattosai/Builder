@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class Block : AbstractEmitterBlock
     {
         public Block(IEmitter emitter, BlockStatement blockStatement)
+            : base(emitter, blockStatement)
         {
             this.Emitter = emitter;
             this.BlockStatement = blockStatement;
@@ -77,7 +78,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if ((!this.WrapByFn.HasValue || this.WrapByFn.Value) && (this.BlockStatement.Parent is ForStatement ||
                      this.BlockStatement.Parent is ForeachStatement ||

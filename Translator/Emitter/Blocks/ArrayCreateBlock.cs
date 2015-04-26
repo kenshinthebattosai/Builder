@@ -8,7 +8,7 @@ namespace Bridge.Translator
 {
     public class ArrayCreateBlock : AbstractEmitterBlock
     {
-        public ArrayCreateBlock(IEmitter emitter, ArrayCreateExpression arrayCreateExpression)
+        public ArrayCreateBlock(IEmitter emitter, ArrayCreateExpression arrayCreateExpression) : base(emitter, arrayCreateExpression)
         {
             this.Emitter = emitter;
             this.ArrayCreateExpression = arrayCreateExpression;
@@ -20,7 +20,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitArrayCreateExpression();
         }

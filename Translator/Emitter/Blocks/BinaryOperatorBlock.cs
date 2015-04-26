@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class BinaryOperatorBlock : ConversionBlock
     {
         public BinaryOperatorBlock(IEmitter emitter, BinaryOperatorExpression binaryOperatorExpression)
+            : base(emitter, binaryOperatorExpression)
         {
             this.Emitter = emitter;
             this.BinaryOperatorExpression = binaryOperatorExpression;
@@ -202,7 +203,7 @@ namespace Bridge.Translator
                         this.Write(nullable ? "sub" : "-");
                         break;
                     default:
-                        throw (Exception)this.Emitter.CreateException(binaryOperatorExpression, "Unsupported binary operator: " + binaryOperatorExpression.Operator.ToString());
+                        throw new EmitterException(binaryOperatorExpression, "Unsupported binary operator: " + binaryOperatorExpression.Operator.ToString());
                 }
             }
             else

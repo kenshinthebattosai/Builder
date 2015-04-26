@@ -7,6 +7,7 @@ namespace Bridge.Translator
     public class ArrayInitializerBlock : AbstractEmitterBlock
     {
         public ArrayInitializerBlock(IEmitter emitter, ArrayInitializerExpression arrayInitializerExpression)
+            : base(emitter, arrayInitializerExpression)
         {
             this.Emitter = emitter;
             this.ArrayInitializerExpression = arrayInitializerExpression;
@@ -18,7 +19,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             var elements = this.ArrayInitializerExpression.Elements;
             var first = elements.Count > 0 ? elements.First() : null;

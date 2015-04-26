@@ -10,6 +10,7 @@ namespace Bridge.Translator
     public class IndexerBlock : AbstractEmitterBlock
     {
         public IndexerBlock(IEmitter emitter, IndexerExpression indexerExpression)
+            : base(emitter, indexerExpression)
         {
             this.Emitter = emitter;
             this.IndexerExpression = indexerExpression;
@@ -21,7 +22,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitIndexerExpression();
         }
@@ -361,7 +362,7 @@ namespace Bridge.Translator
             {
                 if (indexerExpression.Arguments.Count != 1)
                 {
-                    throw (Exception)this.Emitter.CreateException(indexerExpression, "Only one index is supported");
+                    throw new EmitterException(indexerExpression, "Only one index is supported");
                 }
 
                 var index = indexerExpression.Arguments.First();

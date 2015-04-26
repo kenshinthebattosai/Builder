@@ -8,6 +8,7 @@ namespace Bridge.Translator
     public class AssignmentBlock : AbstractEmitterBlock
     {
         public AssignmentBlock(IEmitter emitter, AssignmentExpression assignmentExpression)
+            : base(emitter, assignmentExpression)
         {
             this.Emitter = emitter;
             this.AssignmentExpression = assignmentExpression;
@@ -19,7 +20,7 @@ namespace Bridge.Translator
             set; 
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             this.VisitAssignmentExpression();
         }
@@ -132,7 +133,7 @@ namespace Bridge.Translator
                         this.Write("-");
                         break;
                     default:
-                        throw (Exception)this.Emitter.CreateException(assignmentExpression, "Unsupported assignment operator: " + assignmentExpression.Operator.ToString());
+                        throw new EmitterException(assignmentExpression, "Unsupported assignment operator: " + assignmentExpression.Operator.ToString());
                 }
 
                 int count = this.Emitter.Writers.Count;

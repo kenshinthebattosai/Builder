@@ -10,6 +10,7 @@ namespace Bridge.Translator
     public class MethodBlock : AbstractMethodBlock
     {
         public MethodBlock(IEmitter emitter, ITypeInfo typeInfo, bool staticBlock)
+            : base(emitter, typeInfo.TypeDeclaration)
         {
             this.Emitter = emitter;
             this.TypeInfo = typeInfo;
@@ -28,7 +29,7 @@ namespace Bridge.Translator
             set;
         }
 
-        public override void Emit()
+        protected override void DoEmit()
         {
             if (this.StaticBlock)
             {

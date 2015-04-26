@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Bridge.Contract;
 
 namespace Bridge.Builder
 {
@@ -121,10 +122,11 @@ namespace Bridge.Builder
                 outputLocation = Path.GetFileNameWithoutExtension(projectLocation);
             }
 
+            Bridge.Translator.Translator translator = null;
             try
             {
                 Console.WriteLine("Generating script...");
-                var translator = new Bridge.Translator.Translator(projectLocation);
+                translator = new Bridge.Translator.Translator(projectLocation);
 
                 bridgeLocation = !string.IsNullOrEmpty(bridgeLocation) ? bridgeLocation : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll"); 
 
@@ -153,14 +155,27 @@ namespace Bridge.Builder
                     translator.RunEvent(translator.AssemblyInfo.AfterBuild);
                 }
             }
+            catch (EmitterException e)
+            {
+                Console.WriteLine("{2} ({3}, {4}) Error: {0} {1}", e.Message, e.StackTrace, e.FileName, e.StartLine + 1, e.StartColumn + 1, e.EndLine + 1, e.EndColumn + 1);
+            }
             catch (Exception e)
             {
+                var ee = translator != null ? translator.CreateExceptionFromLastNode() : null;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: {0}", e.Message);
+
+                if (ee != null)
+                {
+                    Console.WriteLine("{2} ({3}, {4}) Error: {0} {1}", e.Message, e.StackTrace, ee.FileName, ee.StartLine + 1, ee.StartColumn + 1, ee.EndLine + 1, ee.EndColumn + 1);
+                }
+                else
+                {
+                    Console.WriteLine("Error: {0} {1}", e.Message, e.StackTrace);
+                }
+
                 Console.ResetColor();
                 Console.ReadLine();
             }
-
         }
     }
 }

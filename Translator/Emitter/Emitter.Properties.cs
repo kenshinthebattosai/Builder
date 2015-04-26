@@ -359,5 +359,11 @@ namespace Bridge.Translator
             get;
             set;
         }
+
+        public ITranslator Translator
+        {
+            get; 
+            set;
+        }
     }
 }
