@@ -222,6 +222,43 @@ namespace Bridge.Translator
             return name;
         }
 
+        public virtual string GetEntityNameFromAttr(IEntity member, bool setter = false)
+        {
+            var prop = member as IProperty;
+            if (prop != null)
+            {
+                member = setter ? prop.Setter : prop.Getter;
+            }
+            else
+            {
+                var e = member as IEvent;
+                if (e != null)
+                {
+                    member = setter ? e.AddAccessor : e.RemoveAccessor;
+                }
+            }
+            
+            var attr = member.Attributes.FirstOrDefault(a => a.AttributeType.FullName == Bridge.Translator.Translator.Bridge_ASSEMBLY + ".NameAttribute");
+            bool isIgnore = member.DeclaringTypeDefinition != null && this.Validator.IsIgnoreType(member.DeclaringTypeDefinition);
+            string name;
+            
+            if (attr != null)
+            {
+                var value = attr.PositionalArguments.First().ConstantValue;
+                if (value is string)
+                {
+                    name = value.ToString();
+                    if (!isIgnore && ((member.IsStatic && Emitter.IsReservedStaticName(name)) || Helpers.IsReservedWord(name)))
+                    {
+                        name = "$" + name;
+                    }
+                    return name;
+                }
+            }
+
+            return null;
+        }
+
         public virtual string GetEntityName(IEntity member, bool cancelChangeCase = false, bool ignoreInterface = false)
         {
             bool changeCase = !this.IsNativeMember(member.FullName) ? this.ChangeCase : true;

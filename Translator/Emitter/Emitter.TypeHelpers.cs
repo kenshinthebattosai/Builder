@@ -79,7 +79,7 @@ namespace Bridge.Translator
                     if (this.IsInheritedFrom(t, x))
                     {
                         this.Types.Remove(t);
-                        this.Types.Insert(i, t);
+                        this.Types.Insert(this.Types.IndexOf(x) + 1, t);
                         break;
                     }
                 }
