@@ -180,6 +180,11 @@ namespace Bridge.Translator
                         }
                     }
 
+                    if (invocationResult == null)
+                    {
+                        invocationResult = this.Emitter.Resolver.ResolveNode(invocationExpression, this.Emitter) as InvocationResolveResult;
+                    }
+
                     if (invocationResult != null)
                     {
                         var resolvedMethod = invocationResult.Member as IMethod;
@@ -315,6 +320,16 @@ namespace Bridge.Translator
                 if (this.Emitter.Writers.Count > count)
                 {
                     var tuple = this.Emitter.Writers.Pop();
+
+                    if (method != null && method.IsExtensionMethod)
+                    {
+                        StringBuilder savedBuilder = this.Emitter.Output;
+                        this.Emitter.Output = new StringBuilder();
+                        this.WriteThisExtension(invocationExpression.Target);
+                        argsInfo.ThisArgument = this.Emitter.Output.ToString();
+                        this.Emitter.Output = savedBuilder;
+                    }
+
                     new InlineArgumentsBlock(this.Emitter, argsInfo, tuple.Item1).Emit();
                     var result = this.Emitter.Output.ToString();
                     this.Emitter.Output = tuple.Item2;
