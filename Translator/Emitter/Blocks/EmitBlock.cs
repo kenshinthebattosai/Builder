@@ -250,11 +250,16 @@ namespace Bridge.Translator
             this.Emitter.Writers = new Stack<Tuple<string, StringBuilder, bool, Action>>();
             this.Emitter.Outputs = new EmitterOutputs();
 
+            this.Emitter.Translator.Plugins.BeforeTypesEmit(this.Emitter, this.Emitter.Types);
+
             foreach (var type in this.Emitter.Types)
             {
+                this.Emitter.Translator.Plugins.BeforeTypeEmit(this.Emitter, type);
+
                 this.Emitter.Translator.EmitNode = type.TypeDeclaration;
                 if (type.IsObjectLiteral)
                 {
+                    this.Emitter.Translator.Plugins.AfterTypeEmit(this.Emitter, type);
                     continue;
                 }
 
@@ -285,9 +290,12 @@ namespace Bridge.Translator
                 }
 
                 new ClassBlock(this.Emitter, this.Emitter.TypeInfo).Emit();
-            }
+                this.Emitter.Translator.Plugins.AfterTypeEmit(this.Emitter, type);
+            }            
 
             this.RemovePenultimateEmptyLines(true);
+
+            this.Emitter.Translator.Plugins.AfterTypesEmit(this.Emitter, this.Emitter.Types);
         }
     }
 }

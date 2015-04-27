@@ -52,6 +52,7 @@ namespace Bridge.Translator
             emitter.Plugins = this.Plugins;
             this.Plugins.BeforeEmit(emitter, this);
             this.Outputs = emitter.Emit();
+            this.Plugins.AfterEmit(emitter, this);
 
             return this.Outputs;
         }        

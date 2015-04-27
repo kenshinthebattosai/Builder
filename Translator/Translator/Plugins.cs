@@ -56,14 +56,7 @@ namespace Bridge.Translator
             {
                 plugin.OnConfigRead(config);
             }
-        }
-        public void BeforeEmit(IEmitter emitter, ITranslator translator)
-        {
-            foreach (var plugin in this.Parts)
-            {
-                plugin.BeforeEmit(emitter, translator);
-            }
-        }
+        }        
 
         public IEnumerable<string> GetConstructorInjectors(IConstructorBlock constructorBlock)
         {
@@ -87,6 +80,54 @@ namespace Bridge.Translator
             }
 
             return false;
+        }
+
+        public void BeforeEmit(IEmitter emitter, ITranslator translator)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.BeforeEmit(emitter, translator);
+            }
+        }
+
+        public void AfterEmit(IEmitter emitter, ITranslator translator)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.AfterEmit(emitter, translator);
+            }
+        }
+
+        public void BeforeTypesEmit(IEmitter emitter, IList<ITypeInfo> types)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.BeforeTypesEmit(emitter, types);
+            }
+        }
+
+        public void AfterTypesEmit(IEmitter emitter, IList<ITypeInfo> types)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.AfterTypesEmit(emitter, types);
+            }
+        }
+
+        public void BeforeTypeEmit(IEmitter emitter, ITypeInfo type)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.BeforeTypeEmit(emitter, type);
+            }
+        }
+
+        public void AfterTypeEmit(IEmitter emitter, ITypeInfo type)
+        {
+            foreach (var plugin in this.Parts)
+            {
+                plugin.AfterTypeEmit(emitter, type);
+            }
         }
     }
 }

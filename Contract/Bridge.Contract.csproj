@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractPlugin.cs" />
     <Compile Include="BridgeType.cs" />
     <Compile Include="EmitterException.cs" />
     <Compile Include="Helpers.Cecil.cs" />
