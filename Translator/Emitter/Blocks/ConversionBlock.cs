@@ -101,7 +101,13 @@ namespace Bridge.Translator
                     return false;
                 }
 
-                if (conversion.IsLifted)
+                var isNumLifted = conversion.IsImplicit && conversion.IsLifted && conversion.IsNumericConversion && !(expression is BinaryOperatorExpression);
+                if (isNumLifted && !conversion.IsUserDefined)
+                {
+                    return false;
+                }
+
+                if (conversion.IsLifted && !isNumLifted)
                 {
                     block.Write("Bridge.Nullable.lift(");
                 }
@@ -177,10 +183,6 @@ namespace Bridge.Translator
 
                     return true;
                 }
-                else if (conversion.IsNumericConversion)
-                {
-                }
-
                 // Still returns true if Nullable.lift( was written.
                 return conversion.IsLifted;
             }

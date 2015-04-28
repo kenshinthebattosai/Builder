@@ -174,6 +174,11 @@ namespace Bridge.Contract
                 return "Object";
             }
 
+            if (NullableType.IsNullable(type))
+            {
+                return BridgeTypes.ToJsName(NullableType.GetUnderlyingType(type), emitter);
+            }
+
             BridgeType bridgeType = emitter.BridgeTypes.Get(type, true);            
             string name = BridgeTypes.ConvertName(type.FullName);
             bool isCustomName = false;
@@ -185,7 +190,7 @@ namespace Bridge.Contract
             if (!isCustomName && type.TypeArguments.Count > 0)
             {
                 name += "$" + type.TypeArguments.Count;
-            }
+            }            
 
             if (!asDefinition && type.TypeArguments.Count > 0 && !Helpers.IsIgnoreGeneric(type, emitter))
             {
