@@ -43,7 +43,7 @@ namespace Bridge.Translator
 
             if (isConversion)
             {
-                this.Write(")");
+                this.WriteCloseParentheses();
             }
         }
 
@@ -114,7 +114,8 @@ namespace Bridge.Translator
 
                     if (conversion.IsExplicit && !string.IsNullOrWhiteSpace(inline))
                     {
-                        return false;
+                        // Still returns true if Nullable.lift( was written.
+                        return conversion.IsLifted;
                     }
 
                     if (!string.IsNullOrWhiteSpace(inline))
@@ -148,13 +149,15 @@ namespace Bridge.Translator
 
                         block.DisableEmitConversionExpression = true;
 
-                        return false;
+                        // Still returns true if Nullable.lift( was written.
+                        return conversion.IsLifted;
                     }
                     else
                     {
                         if (method.DeclaringTypeDefinition != null && block.Emitter.Validator.IsIgnoreType(method.DeclaringTypeDefinition))
                         {
-                            return false;
+                            // Still returns true if Nullable.lift( was written.
+                            return conversion.IsLifted;
                         }
 
                         block.Write(BridgeTypes.ToJsName(method.DeclaringType, block.Emitter));
@@ -177,6 +180,9 @@ namespace Bridge.Translator
                 else if (conversion.IsNumericConversion)
                 {
                 }
+
+                // Still returns true if Nullable.lift( was written.
+                return conversion.IsLifted;
             }
             catch
             {

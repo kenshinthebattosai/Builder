@@ -34,7 +34,7 @@ namespace Bridge.Translator
 
             foreach (var tag in combined_tags)
             {
-                if (tag.Value == "Bridge" || tag.Value.StartsWith("Bridge."))
+                if (tag.Value == "Bridge")
                 {
                     valid = false;
                     if (!failList.Contains(tag.Value))
@@ -54,8 +54,8 @@ namespace Bridge.Translator
                         tag.Value + "</" + tag.Name.LocalName + ">\n";
                 }
 
-                throw new Bridge.Translator.Exception("'Bridge' or 'Bridge.*' names are reserved and may not " +
-                    "be used as project names, root namespaces or namespaces.\n" +
+                throw new Bridge.Translator.Exception("'Bridge' name is reserved and may not " +
+                    "be used as project names or root namespaces.\n" +
                     "Please verify your project settings and rename where it applies.\n" +
                     "Project file: " + this.Location + "\n" +
                     "Offending settings:\n" + offendingSettings

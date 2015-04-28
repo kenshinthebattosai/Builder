@@ -184,7 +184,7 @@ namespace Bridge.Translator
         /// <returns></returns>
         protected static bool IsConflictingNamespace(string namespaceName)
         {
-            return (namespaceName == "Bridge" || namespaceName.StartsWith("Bridge."));
+            return (namespaceName == "Bridge");
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace Bridge.Translator
                 if (Bridge.Translator.Inspector.IsConflictingNamespace(nsName))
                 {
                     throw new EmitterException(nsAt,"Custom attribute '[" + nsAt.ToString() +
-                        "]' uses reserved namespace names 'Bridge' or 'Bridge.*'.\n" +
-                        "These names are reserved for Bridge.NET core and frameworks.");
+                        "]' uses reserved namespace name 'Bridge'.\n" +
+                        "This name is reserved for Bridge.NET core.");
                 }
             }
         }
@@ -215,8 +215,8 @@ namespace Bridge.Translator
             if (Bridge.Translator.Inspector.IsConflictingNamespace(nsDecl.FullName))
             {
                 throw new EmitterException(nsDecl, "Namespace '" + nsDecl.FullName +
-                    "' uses reserved names 'Bridge' or 'Bridge.*'.\n" +
-                    "These names are reserved for Bridge.NET core and frameworks.");
+                    "' uses reserved name 'Bridge'.\n" +
+                    "This name is reserved for Bridge.NET core.");
             }
         }
     }
