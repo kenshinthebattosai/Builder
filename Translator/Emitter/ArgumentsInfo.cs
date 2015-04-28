@@ -241,6 +241,20 @@ namespace Bridge.Translator
                         this.TypeArguments[i] = new TypeParamExpression(method.TypeParameters[i].Name, null, method.TypeArguments[i]);
                     }
                 }
+
+                if (method.DeclaringType != null && method.DeclaringTypeDefinition != null && method.DeclaringTypeDefinition.TypeParameters.Count > 0)
+                {
+                    var typeParams = method.DeclaringTypeDefinition.TypeParameters;
+                    var typeArgs = method.DeclaringType.TypeArguments;
+                    var temp = new TypeParamExpression[typeParams.Count];
+
+                    for (int i = 0; i < typeParams.Count; i++)
+                    {
+                        temp[i] = new TypeParamExpression(typeParams[i].Name, null, typeArgs[i]);
+                    }
+
+                    this.TypeArguments = this.TypeArguments.Concat(temp).ToArray();
+                }
             }
         }
 
