@@ -89,7 +89,7 @@ namespace Bridge.Contract
             {
                 if (reference.IsGenericInstance)
                 {
-                    return reference.Resolve();
+                    reference = reference.GetElementType();
                 }
 
                 string key = BridgeTypes.GetTypeDefinitionKey(reference.FullName);

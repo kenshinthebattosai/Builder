@@ -96,7 +96,25 @@ namespace Bridge.Contract
             var name = type.FullName;
             if (type.IsGenericInstance)
             {
-                name = type.Resolve().FullName;
+                /*try
+                {
+                    name = type.Resolve().FullName;                    
+                }
+                catch
+                {
+                    try
+                    {
+                        var elementType = type.GetElementType();
+
+                        name = elementType != null ? elementType.FullName : type.FullName;
+                    }
+                    catch
+                    {
+                        name = type.FullName;
+                    }                    
+                }*/
+
+                name = type.GetElementType().FullName;
             }
 
             foreach (var item in this)
