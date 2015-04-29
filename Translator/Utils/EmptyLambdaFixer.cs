@@ -20,6 +20,8 @@ namespace Bridge.Translator
             {
                 this.Found = true;                
             }
+
+            base.VisitLambdaExpression(lambdaExpression);
         }
     }
 
@@ -68,14 +70,21 @@ namespace Bridge.Translator
 
         public override AstNode VisitLambdaExpression(LambdaExpression lambdaExpression)
         {
+            var clonLambdaExpression = (LambdaExpression)base.VisitLambdaExpression(lambdaExpression);
+
+            if (clonLambdaExpression != null)
+            {
+                lambdaExpression = clonLambdaExpression;
+            }
+
             if (lambdaExpression.Body.IsNull)
             {
                 var l = (LambdaExpression)lambdaExpression.Clone();
                 l.Body = new IdentifierExpression(lambdaExpression.Parameters.Last().Name);
 
                 return l;
-            }
-
+            }            
+            
             return lambdaExpression.Clone();
         }
     }
