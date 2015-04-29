@@ -210,7 +210,7 @@ namespace Bridge.Translator
 
                                 this.Write(name);
 
-                                if (!isIgnoreClass && argsInfo.TypeArguments != null && argsInfo.TypeArguments.Length > 0)
+                                if (!isIgnoreClass && argsInfo.HasTypeArguments)
                                 {
                                     this.WriteOpenParentheses();
                                     new TypeExpressionListBlock(this.Emitter, argsInfo.TypeArguments).Emit();
@@ -267,7 +267,7 @@ namespace Bridge.Translator
                     this.Write(BridgeTypes.ToJsName(baseType, this.Emitter), ".prototype.", this.Emitter.ChangeCase ? Object.Net.Utilities.StringUtils.ToLowerCamelCase(baseMethod) : baseMethod);
                 }
 
-                if (!isIgnore && argsInfo.TypeArguments != null && argsInfo.TypeArguments.Length > 0)
+                if (!isIgnore && argsInfo.HasTypeArguments)
                 {
                     this.WriteOpenParentheses();
                     new TypeExpressionListBlock(this.Emitter, argsInfo.TypeArguments).Emit();
@@ -345,7 +345,7 @@ namespace Bridge.Translator
                         isIgnore = true;
                     }
 
-                    if (!isIgnore && argsInfo.TypeArguments != null && argsInfo.TypeArguments.Length > 0)
+                    if (!isIgnore && argsInfo.HasTypeArguments)
                     {
                         this.WriteOpenParentheses();
                         new TypeExpressionListBlock(this.Emitter, argsInfo.TypeArguments).Emit();

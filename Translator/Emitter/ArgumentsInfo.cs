@@ -84,17 +84,24 @@ namespace Bridge.Translator
             set;
         }
 
+        public bool HasTypeArguments
+        {
+            get;
+            set;
+        }
+
         public ArgumentsInfo(IEmitter emitter, InvocationExpression invocationExpression)
         {
             this.Emitter = emitter;
             this.Expression = invocationExpression;            
 
             var arguments = invocationExpression.Arguments.ToList();
-            this.ResolveResult = emitter.Resolver.ResolveNode(invocationExpression, emitter) as InvocationResolveResult;
+            this.ResolveResult = emitter.Resolver.ResolveNode(invocationExpression, emitter) as InvocationResolveResult;            
 
             this.BuildArgumentsList(arguments);
             if (this.ResolveResult != null) 
             {
+                this.HasTypeArguments = ((IMethod)this.ResolveResult.Member).TypeArguments.Count > 0;
                 this.BuildTypedArguments(invocationExpression.Target);
             }            
         }

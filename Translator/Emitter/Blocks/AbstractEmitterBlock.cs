@@ -15,6 +15,14 @@ namespace Bridge.Translator
 
         protected abstract void DoEmit();
 
+        public AstNode PreviousNode
+        {
+            get
+            {
+                return this.previousNode;
+            }
+        }
+
         public IEmitter Emitter
         {
             get;

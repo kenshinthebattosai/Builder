@@ -57,7 +57,19 @@ namespace Bridge.Translator
                 }
 
                 needComma = true;
-                this.Write(BridgeTypes.ToJsName(expr.AstType, this.Emitter));
+
+                if (expr.AstType != null)
+                {
+                    this.Write(BridgeTypes.ToJsName(expr.AstType, this.Emitter));
+                }
+                else if (expr.IType != null)
+                {
+                    this.Write(BridgeTypes.ToJsName(expr.IType, this.Emitter));
+                }
+                else
+                {
+                    throw new EmitterException(this.PreviousNode, "There is no type information");
+                }
             }
         }
 
