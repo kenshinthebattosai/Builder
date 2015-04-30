@@ -118,11 +118,14 @@ namespace Bridge.Translator
                 this.ReadTypes(item);
             }
 
-            var prefix = Path.GetDirectoryName(this.Location);
-
-            for (int i = 0; i < this.SourceFiles.Count; i++)
+            if (!this.FolderMode)
             {
-                this.SourceFiles[i] = Path.Combine(prefix, this.SourceFiles[i]);
+                var prefix = Path.GetDirectoryName(this.Location);
+
+                for (int i = 0; i < this.SourceFiles.Count; i++)
+                {
+                    this.SourceFiles[i] = Path.Combine(prefix, this.SourceFiles[i]);
+                }
             }
 
             return references;

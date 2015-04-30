@@ -17,11 +17,11 @@ namespace Bridge.Translator
             string path = null;
             if (!string.IsNullOrWhiteSpace(config.PluginsPath))
             {
-                path = Path.Combine(Path.GetDirectoryName(translator.Location), config.PluginsPath);
+                path = Path.Combine(translator.FolderMode ? translator.Location : Path.GetDirectoryName(translator.Location), config.PluginsPath);
             }
             else
             {
-                path = Path.Combine(Path.GetDirectoryName(translator.Location), "Bridge\\plugins");
+                path = Path.Combine(translator.FolderMode ? translator.Location : Path.GetDirectoryName(translator.Location), "Bridge\\plugins");
             }
             
             if (!System.IO.Directory.Exists(path)) 

@@ -39,6 +39,10 @@ namespace Bridge.Builder
             bool extractCore = true;
             bool changeCase = true;
             string cfg = null;
+            string source = null;
+            string folder = Environment.CurrentDirectory;
+            bool recursive = false;
+            string lib = null;
 
             if (args.Length == 0)
             {
@@ -91,6 +95,18 @@ namespace Bridge.Builder
                     case "-nocore":
                         extractCore = false;
                         break;
+                    case "-src":
+                        source = args[++i];
+                        break;
+                    case "-folder":
+                        folder = Path.Combine(Environment.CurrentDirectory, args[++i]);
+                        break;
+                    case "-recursive":
+                        recursive = true;
+                        break;
+                    case "-lib":
+                        lib = args[++i];
+                        break;
 #if DEBUG
                     case "-debug":
                     case "-d":
@@ -103,30 +119,32 @@ namespace Bridge.Builder
                 }
 
                 i++;
-            }
-
-            if (string.IsNullOrEmpty(projectLocation))
-            {
-                Console.WriteLine("Project location is empty, please define argument with -p command");
-                return;
-            }
-
-            if (!File.Exists(projectLocation))
-            {
-                Console.WriteLine("Project file doesn't exist: " + projectLocation);
-                return;
-            }
-
+            }            
+           
             if (string.IsNullOrEmpty(outputLocation))
             {
-                outputLocation = Path.GetFileNameWithoutExtension(projectLocation);
+                outputLocation = !string.IsNullOrWhiteSpace(projectLocation) ? Path.GetFileNameWithoutExtension(projectLocation) : folder;
             }
 
             Bridge.Translator.Translator translator = null;
             try
             {
                 Console.WriteLine("Generating script...");
-                translator = new Bridge.Translator.Translator(projectLocation);
+
+                if (!string.IsNullOrWhiteSpace(projectLocation))
+                {
+                    translator = new Bridge.Translator.Translator(projectLocation);
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(lib))
+                    {
+                        throw new Exception("Please define path to assembly using -lib option");
+                    }
+
+                    lib = Path.Combine(folder, lib);
+                    translator = new Bridge.Translator.Translator(folder, source, recursive, lib);
+                }                
 
                 bridgeLocation = !string.IsNullOrEmpty(bridgeLocation) ? bridgeLocation : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll"); 
 
@@ -137,9 +155,19 @@ namespace Bridge.Builder
                 translator.Configuration = cfg;
                 translator.Translate();
 
-                string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
-                string outputPath = Path.Combine(Path.GetDirectoryName(projectLocation), !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ? translator.AssemblyInfo.Output : path);
+                string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);                
+                string outputPath = null;
 
+                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output))
+                {
+                    outputPath = Path.Combine(!string.IsNullOrWhiteSpace(projectLocation) ? Path.GetDirectoryName(projectLocation) : folder, translator.AssemblyInfo.Output);
+                }
+                else
+                {
+                    outputPath = Path.Combine(!string.IsNullOrWhiteSpace(projectLocation) ? Path.GetDirectoryName(projectLocation) : folder, !string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output) ? translator.AssemblyInfo.Output : path);
+                }
+
+                Console.WriteLine("Saving to " + outputPath);
                 translator.SaveTo(outputPath, Path.GetFileName(outputLocation));
 
                 if (extractCore)

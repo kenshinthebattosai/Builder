@@ -19,6 +19,12 @@ namespace Bridge.Translator
             this.ParsedSourceFiles = new List<ParsedSourceFile>();
         }
 
+        protected virtual void ReadFolderFiles()
+        {
+            this.SourceFiles = this.GetSourceFiles();
+            this.ParsedSourceFiles = new List<ParsedSourceFile>();
+        }
+
         /// <summary>
         /// Validates project and namespace names against conflicts with Bridge.NET namespaces.
         /// </summary>
@@ -137,6 +143,31 @@ namespace Bridge.Translator
             }
 
             return nodes.First().Value;
+        }
+
+        protected virtual IList<string> GetSourceFiles()
+        {
+            var result = new List<string>();
+            if (string.IsNullOrWhiteSpace(this.Source))
+            {
+                this.Source = "*.cs";
+            }
+
+            string[] parts = this.Source.Split(';');
+            var searchOption = this.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            foreach (var part in parts)
+            {
+                int index = part.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
+                string folder = index > -1 ? Path.Combine(this.Location, part.Substring(0, index + 1)) : this.Location;
+                string mask = index > -1 ? part.Substring(index + 1) : part;
+
+                string[] allfiles = System.IO.Directory.GetFiles(folder, mask, searchOption);
+                result.AddRange(allfiles);
+            }
+
+            result = result.Distinct().ToList();
+            return result;
         }
     }
 }

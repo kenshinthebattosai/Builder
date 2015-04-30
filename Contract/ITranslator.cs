@@ -31,5 +31,8 @@ namespace Bridge.Contract
         BridgeTypes BridgeTypes { get; set; }
         AstNode EmitNode { get; set; }
         EmitterException CreateExceptionFromLastNode();
+        bool FolderMode { get; set; }
+        string Source { get; set; }
+        bool Recursive { get; set; }
     }
 }

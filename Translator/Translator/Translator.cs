@@ -16,6 +16,16 @@ namespace Bridge.Translator
             this.Validator = this.CreateValidator();
         }
 
+        public Translator(string folder, string source, bool recursive, string lib)
+        {
+            this.Recursive = recursive;
+            this.Source = source;
+            this.FolderMode = true;
+            this.Location = folder;
+            this.AssemblyLocation = lib;
+            this.Validator = this.CreateValidator();
+        }
+
         public Dictionary<string, string> Translate()
         {            
             var config = this.ReadConfig();
@@ -26,13 +36,20 @@ namespace Bridge.Translator
             {
                 this.RunEvent(config.BeforeBuild);
             }
-            
-            this.ReadProjectFile();
 
-            if (this.Rebuild || !File.Exists(this.AssemblyLocation))
+            if (this.FolderMode)
             {
-                this.BuildAssembly();
+                this.ReadFolderFiles();
             }
+            else
+            {
+                this.ReadProjectFile();
+
+                if (this.Rebuild || !File.Exists(this.AssemblyLocation))
+                {
+                    this.BuildAssembly();
+                }
+            }            
 
             var references = this.InspectReferences();            
 

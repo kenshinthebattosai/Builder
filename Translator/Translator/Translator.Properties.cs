@@ -151,5 +151,23 @@ namespace Bridge.Translator
             get; 
             set;
         }
+
+        public bool FolderMode
+        {
+            get;
+            set;
+        }
+
+        public string Source
+        {
+            get;
+            set;
+        }
+
+        public bool Recursive
+        {
+            get;
+            set;
+        }
     }
 }
