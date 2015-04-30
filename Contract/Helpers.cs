@@ -26,6 +26,79 @@ namespace Bridge.Contract
             return name.Replace('`', '$').Replace('/', '.').Replace("+", ".");
         }
 
+        public static bool HasGenericArgument(GenericInstanceType type, TypeDefinition searchType, IEmitter emitter)
+        {
+            foreach (var gArg in type.GenericArguments)
+            {
+                var orig = gArg;
+                
+                var gArgDef = gArg;                
+                if (gArgDef.IsGenericInstance)
+                {
+                    gArgDef = gArgDef.GetElementType();
+                }
+
+                TypeDefinition gTypeDef = null;
+                try
+                {
+                    gTypeDef = Helpers.ToTypeDefinition(gArgDef, emitter);
+                }
+                catch { }
+
+                if (gTypeDef == searchType)
+                {
+                    return true;
+                }
+
+                if (orig.IsGenericInstance)
+                {
+                    var result = Helpers.HasGenericArgument((GenericInstanceType)orig, searchType, emitter);
+
+                    if (result)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        
+        public static bool IsTypeArgInSubclass(TypeDefinition thisTypeDefinition, TypeDefinition typeArgDefinition, IEmitter emitter, bool deep = true)
+        {
+            foreach (TypeReference interfaceReference in thisTypeDefinition.Interfaces)
+            {
+                var gBaseType = interfaceReference as GenericInstanceType;
+                if (gBaseType != null && Helpers.HasGenericArgument(gBaseType, typeArgDefinition, emitter))
+                {
+                    return true;
+                }
+            }
+
+            if (thisTypeDefinition.BaseType != null)
+            {
+                TypeDefinition baseTypeDefinition = null;
+
+                var gBaseType = thisTypeDefinition.BaseType as GenericInstanceType;
+                if (gBaseType != null && Helpers.HasGenericArgument(gBaseType, typeArgDefinition, emitter))
+                {
+                    return true;
+                }
+
+                try
+                {
+                    baseTypeDefinition = Helpers.ToTypeDefinition(thisTypeDefinition.BaseType, emitter);
+                }
+                catch { }
+
+                if (baseTypeDefinition != null && deep)
+                {                    
+                    return Helpers.IsTypeArgInSubclass(baseTypeDefinition, typeArgDefinition, emitter);
+                }
+            }
+            return false;
+        }
+
         public static bool IsSubclassOf(TypeDefinition thisTypeDefinition, TypeDefinition typeDefinition, IEmitter emitter)
         {
             if (thisTypeDefinition.BaseType != null)
@@ -50,7 +123,13 @@ namespace Bridge.Contract
         {
             foreach (TypeReference interfaceReference in thisTypeDefinition.Interfaces)
             {
-                if (interfaceReference == interfaceTypeDefinition)
+                var iref = interfaceReference;
+                if (interfaceReference.IsGenericInstance)
+                {
+                    iref = interfaceReference.GetElementType();
+                }
+
+                if (iref == interfaceTypeDefinition)
                 {
                     return true;
                 }
@@ -59,7 +138,7 @@ namespace Bridge.Contract
                 
                 try 
                 {
-                    interfaceDefinition = Helpers.ToTypeDefinition(interfaceReference, emitter);
+                    interfaceDefinition = Helpers.ToTypeDefinition(iref, emitter);
                 }
                 catch { }
 

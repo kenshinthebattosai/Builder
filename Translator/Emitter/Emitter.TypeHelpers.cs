@@ -58,7 +58,8 @@ namespace Bridge.Translator
             var yTypeDefinition = this.TypeDefinitions[y.Key];
 
             if (Helpers.IsSubclassOf(xTypeDefinition, yTypeDefinition, this) ||
-                (xTypeDefinition.IsInterface && Helpers.IsImplementationOf(xTypeDefinition, yTypeDefinition, this)))
+                (yTypeDefinition.IsInterface && Helpers.IsImplementationOf(xTypeDefinition, yTypeDefinition, this)) ||
+                Helpers.IsTypeArgInSubclass(xTypeDefinition, yTypeDefinition, this))
             {
                 inherits = true;
             }

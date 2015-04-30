@@ -83,6 +83,8 @@ namespace Bridge.Translator
 
             if (extend.IsNotEmpty() && !this.TypeInfo.IsEnum)
             {
+                var bridgeType = this.Emitter.BridgeTypes.Get(this.Emitter.TypeInfo);                
+
                 if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "inherits")) ||
                     this.TypeInfo.InstanceConfig.Fields.Any(m => m.GetName(this.Emitter) == "inherits"))
                 {
@@ -91,7 +93,21 @@ namespace Bridge.Translator
 
                 this.Write("inherits");
                 this.WriteColon();
-                this.Write(extend);
+                if (Helpers.IsTypeArgInSubclass(bridgeType.TypeDefinition, bridgeType.TypeDefinition, this.Emitter, false))
+                {
+                    this.WriteFunction();
+                    this.WriteOpenCloseParentheses(true);
+                    this.WriteOpenBrace(true);
+                    this.WriteReturn(true);
+                    this.Write(extend);
+                    this.WriteSemiColon();
+                    this.WriteCloseBrace(true);
+                }
+                else
+                {
+                    this.Write(extend);
+                }
+                
                 this.Emitter.Comma = true;
             }
 
