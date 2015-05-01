@@ -106,11 +106,6 @@ namespace Bridge.Build
                 {
                     Bridge.Translator.Translator.ExtractCore(translator.BridgeLocation, outputPath);
                 }
-
-                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))
-                {
-                    translator.RunEvent(translator.AssemblyInfo.AfterBuild);
-                }
             }
             catch (EmitterException e)
             {

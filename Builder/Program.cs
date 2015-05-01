@@ -177,11 +177,6 @@ namespace Bridge.Builder
                 }
 
                 Console.WriteLine("Done.");
-
-                if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.AfterBuild))
-                {
-                    translator.RunEvent(translator.AssemblyInfo.AfterBuild);
-                }
             }
             catch (EmitterException e)
             {
@@ -198,7 +193,14 @@ namespace Bridge.Builder
                 }
                 else
                 {
-                    Console.WriteLine("Error: {0} {1}", e.Message, e.StackTrace);
+                    // Iteractively print inner exceptions
+                    var ine = e;
+                    var elvl = 0;
+                    while (ine != null)
+                    {
+                        Console.WriteLine("Error: exception level: {0} - {1}\nStack trace:\n{2}", elvl++, ine.Message, ine.StackTrace);
+                        ine = ine.InnerException;
+                    }
                 }
 
                 Console.ResetColor();
