@@ -55,13 +55,20 @@ namespace Bridge.Translator
                 FileName = e
             };
             info.WindowStyle = ProcessWindowStyle.Hidden;
+
+            if (!File.Exists(e))
+            {
+                throw new Exception("The specified file '" + e + "' couldn't be found." +
+                    "\nWarning: Bridge.NET translator working directory: " + Directory.GetCurrentDirectory());
+            }
+
             using (var p = Process.Start(info))
             {
                 p.WaitForExit();
 
                 if (p.ExitCode != 0)
                 {
-                    Bridge.Translator.Exception.Throw("Event (" + e + ") was not successful, exit code - " + p.ExitCode);
+                    throw new Exception("Error: The command '" + e + "' returned with exit code: " + p.ExitCode);
                 }
             }
         }

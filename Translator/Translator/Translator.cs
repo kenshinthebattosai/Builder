@@ -34,7 +34,15 @@ namespace Bridge.Translator
 
             if (config != null && !string.IsNullOrWhiteSpace(config.BeforeBuild))
             {
-                this.RunEvent(config.BeforeBuild);
+                try
+                {
+                    this.RunEvent(config.BeforeBuild);
+                }
+                catch (Exception exc)
+                {
+                    throw new Bridge.Translator.Exception("Error: Unable to run beforeBuild event command: " +
+                        exc.Message + "\nStack trace:\n" + exc.StackTrace);
+                }
             }
 
             if (this.FolderMode)
@@ -125,12 +133,25 @@ namespace Bridge.Translator
                 file.Directory.Create();
                 File.WriteAllText(file.FullName, code, System.Text.UTF8Encoding.UTF8);
 
-                string fn = Path.GetFileNameWithoutExtension(filePath);
-                filePath = Path.GetDirectoryName(filePath) + ("\\" + fn + ".min") + Path.GetExtension(filePath);
+                fileName = Path.GetFileNameWithoutExtension(filePath) + ".min" + Path.GetExtension(filePath);
+                filePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
                 file = new System.IO.FileInfo(filePath);
                 file.Directory.Create();
                 File.WriteAllText(file.FullName, minifier.MinifyJavaScript(code), System.Text.UTF8Encoding.UTF8);
-            }            
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.AssemblyInfo.AfterBuild))
+            {
+                try
+                {
+                    this.RunEvent(this.AssemblyInfo.AfterBuild);
+                }
+                catch (Exception exc)
+                {
+                    throw new Bridge.Translator.Exception("Error: Unable to run afterBuild event command: " +
+                        exc.Message + "\nStack trace:\n" + exc.StackTrace);
+                }
+            }
         }
 
         protected virtual Emitter CreateEmitter(IMemberResolver resolver)
