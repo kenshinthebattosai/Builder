@@ -291,6 +291,7 @@ namespace Bridge.Translator
             this.WriteSemiColon(true);
 
             var firstClause = true;
+            var writeElse = false;
 
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
@@ -304,6 +305,7 @@ namespace Bridge.Translator
 
                 if (!isBaseException)
                 {
+                    writeElse = true;
                     this.WriteIf();
                     this.WriteOpenParentheses();
                     this.Write("Bridge.is($e, " + exceptionType + ")");
@@ -317,6 +319,7 @@ namespace Bridge.Translator
                 this.BeginBlock();
 
                 if (clause.VariableName.IsNotEmpty()){
+                    this.WriteVar();
                     this.Write(clause.VariableName + " = $e;");
                     this.WriteNewLine();
                 }                
@@ -328,6 +331,16 @@ namespace Bridge.Translator
                 this.WriteNewLine();
 
                 this.PopLocals();
+            }
+
+            if (writeElse)
+            {
+                this.WriteElse();
+                this.BeginBlock();
+                this.Write("throw $e;");
+                this.WriteNewLine();
+                this.EndBlock();
+                this.WriteNewLine();
             }
 
             this.EndBlock();
