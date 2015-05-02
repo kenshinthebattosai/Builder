@@ -272,14 +272,20 @@ namespace Bridge.Translator
             this.BeginBlock();
             this.Write("$e = Bridge.Exception.create($e);");
             this.WriteNewLine();
-
-            this.WriteVar(true);
+            
             var catchVars = new Dictionary<string, string>();
+            var writeVar = false;
 
             foreach (var clause in tryCatchStatement.CatchClauses)
             {
                 if (clause.VariableName.IsNotEmpty() && !catchVars.ContainsKey(clause.VariableName))
                 {
+                    if (!writeVar)
+                    {
+                        writeVar = true;
+                        this.WriteVar(true);
+                    }
+                    
                     this.EnsureComma(false);
                     catchVars.Add(clause.VariableName, clause.VariableName);
                     this.Write(clause.VariableName);
@@ -288,7 +294,10 @@ namespace Bridge.Translator
             }
 
             this.Emitter.Comma = false;
-            this.WriteSemiColon(true);
+            if (writeVar)
+            {
+                this.WriteSemiColon(true);
+            }
 
             var firstClause = true;
             var writeElse = false;
@@ -318,8 +327,8 @@ namespace Bridge.Translator
                 this.PushLocals();
                 this.BeginBlock();
 
-                if (clause.VariableName.IsNotEmpty()){
-                    this.WriteVar();
+                if (clause.VariableName.IsNotEmpty())
+                {                    
                     this.Write(clause.VariableName + " = $e;");
                     this.WriteNewLine();
                 }                
