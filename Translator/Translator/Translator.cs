@@ -131,13 +131,13 @@ namespace Bridge.Translator
 
                 var file = new System.IO.FileInfo(filePath);
                 file.Directory.Create();
-                File.WriteAllText(file.FullName, code, System.Text.UTF8Encoding.UTF8);
+                File.WriteAllText(file.FullName, "/* global Bridge */\n\n" + code, System.Text.UTF8Encoding.UTF8);
 
                 fileName = Path.GetFileNameWithoutExtension(filePath) + ".min" + Path.GetExtension(filePath);
                 filePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
                 file = new System.IO.FileInfo(filePath);
                 file.Directory.Create();
-                File.WriteAllText(file.FullName, minifier.MinifyJavaScript(code), System.Text.UTF8Encoding.UTF8);
+                File.WriteAllText(file.FullName, "/* global Bridge */\n\n" + minifier.MinifyJavaScript(code), System.Text.UTF8Encoding.UTF8);
             }
 
             if (!string.IsNullOrWhiteSpace(this.AssemblyInfo.AfterBuild))
