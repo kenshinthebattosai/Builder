@@ -8,6 +8,44 @@ namespace Bridge.Translator
 {
     public partial class Translator
     {
+        private void ConvertConfigPaths(IAssemblyInfo assemblyInfo)
+        {
+            if (!string.IsNullOrWhiteSpace(assemblyInfo.AfterBuild))
+            {
+                assemblyInfo.AfterBuild = ConvertPath(assemblyInfo.AfterBuild);
+            }
+
+            if (!string.IsNullOrWhiteSpace(assemblyInfo.BeforeBuild))
+            {
+                assemblyInfo.BeforeBuild = ConvertPath(assemblyInfo.BeforeBuild);
+            }
+
+            if (!string.IsNullOrWhiteSpace(assemblyInfo.Output))
+            {
+                assemblyInfo.Output = ConvertPath(assemblyInfo.Output);
+            }
+
+            if (!string.IsNullOrWhiteSpace(assemblyInfo.PluginsPath))
+            {
+                assemblyInfo.PluginsPath = ConvertPath(assemblyInfo.PluginsPath);
+            }
+        }
+
+        private string ConvertPath(string path)
+        {
+            if (Path.DirectorySeparatorChar != '/')
+            {
+                path = path.Replace('/', Path.DirectorySeparatorChar);
+            }
+
+            if (Path.DirectorySeparatorChar != '\\')
+            {
+                path.Replace('\\', Path.DirectorySeparatorChar);
+            }
+
+            return path;
+        }
+
         protected virtual IAssemblyInfo ReadConfig()
         {
             var folder = this.FolderMode ? this.Location : Path.GetDirectoryName(this.Location);
@@ -39,13 +77,15 @@ namespace Bridge.Translator
                     assemblyInfo = new AssemblyInfo();
                 }
                 
+                // Convert '/' and '\\' to platform-specific path separator.
+                ConvertConfigPaths(assemblyInfo);
+
                 return assemblyInfo;
             }
             catch (Exception e)
             {
                 throw new InvalidOperationException("Cannot read bridge.json", e);
             }
-
         }
 
         public virtual void RunEvent(string e)
