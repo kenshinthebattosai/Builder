@@ -4,13 +4,17 @@ using System.Diagnostics;
 namespace Bridge.Translator
 {
     public partial class Translator
-    {        
+    {
+
+        protected static readonly char ps = System.IO.Path.DirectorySeparatorChar;
+
         protected virtual string GetBuilderPath()
         {
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
-                    return String.Format("{0}\\Microsoft.NET\\Framework\\v{1}\\msbuild", Environment.GetEnvironmentVariable("windir"), this.MSBuildVersion);
+                    return Environment.GetEnvironmentVariable("windir") + ps + "Microsoft.NET" + ps + "Framework" + ps +
+                        this.MSBuildVersion + ps + "msbuild";
                 default:
                     throw (Exception)Bridge.Translator.Exception.Create("Unsupported platform - {0}", Environment.OSVersion.Platform);
             }

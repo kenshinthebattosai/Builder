@@ -21,7 +21,7 @@ namespace Bridge.Translator
             }
             else
             {
-                path = Path.Combine(translator.FolderMode ? translator.Location : Path.GetDirectoryName(translator.Location), "Bridge\\plugins");
+                path = Path.Combine(translator.FolderMode ? translator.Location : Path.GetDirectoryName(translator.Location), "Bridge" + Path.DirectorySeparatorChar + "plugins");
             }
             
             if (!System.IO.Directory.Exists(path)) 

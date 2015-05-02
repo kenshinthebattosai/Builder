@@ -115,7 +115,7 @@ namespace Bridge.Translator
                 var oldFNlen = fileName.Length;
                 while (Path.IsPathRooted(fileName))
                 {
-                    fileName = fileName.TrimStart('/', '\\');
+                    fileName = fileName.TrimStart(Path.DirectorySeparatorChar, '/', '\\');
 
                     // Trimming didn't change the path. This way, it will just loop indefinitely.
                     // Also, this means the absolute path specifies a fully-qualified DOS PathName with drive letter.
