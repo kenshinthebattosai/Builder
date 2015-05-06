@@ -19,10 +19,10 @@ namespace Bridge.Translator
             this.YieldBreakStatement = breakStatement;
         }
 
-        public BreakStatement BreakStatement 
-        { 
-            get; 
-            set; 
+        public BreakStatement BreakStatement
+        {
+            get;
+            set;
         }
 
         public YieldBreakStatement YieldBreakStatement
@@ -63,7 +63,7 @@ namespace Bridge.Translator
             {
                 this.Write("break");
             }
-            
+
             this.WriteSemiColon();
             this.WriteNewLine();
         }

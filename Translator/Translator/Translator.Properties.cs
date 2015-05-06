@@ -37,17 +37,17 @@ namespace Bridge.Translator
             get;
             set;
         }
-        
-        public string Location 
-        { 
-            get; 
-            protected set; 
+
+        public string Location
+        {
+            get;
+            protected set;
         }
 
-        public string AssemblyLocation 
-        { 
-            get; 
-            protected set; 
+        public string AssemblyLocation
+        {
+            get;
+            protected set;
         }
 
         public string Configuration
@@ -84,10 +84,10 @@ namespace Bridge.Translator
             }
         }
 
-        public IList<string> SourceFiles 
-        { 
-            get; 
-            protected set; 
+        public IList<string> SourceFiles
+        {
+            get;
+            protected set;
         }
 
         public IList<ParsedSourceFile> ParsedSourceFiles
@@ -98,7 +98,7 @@ namespace Bridge.Translator
 
         private bool rebuild = true;
 
-        public bool Rebuild 
+        public bool Rebuild
         {
             get
             {
@@ -122,10 +122,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public List<ITypeInfo> Types 
-        { 
-            get; 
-            protected set; 
+        public List<ITypeInfo> Types
+        {
+            get;
+            protected set;
         }
 
         public Dictionary<string, string> Outputs
@@ -148,7 +148,7 @@ namespace Bridge.Translator
 
         public AstNode EmitNode
         {
-            get; 
+            get;
             set;
         }
 

@@ -11,7 +11,7 @@ namespace Bridge.Translator
         public AssemblyInfo()
         {
             this.Dependencies = new List<IPluginDependency>();
-            //this.AutoPropertyToField = true;        
+            //this.AutoPropertyToField = true;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Bridge.Translator
         }
 
         /// <summary>
-        /// The output folder path for generated JavaScript. A non-absolute path is concatenated with a project's root. 
+        /// The output folder path for generated JavaScript. A non-absolute path is concatenated with a project's root.
         /// Examples: "Bridge\\output\\", "..\\Bridge\\output\\", "c:\\Bridge\\output\\"
         /// </summary>
         public string Output
@@ -72,7 +72,7 @@ namespace Bridge.Translator
         }
 
         /// <summary>
-        /// Substrings the file name starting with the defined index. 
+        /// Substrings the file name starting with the defined index.
         /// For example, it might be useful to get rid of the first namespace in the chain if use ByFullName or ByNamespace FilesHierarchy.
         /// </summary>
         public int StartIndexInName
@@ -101,7 +101,7 @@ namespace Bridge.Translator
         }
 
         /// <summary>
-        /// The executable file to be launched before building. The path will be concatenated with the project's root. 
+        /// The executable file to be launched before building. The path will be concatenated with the project's root.
         /// For example, it might be used for cleaning up the output directory - "Bridge\\builder\\clean.bat".
         /// </summary>
         public string BeforeBuild
@@ -111,7 +111,7 @@ namespace Bridge.Translator
         }
 
         /// <summary>
-        /// The executable file to be launched after building. The path will be concatenated with the project's root. 
+        /// The executable file to be launched after building. The path will be concatenated with the project's root.
         /// For example, it might be used for copying the generated JavaScript files to a Web application - "Bridge\\builder\\copy.bat"
         /// </summary>
         public string AfterBuild
@@ -125,10 +125,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public string PluginsPath 
-        { 
-            get; 
-            set; 
+        public string PluginsPath
+        {
+            get;
+            set;
         }
     }
 }

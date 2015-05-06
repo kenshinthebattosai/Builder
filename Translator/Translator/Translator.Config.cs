@@ -76,7 +76,7 @@ namespace Bridge.Translator
                 {
                     assemblyInfo = new AssemblyInfo();
                 }
-                
+
                 // Convert '/' and '\\' to platform-specific path separator.
                 ConvertConfigPaths(assemblyInfo);
 

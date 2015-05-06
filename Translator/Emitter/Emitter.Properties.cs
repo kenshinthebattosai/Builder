@@ -26,12 +26,12 @@ namespace Bridge.Translator
         public const string FIX_ARGUMENT_NAME = "__autofix__";
 
 
-        internal static List<string> reservedStaticNames = new List<string> { "Name", "Arguments", "Caller", "Length", "Prototype" };        
+        internal static List<string> reservedStaticNames = new List<string> { "Name", "Arguments", "Caller", "Length", "Prototype" };
 
         private Dictionary<string, OverloadsCollection> overloadsCache;
-        public Dictionary<string, OverloadsCollection> OverloadsCache 
-        { 
-            get 
+        public Dictionary<string, OverloadsCollection> OverloadsCache
+        {
+            get
             {
                 if (this.overloadsCache == null)
                 {
@@ -46,10 +46,10 @@ namespace Bridge.Translator
             private set;
         }
 
-        public List<ITypeInfo> Types 
-        { 
-            get; 
-            set; 
+        public List<ITypeInfo> Types
+        {
+            get;
+            set;
         }
 
         public bool IsAssignment
@@ -70,16 +70,16 @@ namespace Bridge.Translator
             set;
         }
 
-        public bool IsUnaryAccessor 
-        { 
-            get; 
-            set; 
+        public bool IsUnaryAccessor
+        {
+            get;
+            set;
         }
-        
-        public Dictionary<string, AstType> Locals 
-        { 
-            get; 
-            set; 
+
+        public Dictionary<string, AstType> Locals
+        {
+            get;
+            set;
         }
 
         public Dictionary<string, string> LocalsMap
@@ -94,28 +94,28 @@ namespace Bridge.Translator
             set;
         }
 
-        public Stack<Dictionary<string, AstType>> LocalsStack 
-        { 
-            get; 
-            set; 
+        public Stack<Dictionary<string, AstType>> LocalsStack
+        {
+            get;
+            set;
         }
 
-        public int Level 
-        { 
-            get; 
-            set; 
+        public int Level
+        {
+            get;
+            set;
         }
 
-        public bool IsNewLine 
-        { 
-            get; 
-            set; 
+        public bool IsNewLine
+        {
+            get;
+            set;
         }
 
-        public bool EnableSemicolon 
-        { 
-            get; 
-            set; 
+        public bool EnableSemicolon
+        {
+            get;
+            set;
         }
 
         private bool changeCase = true;
@@ -131,34 +131,34 @@ namespace Bridge.Translator
             }
         }
 
-        public int IteratorCount 
-        { 
-            get; 
-            set; 
+        public int IteratorCount
+        {
+            get;
+            set;
         }
 
-        public int ThisRefCounter 
-        { 
-            get; 
-            set; 
+        public int ThisRefCounter
+        {
+            get;
+            set;
         }
 
-        public IDictionary<string, TypeDefinition> TypeDefinitions 
-        { 
-            get; 
-            protected set; 
+        public IDictionary<string, TypeDefinition> TypeDefinitions
+        {
+            get;
+            protected set;
         }
 
-        public ITypeInfo TypeInfo 
-        { 
-            get; 
-            set; 
+        public ITypeInfo TypeInfo
+        {
+            get;
+            set;
         }
 
-        public StringBuilder Output 
-        { 
-            get; 
-            set; 
+        public StringBuilder Output
+        {
+            get;
+            set;
         }
 
         public Stack<Tuple<string, StringBuilder, bool, Action>> Writers
@@ -193,10 +193,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public virtual IList<string> SourceFiles 
-        { 
-            get; 
-            set; 
+        public virtual IList<string> SourceFiles
+        {
+            get;
+            set;
         }
 
         private List<IAssemblyReference> list;
@@ -208,7 +208,7 @@ namespace Bridge.Translator
                 {
                     return this.list;
                 }
-                
+
                 this.list = Emitter.ToAssemblyReferences(this.References);
 
                 return this.list;
@@ -270,10 +270,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public IEnumerable<MethodDefinition> MethodsGroup 
-        { 
-            get; 
-            set; 
+        public IEnumerable<MethodDefinition> MethodsGroup
+        {
+            get;
+            set;
         }
 
         public Dictionary<int, StringBuilder> MethodsGroupBuilder
@@ -282,10 +282,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public bool IsAsync 
-        { 
-            get; 
-            set; 
+        public bool IsAsync
+        {
+            get;
+            set;
         }
 
         public List<string> AsyncVariables
@@ -312,10 +312,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public AstNode IgnoreBlock 
-        { 
-            get; 
-            set; 
+        public AstNode IgnoreBlock
+        {
+            get;
+            set;
         }
 
         public AstNode NoBraceBlock
@@ -362,7 +362,7 @@ namespace Bridge.Translator
 
         public ITranslator Translator
         {
-            get; 
+            get;
             set;
         }
     }

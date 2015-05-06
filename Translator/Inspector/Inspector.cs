@@ -9,17 +9,17 @@ using Bridge.Contract;
 using NRAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 using BrException = Bridge.Translator.Exception;
 
-namespace Bridge.Translator 
+namespace Bridge.Translator
 {
     public partial class Inspector : Visitor
     {
-        public Inspector() 
+        public Inspector()
         {
             this.Usings = new HashSet<string>();
             this.Types = new List<ITypeInfo>();
             this.AssemblyInfo = new AssemblyInfo();
         }
-        
+
         protected virtual bool HasAttribute(EntityDeclaration type, string name)
         {
 
@@ -69,12 +69,12 @@ namespace Bridge.Translator
             return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".ObjectLiteral");
         }
 
-        protected virtual bool HasIgnore(EntityDeclaration declaration) 
+        protected virtual bool HasIgnore(EntityDeclaration declaration)
         {
             return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".Ignore");
         }
 
-        protected virtual bool HasInline(EntityDeclaration declaration) 
+        protected virtual bool HasInline(EntityDeclaration declaration)
         {
             return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".Template");
         }
@@ -84,7 +84,7 @@ namespace Bridge.Translator
             return this.HasAttribute(declaration, Translator.Bridge_ASSEMBLY + ".Script");
         }
 
-        private Expression GetDefaultFieldInitializer(AstType type) 
+        private Expression GetDefaultFieldInitializer(AstType type)
         {
             return new PrimitiveExpression(Inspector.GetDefaultFieldValue(type, this.Resolver), "?");
         }
@@ -94,7 +94,7 @@ namespace Bridge.Translator
             if (type is PrimitiveType)
             {
                 var primitiveType = (PrimitiveType)type;
-                
+
                 switch (primitiveType.KnownTypeCode)
                 {
                     case KnownTypeCode.Int16:
@@ -111,7 +111,7 @@ namespace Bridge.Translator
                         return 0;
                     case KnownTypeCode.Boolean:
                         return false;
-                }                
+                }
             }
 
             var resolveResult = resolver.ResolveNode(type, null);
@@ -129,7 +129,7 @@ namespace Bridge.Translator
             return null;
         }
 
-        protected virtual bool IsValidStaticInitializer(Expression expr) 
+        protected virtual bool IsValidStaticInitializer(Expression expr)
         {
             if (expr.IsNull || expr is PrimitiveExpression)
             {
@@ -143,13 +143,13 @@ namespace Bridge.Translator
                 return false;
             }
 
-            try 
+            try
             {
                 new ArrayInitializerVisitor().VisitArrayCreateExpression(arrayExpr);
 
                 return true;
-            } 
-            catch(Exception) 
+            }
+            catch(Exception)
             {
                 return false;
             }
@@ -171,9 +171,9 @@ namespace Bridge.Translator
                 VariableDeclarationStatement varState = new VariableDeclarationStatement(p.Type.Clone(), oldName, new CastExpression(p.Type.Clone(), new IdentifierExpression(newName)));
 
                 p.Name = newName;
-                
+
                 body.InsertChildBefore(body.FirstChild, varState, new Role<VariableDeclarationStatement>("Statement"));
-                
+
             }*/
         }
 

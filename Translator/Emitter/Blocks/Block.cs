@@ -24,10 +24,10 @@ namespace Bridge.Translator
             }
         }
 
-        public BlockStatement BlockStatement 
-        { 
-            get; 
-            set; 
+        public BlockStatement BlockStatement
+        {
+            get;
+            set;
         }
 
         protected bool AddEndBlock
@@ -122,7 +122,7 @@ namespace Bridge.Translator
             {
                 return true;
             }
-            
+
             if (parent is Accessor && (parent.Parent is PropertyDeclaration || parent.Parent is CustomEventDeclaration || parent.Parent is IndexerDeclaration))
             {
                 return true;
@@ -227,7 +227,7 @@ namespace Bridge.Translator
             {
                 this.EndBlock();
                 blockWasEnded = true;
-            }            
+            }
 
             if (this.AddEndBlock)
             {
@@ -272,6 +272,6 @@ namespace Bridge.Translator
             }
 
             this.BeginPosition = this.Emitter.Output.Length;
-        }        
+        }
     }
 }

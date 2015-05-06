@@ -38,14 +38,14 @@ namespace Bridge.Contract
         string GetInline(ICSharpCode.NRefactory.TypeSystem.IEntity entity);
         string GetInline(Mono.Cecil.ICustomAttributeProvider provider);
         Tuple<bool, bool, string> GetInlineCode(ICSharpCode.NRefactory.CSharp.InvocationExpression node);
-        string GetDefinitionName(IMemberDefinition member, bool changeCase = true);        
+        string GetDefinitionName(IMemberDefinition member, bool changeCase = true);
         System.Collections.Generic.IEnumerable<string> GetScript(ICSharpCode.NRefactory.CSharp.EntityDeclaration method);
         int GetPriority(Mono.Cecil.TypeDefinition type);
         Mono.Cecil.TypeDefinition GetTypeDefinition();
         Mono.Cecil.TypeDefinition GetTypeDefinition(ICSharpCode.NRefactory.CSharp.AstType reference);
         Mono.Cecil.TypeDefinition GetTypeDefinition(IType type);
         string GetTypeHierarchy();
-        ICSharpCode.NRefactory.CSharp.AstNode IgnoreBlock { get; set; }        
+        ICSharpCode.NRefactory.CSharp.AstNode IgnoreBlock { get; set; }
         bool IsAssignment { get; set; }
         bool IsAsync { get; set; }
         bool IsInlineConst(ICSharpCode.NRefactory.TypeSystem.IMember member);
@@ -71,7 +71,7 @@ namespace Bridge.Contract
         System.Text.StringBuilder Output { get; set; }
         IEmitterOutputs Outputs { get; set; }
         System.Collections.Generic.IEnumerable<Mono.Cecil.AssemblyDefinition> References { get; set; }
-        bool ReplaceAwaiterByVar { get; set; }        
+        bool ReplaceAwaiterByVar { get; set; }
         IMemberResolver Resolver { get; set; }
         bool SkipSemiColon { get; set; }
         System.Collections.Generic.IList<string> SourceFiles { get; set; }

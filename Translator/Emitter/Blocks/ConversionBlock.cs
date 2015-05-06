@@ -9,7 +9,7 @@ namespace Bridge.Translator
     {
         public ConversionBlock(IEmitter emitter, AstNode node) : base(emitter, node)
         {
-            
+
         }
 
         protected sealed override void DoEmit()
@@ -26,10 +26,10 @@ namespace Bridge.Translator
 
             var isConversion = false;
             bool check = expression != null && !expression.IsNull && expression.Parent != null;
-            
+
             if (check)
             {
-                isConversion = this.CheckConversion(expression);   
+                isConversion = this.CheckConversion(expression);
             }
 
             if (this.DisableEmitConversionExpression)
@@ -134,7 +134,7 @@ namespace Bridge.Translator
                         {
                             new InlineArgumentsBlock(block.Emitter, new ArgumentsInfo(block.Emitter, (InvocationExpression)expression), inline).Emit();
                         }
-                        else if (expression is UnaryOperatorExpression) 
+                        else if (expression is UnaryOperatorExpression)
                         {
                             var unaryExpression = (UnaryOperatorExpression)expression;
                             var resolveOperator = block.Emitter.Resolver.ResolveNode(unaryExpression, block.Emitter);
@@ -149,7 +149,7 @@ namespace Bridge.Translator
                             new InlineArgumentsBlock(block.Emitter, new ArgumentsInfo(block.Emitter, binaryExpression, orr), inline).Emit();
                         }
                         else
-                        {                            
+                        {
                             new InlineArgumentsBlock(block.Emitter, new ArgumentsInfo(block.Emitter, expression), inline).Emit();
                         }
 

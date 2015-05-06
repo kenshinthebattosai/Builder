@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.DoWhileStatement = doWhileStatement;
         }
 
-        public DoWhileStatement DoWhileStatement 
-        { 
-            get; 
-            set; 
+        public DoWhileStatement DoWhileStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -47,14 +47,14 @@ namespace Bridge.Translator
             if (!string.IsNullOrWhiteSpace(loopStep.Output.ToString()))
             {
                 loopStep = this.Emitter.AsyncBlock.AddAsyncStep();
-            }   
+            }
 
-            this.Emitter.IgnoreBlock = doWhileStatement.EmbeddedStatement;            
+            this.Emitter.IgnoreBlock = doWhileStatement.EmbeddedStatement;
             doWhileStatement.EmbeddedStatement.AcceptVisitor(this.Emitter);
 
             this.Emitter.AsyncBlock.Steps.Last().JumpToStep = this.Emitter.AsyncBlock.Step;
             var conditionStep = this.Emitter.AsyncBlock.AddAsyncStep();
-            this.WriteAwaiters(doWhileStatement.Condition);           
+            this.WriteAwaiters(doWhileStatement.Condition);
 
             this.WriteIf();
             this.WriteOpenParentheses(true);
@@ -74,7 +74,7 @@ namespace Bridge.Translator
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
             conditionStep.JumpToStep = nextStep.Step;
-            
+
             if (this.Emitter.JumpStatements.Count > 0)
             {
                 this.Emitter.JumpStatements.Sort((j1, j2) => -j1.Position.CompareTo(j2.Position));

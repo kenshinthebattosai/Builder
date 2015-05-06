@@ -8,14 +8,14 @@ namespace Bridge.Translator
 {
     public class TypeInfo : ITypeInfo
     {
-        public TypeInfo() 
+        public TypeInfo()
         {
             this.StaticMethods = new Dictionary<string, List<MethodDeclaration>>();
             this.InstanceMethods = new Dictionary<string, List<MethodDeclaration>>();
             this.StaticProperties = new Dictionary<string, List<EntityDeclaration>>();
             this.InstanceProperties = new Dictionary<string, List<EntityDeclaration>>();
             this.FieldsDeclarations = new Dictionary<string, FieldDeclaration>();
-            this.EventsDeclarations = new Dictionary<string, EventDeclaration>();            
+            this.EventsDeclarations = new Dictionary<string, EventDeclaration>();
             this.Dependencies = new List<IPluginDependency>();
             this.Ctors = new List<ConstructorDeclaration>();
             this.Operators = new Dictionary<OperatorType, List<OperatorDeclaration>>();
@@ -59,40 +59,40 @@ namespace Bridge.Translator
             set;
         }
 
-        public bool IsStatic 
-        { 
-            get; 
-            set; 
+        public bool IsStatic
+        {
+            get;
+            set;
         }
 
-        public ClassType ClassType 
-        { 
-            get; 
-            set; 
-        }
-        
-        public string Namespace 
-        { 
-            get; 
-            set; 
+        public ClassType ClassType
+        {
+            get;
+            set;
         }
 
-        public string Name 
-        { 
-            get; 
-            set; 
+        public string Namespace
+        {
+            get;
+            set;
         }
 
-        public HashSet<string> Usings 
-        { 
-            get; 
-            set; 
+        public string Name
+        {
+            get;
+            set;
         }
-        
+
+        public HashSet<string> Usings
+        {
+            get;
+            set;
+        }
+
         public List<ConstructorDeclaration> Ctors
-        { 
-            get; 
-            set; 
+        {
+            get;
+            set;
         }
 
         public ConstructorDeclaration StaticCtor
@@ -107,16 +107,16 @@ namespace Bridge.Translator
             protected set;
         }
 
-        public Dictionary<string, List<MethodDeclaration>> StaticMethods 
-        { 
-            get; 
-            protected set; 
+        public Dictionary<string, List<MethodDeclaration>> StaticMethods
+        {
+            get;
+            protected set;
         }
 
-        public Dictionary<string, List<MethodDeclaration>> InstanceMethods 
-        { 
-            get; 
-            protected set; 
+        public Dictionary<string, List<MethodDeclaration>> InstanceMethods
+        {
+            get;
+            protected set;
         }
 
         public Dictionary<string, List<EntityDeclaration>> StaticProperties
@@ -136,8 +136,8 @@ namespace Bridge.Translator
             get
             {
                 return this.StaticConfig.HasMembers
-                       || this.StaticMethods.Count > 0 
-                       || this.StaticProperties.Count > 0                       
+                       || this.StaticMethods.Count > 0
+                       || this.StaticProperties.Count > 0
                        || this.StaticCtor != null
                        || this.Operators.Count > 0;
             }
@@ -149,7 +149,7 @@ namespace Bridge.Translator
             {
                 return this.InstanceConfig.HasMembers
                        || this.InstanceMethods.Count > 0
-                       || this.InstanceProperties.Count > 0 
+                       || this.InstanceProperties.Count > 0
                        || this.Ctors.Count > 0;
             }
         }
@@ -164,10 +164,10 @@ namespace Bridge.Translator
             }
         }
 
-        public bool IsEnum 
-        { 
-            get; 
-            set; 
+        public bool IsEnum
+        {
+            get;
+            set;
         }
 
         public string Module

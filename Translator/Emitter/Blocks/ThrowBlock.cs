@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.ThrowStatement = throwStatement;
         }
 
-        public ThrowStatement ThrowStatement 
-        { 
-            get; 
-            set; 
+        public ThrowStatement ThrowStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -24,12 +24,12 @@ namespace Bridge.Translator
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
 
             if (this.Emitter.IsAsync)
-            {                
+            {
                 this.WriteAwaiters(this.ThrowStatement.Expression);
                 this.Emitter.ReplaceAwaiterByVar = true;
             }
-            
-            this.WriteThrow();            
+
+            this.WriteThrow();
 
             if (this.ThrowStatement.Expression.IsNull)
             {
@@ -56,7 +56,7 @@ namespace Bridge.Translator
             {
                 this.ThrowStatement.Expression.AcceptVisitor(this.Emitter);
             }
-            
+
             this.WriteSemiColon();
             this.WriteNewLine();
             this.Emitter.ReplaceAwaiterByVar = oldValue;

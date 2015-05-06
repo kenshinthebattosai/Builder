@@ -33,7 +33,7 @@ namespace Bridge.Translator
                 inner = varStat.Variables.Skip(1);
                 res = varStat.Variables.First();
             }
-            
+
             this.EmitUsing(res, inner);
         }
 
@@ -68,7 +68,7 @@ namespace Bridge.Translator
                 this.WriteNewLine();
             }
 
-            this.WriteTry();            
+            this.WriteTry();
 
             if (inner != null && inner.Any())
             {
@@ -94,7 +94,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                 }
             }
-            
+
             this.WriteFinally();
             this.BeginBlock();
 

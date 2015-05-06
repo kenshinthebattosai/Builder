@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.VariableDeclarationStatement = variableDeclarationStatement;
         }
 
-        public VariableDeclarationStatement VariableDeclarationStatement 
-        { 
-            get; 
-            set; 
+        public VariableDeclarationStatement VariableDeclarationStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -33,7 +33,7 @@ namespace Bridge.Translator
             var asyncExpressionHandling = this.Emitter.AsyncExpressionHandling;
 
             foreach (var variable in this.VariableDeclarationStatement.Variables)
-            {                
+            {
                 var varName = this.AddLocal(variable.Name, this.VariableDeclarationStatement.Type);
 
                 if (variable.Initializer != null && !variable.Initializer.IsNull && variable.Initializer.ToString().Contains(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME))                {
@@ -132,6 +132,6 @@ namespace Bridge.Translator
             {
                 this.Emitter.EnableSemicolon = true;
             }
-        }        
+        }
     }
 }

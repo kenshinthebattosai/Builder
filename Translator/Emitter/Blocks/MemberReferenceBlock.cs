@@ -18,10 +18,10 @@ namespace Bridge.Translator
             this.MemberReferenceExpression = memberReferenceExpression;
         }
 
-        public MemberReferenceExpression MemberReferenceExpression 
-        { 
-            get; 
-            set; 
+        public MemberReferenceExpression MemberReferenceExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -88,7 +88,7 @@ namespace Bridge.Translator
                 var oldResult = (MethodGroupResolveResult)resolveResult;
                 resolveResult = this.Emitter.Resolver.ResolveNode(memberReferenceExpression.Parent, this.Emitter);
 
-                if (resolveResult is DynamicInvocationResolveResult) 
+                if (resolveResult is DynamicInvocationResolveResult)
                 {
                     var method = oldResult.Methods.Last();
                     resolveResult = new MemberResolveResult(new TypeResolveResult(method.DeclaringType), method);
@@ -101,7 +101,7 @@ namespace Bridge.Translator
             if (globalTarget != null && globalTarget.Item1)
             {
                 var target = globalTarget.Item2;
-                
+
                 if (!string.IsNullOrWhiteSpace(target))
                 {
                     bool assign = false;
@@ -112,7 +112,7 @@ namespace Bridge.Translator
                     {
                         assign = true;
                     }
-                    else 
+                    else
                     {
                         var varInit = memberExpression as VariableInitializer;
                         if (varInit != null && varInit.Initializer == targetExpression)
@@ -127,9 +127,9 @@ namespace Bridge.Translator
                                 assign = true;
                             }
                         }
-                    }                    
+                    }
 
-                    if(assign) 
+                    if(assign)
                     {
                         if (resolveResult is InvocationResolveResult)
                         {
@@ -154,7 +154,7 @@ namespace Bridge.Translator
 
             string inline = member != null ? this.Emitter.GetInline(member.Member) : null;
             bool hasInline = !string.IsNullOrEmpty(inline);
-            bool hasThis = hasInline && inline.Contains("{this}");            
+            bool hasThis = hasInline && inline.Contains("{this}");
 
             if (hasThis)
             {
@@ -252,7 +252,7 @@ namespace Bridge.Translator
                     TypeResolveResult typeResolveResult = (TypeResolveResult)resolveResult;
 
                     this.Write(BridgeTypes.ToJsName(typeResolveResult.Type, this.Emitter));
-                    
+
                     return;
                 }
                 else if (member != null &&
@@ -267,7 +267,7 @@ namespace Bridge.Translator
                     )
                 {
                     var resolvedMethod = (IMethod)member.Member;
-                    bool isStatic = resolvedMethod != null && resolvedMethod.IsStatic;                    
+                    bool isStatic = resolvedMethod != null && resolvedMethod.IsStatic;
 
                     var isExtensionMethod = resolvedMethod.IsExtensionMethod;
 
@@ -277,12 +277,12 @@ namespace Bridge.Translator
                     if (!isStatic)
                     {
                         this.Write(Bridge.Translator.Emitter.ROOT + "." + (isExtensionMethod ? Bridge.Translator.Emitter.DELEGATE_BIND_SCOPE : Bridge.Translator.Emitter.DELEGATE_BIND) + "(");
-                        memberReferenceExpression.Target.AcceptVisitor(this.Emitter);                        
+                        memberReferenceExpression.Target.AcceptVisitor(this.Emitter);
                         this.Write(", ");
                     }
-               
+
                     this.Emitter.IsAssignment = oldIsAssignment;
-                    this.Emitter.IsUnaryAccessor = oldUnary;                    
+                    this.Emitter.IsUnaryAccessor = oldUnary;
 
                     if (isExtensionMethod)
                     {
@@ -339,14 +339,14 @@ namespace Bridge.Translator
                         }
 
                         if (writeTargetVar)
-                        {                            
+                        {
                             var memberTargetrr = targetrr as MemberResolveResult;
                             bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
-                            
+
                             if (!(targetrr is ThisResolveResult || targetrr is LocalResolveResult || isField))
                             {
                                 targetVar = this.GetTempVarName();
-                                
+
                                 this.Write(targetVar);
                                 this.Write(" = ");
                             }
@@ -360,7 +360,7 @@ namespace Bridge.Translator
                         this.Write(valueVar);
                         this.Write(" = ");
                     }
-                    
+
                     this.Emitter.IsAssignment = false;
                     this.Emitter.IsUnaryAccessor = false;
                     memberReferenceExpression.Target.AcceptVisitor(this.Emitter);
@@ -371,7 +371,7 @@ namespace Bridge.Translator
                     {
                         if (this.Emitter.IsUnaryAccessor && !isStatement)
                         {
-                            this.WriteComma(false);                            
+                            this.WriteComma(false);
 
                             valueVar = this.GetTempVarName();
 
@@ -385,8 +385,8 @@ namespace Bridge.Translator
                             this.WriteSemiColon();
                             this.WriteNewLine();
                             this.Write(targetVar);
-                        }                        
-                    }                    
+                        }
+                    }
                 }
 
                 var targetResolveResult = targetrr as MemberResolveResult;
@@ -394,7 +394,7 @@ namespace Bridge.Translator
                 if (targetResolveResult == null || this.Emitter.IsGlobalTarget(targetResolveResult.Member) == null)
                 {
                     this.WriteDot();
-                }                
+                }
 
                 if (member == null)
                 {
@@ -506,7 +506,7 @@ namespace Bridge.Translator
                                     {
                                         this.Write("-");
                                     }
-   
+
                                     this.Write("1");
                                 }
 
@@ -528,11 +528,11 @@ namespace Bridge.Translator
                             this.Write(Helpers.GetPropertyRef(member.Member, this.Emitter));
                             this.WriteOpenParentheses();
                             this.WriteCloseParentheses();
-                        }                        
+                        }
                     }
                     else if (this.Emitter.AssignmentType != AssignmentOperatorType.Assign)
                     {
-                        if(targetVar != null) 
+                        if(targetVar != null)
                         {
                             this.PushWriter(string.Concat(Helpers.GetPropertyRef(member.Member, this.Emitter, true),
                                 "(",
@@ -540,7 +540,7 @@ namespace Bridge.Translator
                                 ".",
                                 Helpers.GetPropertyRef(member.Member, this.Emitter, false),
                                 "()",
-                                "{0})"), () => { this.RemoveTempVar(targetVar); });                            
+                                "{0})"), () => { this.RemoveTempVar(targetVar); });
                         }
                         else
                         {
@@ -561,7 +561,7 @@ namespace Bridge.Translator
                                 ".",
                                 Helpers.GetPropertyRef(member.Member, this.Emitter, false),
                                 "()",
-                                "{0})"));                            
+                                "{0})"));
                         }
                     }
                     else
@@ -579,7 +579,7 @@ namespace Bridge.Translator
                     }
                     else
                     {
-                        this.Write(OverloadsCollection.Create(this.Emitter, member.Member).GetOverloadName());                        
+                        this.Write(OverloadsCollection.Create(this.Emitter, member.Member).GetOverloadName());
                     }
                 }
                 else if (resolveResult is InvocationResolveResult)
@@ -588,9 +588,9 @@ namespace Bridge.Translator
                     CSharpInvocationResolveResult cInvocationResult = (CSharpInvocationResolveResult)resolveResult;
                     var expresssionMember = expressionResolveResult as MemberResolveResult;
 
-                    if (expresssionMember != null && 
-                        cInvocationResult != null && 
-                        cInvocationResult.IsDelegateInvocation && 
+                    if (expresssionMember != null &&
+                        cInvocationResult != null &&
+                        cInvocationResult.IsDelegateInvocation &&
                         invocationResult.Member != expresssionMember.Member)
                     {
                         this.Write(OverloadsCollection.Create(this.Emitter, expresssionMember.Member).GetOverloadName());
@@ -598,21 +598,21 @@ namespace Bridge.Translator
                     else
                     {
                         this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
-                    }                    
+                    }
                 }
                 else if (member.Member is DefaultResolvedEvent && this.Emitter.IsAssignment && (this.Emitter.AssignmentType == AssignmentOperatorType.Add || this.Emitter.AssignmentType == AssignmentOperatorType.Subtract))
                 {
                     this.Write(this.Emitter.AssignmentType == AssignmentOperatorType.Add ? "add" : "remove");
                     this.Write(OverloadsCollection.Create(this.Emitter, member.Member, this.Emitter.AssignmentType == AssignmentOperatorType.Subtract).GetOverloadName());
-                    this.WriteOpenParentheses();                    
+                    this.WriteOpenParentheses();
                 }
                 else
                 {
-                    this.Write(this.Emitter.GetEntityName(member.Member));                    
+                    this.Write(this.Emitter.GetEntityName(member.Member));
                 }
 
                 Helpers.CheckValueTypeClone(resolveResult, memberReferenceExpression, this);
             }
-        }        
+        }
     }
 }

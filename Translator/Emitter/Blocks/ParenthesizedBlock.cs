@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.ParenthesizedExpression = parenthesizedExpression;
         }
 
-        public ParenthesizedExpression ParenthesizedExpression 
-        { 
-            get; 
-            set; 
+        public ParenthesizedExpression ParenthesizedExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()

@@ -112,7 +112,7 @@ namespace Bridge.Translator
                 this.EnsureComma();
                 this.Write("getHashCode: function () ");
                 this.BeginBlock();
-                this.Write("var hash = 17;");                
+                this.Write("var hash = 17;");
 
                 foreach (var field in this.TypeInfo.InstanceConfig.Fields)
                 {
@@ -121,7 +121,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.Write("hash = hash * 23 + ");
                     this.Write("(this." + fieldName);
-                    this.Write(" == null ? 0 : ");                    
+                    this.Write(" == null ? 0 : ");
                     this.Write("Bridge.getHashCode(");
                     this.Write("this." + fieldName);
                     this.Write("));");
@@ -135,7 +135,7 @@ namespace Bridge.Translator
             }
 
             if (!this.TypeInfo.InstanceMethods.ContainsKey("Equals"))
-            {                
+            {
                 this.EnsureComma();
                 this.Write("equals: function (o) ");
                 this.BeginBlock();
@@ -180,7 +180,7 @@ namespace Bridge.Translator
             this.BeginBlock();
             this.Write("var s = to || new ");
             this.Write(structName);
-            this.Write("();");                        
+            this.Write("();");
 
             foreach (var field in this.TypeInfo.InstanceConfig.Fields)
             {

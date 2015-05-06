@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Bridge.Contract
 {
     public interface IPlugin
-    {        
+    {
         IEnumerable<string> GetConstructorInjectors(IConstructorBlock constructorBlock);
         bool HasConstructorInjectors(IConstructorBlock constructorBlock);
         void OnConfigRead(IAssemblyInfo config);

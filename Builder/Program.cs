@@ -86,12 +86,12 @@ namespace Bridge.Builder
                         break;
                     case "-rebuild":
                     case "-r":
-                        rebuild = true;                        
+                        rebuild = true;
                         break;
                     case "-case":
                     case "-c":
                         changeCase = false;
-                        break;                   
+                        break;
                     case "-nocore":
                         extractCore = false;
                         break;
@@ -119,8 +119,8 @@ namespace Bridge.Builder
                 }
 
                 i++;
-            }            
-           
+            }
+
             if (string.IsNullOrEmpty(outputLocation))
             {
                 outputLocation = !string.IsNullOrWhiteSpace(projectLocation) ? Path.GetFileNameWithoutExtension(projectLocation) : folder;
@@ -144,9 +144,9 @@ namespace Bridge.Builder
 
                     lib = Path.Combine(folder, lib);
                     translator = new Bridge.Translator.Translator(folder, source, recursive, lib);
-                }                
+                }
 
-                bridgeLocation = !string.IsNullOrEmpty(bridgeLocation) ? bridgeLocation : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll"); 
+                bridgeLocation = !string.IsNullOrEmpty(bridgeLocation) ? bridgeLocation : Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Bridge.dll");
 
                 translator.BridgeLocation = bridgeLocation;
                 translator.Rebuild = rebuild;
@@ -155,7 +155,7 @@ namespace Bridge.Builder
                 translator.Configuration = cfg;
                 translator.Translate();
 
-                string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);                
+                string path = string.IsNullOrWhiteSpace(Path.GetFileName(outputLocation)) ? outputLocation : Path.GetDirectoryName(outputLocation);
                 string outputPath = null;
 
                 if (!string.IsNullOrWhiteSpace(translator.AssemblyInfo.Output))

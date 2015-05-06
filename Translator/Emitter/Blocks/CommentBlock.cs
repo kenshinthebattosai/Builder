@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.Comment = comment;
         }
 
-        public Comment Comment 
-        { 
-            get; 
-            set; 
+        public Comment Comment
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -35,7 +35,7 @@ namespace Bridge.Translator
                 this.WriteSpace();
             }
 
-            this.Write("/* " + text + "*/");            
+            this.Write("/* " + text + "*/");
             this.WriteNewLine();
         }
 

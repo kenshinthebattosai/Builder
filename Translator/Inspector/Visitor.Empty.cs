@@ -2,7 +2,7 @@
 
 namespace Bridge.Translator
 {
-    public abstract partial class Visitor : IAstVisitor 
+    public abstract partial class Visitor : IAstVisitor
     {
         public virtual void VisitAttributeSection(AttributeSection attributeSection)
         {
@@ -18,9 +18,9 @@ namespace Bridge.Translator
         {
             //throw this.CreateException(comment);
         }
-        
+
         public virtual void VisitDefaultValueExpression(DefaultValueExpression defaultValueExpression)
-        {            
+        {
             //throw this.CreateException(defaultValueExpression);
         }
 
@@ -28,16 +28,16 @@ namespace Bridge.Translator
         {
             //throw this.CreateException(identifier);
         }
-        
+
         public virtual void VisitNullReferenceExpression(NullReferenceExpression nullReferenceExpression)
         {
             //throw this.CreateException(nullReferenceExpression);
         }
-        
+
         public virtual void VisitPreProcessorDirective(PreProcessorDirective preProcessorDirective)
         {
             //throw this.CreateException(preProcessorDirective);
-        }        
+        }
 
         public virtual void VisitTypeParameterDeclaration(TypeParameterDeclaration typeParameterDeclaration)
         {
@@ -64,7 +64,7 @@ namespace Bridge.Translator
             //throw this.CreateException(newLineNode);
         }
         public virtual void VisitConstraint(Constraint constraint)
-        {            
+        {
         }
 
         public virtual void VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration)

@@ -80,9 +80,9 @@ namespace Bridge.Translator
             {
                 s = this.Emitter.ToJavaScript(value);
             }
-            
+
             this.Emitter.Output.Append(s);
-        }        
+        }
 
         public virtual void WriteComma()
         {
@@ -369,9 +369,9 @@ namespace Bridge.Translator
                 this.Emitter.LastSavedWriter.Comma = this.Emitter.Comma;
                 return this.Emitter.LastSavedWriter;
             }*/
-            
-            var info = new WriterInfo 
-            { 
+
+            var info = new WriterInfo
+            {
                 Output = this.Emitter.Output,
                 IsNewLine = this.Emitter.IsNewLine,
                 Level = this.Emitter.Level,
@@ -432,14 +432,14 @@ namespace Bridge.Translator
 
                 if (c == '\n')
                 {
-                    if (!lastNewLineFound) 
+                    if (!lastNewLineFound)
                     {
                         lastNewLineFound = true;
                     }
                     else
                     {
                         count++; ;
-                    }                        
+                    }
                 }
                 i--;
             }
@@ -518,10 +518,10 @@ namespace Bridge.Translator
                             if (withLast)
                             {
                                 start = i;
-                            }                            
+                            }
                         }
                         else
-                        {                            
+                        {
                             start = i;
                         }
                     }

@@ -37,6 +37,6 @@ namespace Bridge.Translator
             {
                 this.Log(level, message);
             }
-        }    
+        }
     }
 }

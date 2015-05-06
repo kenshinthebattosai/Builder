@@ -266,7 +266,7 @@ namespace Bridge.Translator
                 this.InitEmitter();
 
                 ITypeInfo typeInfo;
-                
+
                 if (this.Emitter.TypeInfoDefinitions.ContainsKey(type.Key))
                 {
                     typeInfo = this.Emitter.TypeInfoDefinitions[type.Key];
@@ -291,7 +291,7 @@ namespace Bridge.Translator
 
                 new ClassBlock(this.Emitter, this.Emitter.TypeInfo).Emit();
                 this.Emitter.Translator.Plugins.AfterTypeEmit(this.Emitter, type);
-            }            
+            }
 
             this.RemovePenultimateEmptyLines(true);
 

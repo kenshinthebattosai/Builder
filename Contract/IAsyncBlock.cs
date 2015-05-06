@@ -23,6 +23,6 @@ namespace Bridge.Contract
         int Step { get; set; }
         System.Collections.Generic.List<IAsyncStep> Steps { get; set; }
         System.Collections.Generic.List<IAsyncTryInfo> TryInfos { get; set; }
-        System.Collections.Generic.List<IAsyncJumpLabel> JumpLabels { get; set; }        
+        System.Collections.Generic.List<IAsyncJumpLabel> JumpLabels { get; set; }
     }
 }

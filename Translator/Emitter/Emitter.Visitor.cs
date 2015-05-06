@@ -73,12 +73,12 @@ namespace Bridge.Translator
         public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
         {
             new IdentifierBlock(this, identifierExpression).Emit();
-        }        
+        }
 
         public override void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
         {
             new MemberReferenceBlock(this, memberReferenceExpression).Emit();
-        }        
+        }
 
         public override void VisitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression)
         {
@@ -93,7 +93,7 @@ namespace Bridge.Translator
         public override void VisitInvocationExpression(InvocationExpression invocationExpression)
         {
             new InvocationBlock(this, invocationExpression).Emit();
-        }        
+        }
 
         public override void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
         {
@@ -173,7 +173,7 @@ namespace Bridge.Translator
         public override void VisitCastExpression(CastExpression castExpression)
         {
             new CastBlock(this, castExpression).Emit();
-        }        
+        }
 
         public override void VisitAsExpression(AsExpression asExpression)
         {

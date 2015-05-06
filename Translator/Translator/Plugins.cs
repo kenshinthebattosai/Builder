@@ -23,13 +23,13 @@ namespace Bridge.Translator
             {
                 path = Path.Combine(translator.FolderMode ? translator.Location : Path.GetDirectoryName(translator.Location), "Bridge" + Path.DirectorySeparatorChar + "plugins");
             }
-            
-            if (!System.IO.Directory.Exists(path)) 
+
+            if (!System.IO.Directory.Exists(path))
             {
                 return new Plugins() { plugins = new IPlugin[0] };
             }
 
-            DirectoryCatalog dirCatalog = new DirectoryCatalog(path, "*.dll");            
+            DirectoryCatalog dirCatalog = new DirectoryCatalog(path, "*.dll");
             var catalog = new AggregateCatalog(dirCatalog);
 
             CompositionContainer container = new CompositionContainer(catalog);
@@ -56,7 +56,7 @@ namespace Bridge.Translator
             {
                 plugin.OnConfigRead(config);
             }
-        }        
+        }
 
         public IEnumerable<string> GetConstructorInjectors(IConstructorBlock constructorBlock)
         {

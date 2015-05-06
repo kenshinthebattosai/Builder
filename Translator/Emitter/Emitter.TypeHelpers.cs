@@ -33,7 +33,7 @@ namespace Bridge.Translator
             }
 
             var xTypeDefinition = this.TypeDefinitions[x.Key];
-            var yTypeDefinition = this.TypeDefinitions[y.Key];            
+            var yTypeDefinition = this.TypeDefinitions[y.Key];
 
             var xPriority = this.GetPriority(xTypeDefinition);
             var yPriority = this.GetPriority(yTypeDefinition);
@@ -109,14 +109,14 @@ namespace Bridge.Translator
         }
 
         public virtual TypeDefinition GetBaseTypeDefinition(TypeDefinition type)
-        {            
+        {
             var reference = type.BaseType;
 
             if (reference == null)
             {
                 return null;
             }
-            
+
             return this.BridgeTypes.Get(reference).TypeDefinition;
         }
 
@@ -146,7 +146,7 @@ namespace Bridge.Translator
             sb.Append("[");
 
             var list = new List<string>();
-            
+
             foreach (var t in this.TypeInfo.TypeDeclaration.BaseTypes)
             {
                 var name = BridgeTypes.ToJsName(t, this);
@@ -154,7 +154,7 @@ namespace Bridge.Translator
                 list.Add(name);
             }
 
-            if (list.Count > 0 && list[0] == "Object") 
+            if (list.Count > 0 && list[0] == "Object")
             {
                 list.RemoveAt(0);
             }
@@ -180,7 +180,7 @@ namespace Bridge.Translator
             sb.Append("]");
 
             return sb.ToString();
-        }        
+        }
 
         public virtual int GetPriority(TypeDefinition type)
         {

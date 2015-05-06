@@ -19,11 +19,11 @@ namespace Bridge.Contract
         }
 
         public virtual void OnConfigRead(IAssemblyInfo config)
-        {            
+        {
         }
 
         public virtual void BeforeEmit(IEmitter emitter, ITranslator translator)
-        {            
+        {
         }
 
         public virtual void AfterEmit(IEmitter emitter, ITranslator translator)

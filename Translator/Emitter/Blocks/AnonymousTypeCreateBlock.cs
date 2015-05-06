@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.AnonymousTypeCreateExpression = anonymousTypeCreateExpression;
         }
 
-        public AnonymousTypeCreateExpression AnonymousTypeCreateExpression 
-        { 
-            get; 
-            set; 
+        public AnonymousTypeCreateExpression AnonymousTypeCreateExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()

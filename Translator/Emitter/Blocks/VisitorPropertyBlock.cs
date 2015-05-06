@@ -35,7 +35,7 @@ namespace Bridge.Translator
         {
             var memberResult = this.Emitter.Resolver.ResolveNode(propertyDeclaration, this.Emitter) as MemberResolveResult;
 
-            if (memberResult != null && 
+            if (memberResult != null &&
                 (memberResult.Member.Attributes.Any(a => a.AttributeType.FullName == "Bridge.FieldPropertyAttribute") ||
                 (propertyDeclaration.Getter.IsNull && propertyDeclaration.Setter.IsNull)))
             {
@@ -47,12 +47,12 @@ namespace Bridge.Translator
                 this.EnsureComma();
 
                 this.ResetLocals();
-                
+
                 var prevMap = this.BuildLocalsMap();
                 var prevNamesMap = this.BuildLocalsNamesMap();
 
                 if (setter)
-                {                    
+                {
                     this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } }, accessor.Body);
                 }
 

@@ -12,15 +12,15 @@ namespace Bridge.Translator
             this.EmptyStatement = emptyStatement;
         }
 
-        public EmptyStatement EmptyStatement 
-        { 
-            get; 
-            set; 
+        public EmptyStatement EmptyStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
         {
-            this.WriteSemiColon(true);   
+            this.WriteSemiColon(true);
         }
     }
 }

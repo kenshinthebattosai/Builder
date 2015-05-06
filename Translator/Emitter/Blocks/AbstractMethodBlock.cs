@@ -20,10 +20,10 @@ namespace Bridge.Translator
             {
                 string name = p.Name.Replace(Bridge.Translator.Emitter.FIX_ARGUMENT_NAME, "");
 
-                if(this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(name)) 
+                if(this.Emitter.LocalsNamesMap != null && this.Emitter.LocalsNamesMap.ContainsKey(name))
                 {
                     name = this.Emitter.LocalsNamesMap[name];
-                }                
+                }
 
                 if (needComma)
                 {
@@ -59,6 +59,6 @@ namespace Bridge.Translator
             }
 
             this.WriteCloseParentheses();
-        }                
+        }
     }
 }

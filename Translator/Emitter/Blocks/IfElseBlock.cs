@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.IfElseStatement = ifElseStatement;
         }
 
-        public IfElseStatement IfElseStatement 
-        { 
-            get; 
-            set; 
+        public IfElseStatement IfElseStatement
+        {
+            get;
+            set;
         }
 
         public List<IAsyncStep> EmittedAsyncSteps
@@ -58,7 +58,7 @@ namespace Bridge.Translator
 
                 this.EmittedAsyncSteps = this.Emitter.AsyncBlock.EmittedAsyncSteps;
                 this.Emitter.AsyncBlock.EmittedAsyncSteps = new List<IAsyncStep>();
-                
+
                 this.Emitter.IgnoreBlock = ifElseStatement.TrueStatement;
                 this.WriteSpace();
                 this.BeginBlock();
@@ -86,14 +86,14 @@ namespace Bridge.Translator
             }
             else
             {
-                this.EmitBlockOrIndentedLine(ifElseStatement.TrueStatement);                
+                this.EmitBlockOrIndentedLine(ifElseStatement.TrueStatement);
             }
-            
+
             if (ifElseStatement.FalseStatement != null && !ifElseStatement.FalseStatement.IsNull)
-            {             
+            {
                 this.WriteElse();
                 if (this.Emitter.IsAsync)
-                {                    
+                {
                     this.Emitter.IgnoreBlock = ifElseStatement.FalseStatement;
                     this.WriteSpace();
                     this.BeginBlock();
@@ -130,7 +130,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
                     this.WriteNewLine();
-                    this.Write("continue;");                    
+                    this.Write("continue;");
                 }
 
                 var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
@@ -153,7 +153,7 @@ namespace Bridge.Translator
             if (this.Emitter.IsAsync)
             {
                 this.Emitter.AsyncBlock.EmittedAsyncSteps = this.EmittedAsyncSteps;
-            }            
+            }
         }
     }
 }

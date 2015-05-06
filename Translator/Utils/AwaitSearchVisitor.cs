@@ -19,7 +19,7 @@ namespace Bridge.Translator
         }
 
         public List<Expression> GetAwaitExpressions()
-        {            
+        {
             this.AwaitExpressions.Sort((t1,t2) => t2.Item1.CompareTo(t1.Item1));
             return this.AwaitExpressions.Select(t => t.Item2).ToList();
         }
@@ -31,11 +31,11 @@ namespace Bridge.Translator
         }
 
         public override void VisitLambdaExpression(LambdaExpression lambdaExpression)
-        {            
+        {
         }
 
         public override void VisitAnonymousMethodExpression(AnonymousMethodExpression anonymousMethodExpression)
-        {            
+        {
         }
 
         public override void VisitInvocationExpression(InvocationExpression invocationExpression)
@@ -59,7 +59,7 @@ namespace Bridge.Translator
     public class AsyncTryVisitor : DepthFirstAstVisitor
     {
         public AsyncTryVisitor()
-        {            
+        {
         }
 
         public bool Found

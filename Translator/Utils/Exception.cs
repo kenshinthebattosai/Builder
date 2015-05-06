@@ -3,9 +3,9 @@ using System;
 
 namespace Bridge.Translator
 {
-    public class Exception : System.Exception, IVisitorException 
+    public class Exception : System.Exception, IVisitorException
     {
-        public Exception(string message) : base(message) 
+        public Exception(string message) : base(message)
         {
         }
 
@@ -14,7 +14,7 @@ namespace Bridge.Translator
             return new Bridge.Translator.Exception(String.Format(format, args));
         }
 
-        public static void Throw(string format, params object[] args) 
+        public static void Throw(string format, params object[] args)
         {
             throw (Exception)Bridge.Translator.Exception.Create(format, args);
         }

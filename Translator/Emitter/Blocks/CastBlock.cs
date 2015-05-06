@@ -46,16 +46,16 @@ namespace Bridge.Translator
             this.AstType = astType;
         }
 
-        public CastExpression CastExpression 
-        { 
-            get; 
-            set; 
+        public CastExpression CastExpression
+        {
+            get;
+            set;
         }
 
-        public AsExpression AsExpression 
-        { 
-            get; 
-            set; 
+        public AsExpression AsExpression
+        {
+            get;
+            set;
         }
 
         public IsExpression IsExpression
@@ -116,7 +116,7 @@ namespace Bridge.Translator
             {
                 this.EmitCastType(this.AstType);
             }
-        }  
+        }
 
         protected virtual void EmitCastExpression(Expression expression, AstType type, string method)
         {
@@ -125,7 +125,7 @@ namespace Bridge.Translator
                 expression.AcceptVisitor(this.Emitter);
                 return;
             }
-            
+
             bool isInlineCast;
             string castCode = this.GetCastCode(expression, type, out isInlineCast);
 
@@ -142,7 +142,7 @@ namespace Bridge.Translator
                 if (Helpers.IsIntegerType(resolveResult.Type, this.Emitter.Resolver))
                 {
                     var fromType = this.Emitter.Resolver.ResolveNode(this.CastExpression.Expression, this.Emitter).Type;
-                    
+
                     if (fromType != null && Helpers.IsFloatType(fromType, this.Emitter.Resolver))
                     {
                         this.Write("Bridge.Int.trunc(");
@@ -199,7 +199,7 @@ namespace Bridge.Translator
             }
 
             this.WriteCloseParentheses();
-        }        
+        }
 
         protected virtual void EmitCastType(AstType astType)
         {
@@ -268,7 +268,7 @@ namespace Bridge.Translator
             {
                 IEnumerable<IAttribute> attributes = null;
                 DefaultResolvedTypeDefinition type = resolveResult.Type as DefaultResolvedTypeDefinition;
-                
+
                 if (type != null)
                 {
                     attributes = type.Attributes;
@@ -319,6 +319,6 @@ namespace Bridge.Translator
             }
 
             this.Write(castCode);
-        }   
+        }
     }
 }

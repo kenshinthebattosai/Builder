@@ -8,7 +8,7 @@ namespace Bridge.Translator
     public class NameBlock : AbstractEmitterBlock
     {
         public NameBlock(IEmitter emitter, NamedExpression namedExpression) : this(emitter, namedExpression.Name, namedExpression, namedExpression.Expression)
-        {            
+        {
         }
 
         public NameBlock(IEmitter emitter, string name, Expression namedExpression, Expression expression)
@@ -34,10 +34,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public Expression NamedExpression 
-        { 
-            get; 
-            set; 
+        public Expression NamedExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -63,7 +63,7 @@ namespace Bridge.Translator
                 }
                 else
                 {
-                    this.Write(isProperty ? Helpers.GetPropertyRef(member, this.Emitter, !(expression is ArrayInitializerExpression)) : lowerCaseName);                                        
+                    this.Write(isProperty ? Helpers.GetPropertyRef(member, this.Emitter, !(expression is ArrayInitializerExpression)) : lowerCaseName);
                 }
             }
             else

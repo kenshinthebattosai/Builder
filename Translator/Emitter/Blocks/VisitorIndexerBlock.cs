@@ -31,12 +31,12 @@ namespace Bridge.Translator
                 this.EnsureComma();
 
                 this.ResetLocals();
-                
+
                 var prevMap = this.BuildLocalsMap();
                 var prevNamesMap = this.BuildLocalsNamesMap();
 
                 if (setter)
-                {                    
+                {
                     this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } }, accessor.Body);
                 }
 

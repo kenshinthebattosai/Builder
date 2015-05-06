@@ -152,7 +152,7 @@ namespace Bridge.Translator
         protected virtual void EmitInitMembers()
         {
             var injectors = this.GetInjectors();
-            IEnumerable<string> fieldsInjectors = null; 
+            IEnumerable<string> fieldsInjectors = null;
 
             var fieldBlock = new FieldBlock(this.Emitter, this.TypeInfo, false, true);
             fieldBlock.Emit();
@@ -162,7 +162,7 @@ namespace Bridge.Translator
             if (fieldBlock.WasEmitted)
             {
                 this.Emitter.Comma = true;
-            }            
+            }
 
             if (!this.TypeInfo.InstanceConfig.HasConfigMembers && !injectors.Any() && !fieldsInjectors.Any())
             {
@@ -178,8 +178,8 @@ namespace Bridge.Translator
             this.EnsureComma();
             this.Write("config");
 
-            this.WriteColon();            
-            this.BeginBlock();            
+            this.WriteColon();
+            this.BeginBlock();
 
             var changeCase = this.Emitter.ChangeCase;
             var baseType = this.Emitter.GetBaseTypeDefinition();

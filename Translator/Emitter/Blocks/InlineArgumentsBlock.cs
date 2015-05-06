@@ -19,17 +19,17 @@ namespace Bridge.Translator
 
             argsInfo.AddExtensionParam();
         }
-        
-        public ArgumentsInfo ArgumentsInfo 
-        { 
-            get; 
-            set; 
+
+        public ArgumentsInfo ArgumentsInfo
+        {
+            get;
+            set;
         }
 
-        public string InlineCode 
-        { 
-            get; 
-            set; 
+        public string InlineCode
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -79,7 +79,7 @@ namespace Bridge.Translator
                 string key = m.Groups[2].Value;
                 bool isRaw = m.Groups[1].Success && m.Groups[1].Value == "*";
                 bool ignoreArray = isRaw || argsInfo.ParamsExpression == null;
-                string modifier = m.Groups[1].Success ? m.Groups[4].Value : null;                
+                string modifier = m.Groups[1].Success ? m.Groups[4].Value : null;
 
                 StringBuilder oldSb = this.Emitter.Output;
                 this.Emitter.Output = new StringBuilder();
@@ -115,7 +115,7 @@ namespace Bridge.Translator
                         else
                         {
                             var writer = this.SaveWriter();
-                            this.NewWriter();                            
+                            this.NewWriter();
                             exprs[0].AcceptVisitor(this.Emitter);
                             var s = this.Emitter.Output.ToString();
                             this.RestoreWriter(writer);

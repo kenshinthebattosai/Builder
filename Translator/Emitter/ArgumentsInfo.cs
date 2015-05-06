@@ -54,16 +54,16 @@ namespace Bridge.Translator
             private set;
         }
 
-        public NamedParamExpression[] NamedExpressions 
-        { 
-            get; 
-            private set; 
+        public NamedParamExpression[] NamedExpressions
+        {
+            get;
+            private set;
         }
 
-        public TypeParamExpression[] TypeArguments 
-        { 
-            get; 
-            private set; 
+        public TypeParamExpression[] TypeArguments
+        {
+            get;
+            private set;
         }
 
         public object ThisArgument
@@ -93,17 +93,17 @@ namespace Bridge.Translator
         public ArgumentsInfo(IEmitter emitter, InvocationExpression invocationExpression)
         {
             this.Emitter = emitter;
-            this.Expression = invocationExpression;            
+            this.Expression = invocationExpression;
 
             var arguments = invocationExpression.Arguments.ToList();
-            this.ResolveResult = emitter.Resolver.ResolveNode(invocationExpression, emitter) as InvocationResolveResult;            
+            this.ResolveResult = emitter.Resolver.ResolveNode(invocationExpression, emitter) as InvocationResolveResult;
 
             this.BuildArgumentsList(arguments);
-            if (this.ResolveResult != null) 
+            if (this.ResolveResult != null)
             {
                 this.HasTypeArguments = ((IMethod)this.ResolveResult.Member).TypeArguments.Count > 0;
                 this.BuildTypedArguments(invocationExpression.Target);
-            }            
+            }
         }
 
         public ArgumentsInfo(IEmitter emitter, IndexerExpression invocationExpression)
@@ -160,7 +160,7 @@ namespace Bridge.Translator
                 this.ArgumentsExpressions = new Expression[] { binaryOperatorExpression.Left, binaryOperatorExpression.Right };
                 this.ArgumentsNames = new string[] { "left", "right" };
                 this.CreateNamedExpressions(this.ArgumentsNames, this.ArgumentsExpressions);
-            }            
+            }
         }
 
         public ArgumentsInfo(IEmitter emitter, UnaryOperatorExpression unaryOperatorExpression, OperatorResolveResult operatorResolveResult)
@@ -207,13 +207,13 @@ namespace Bridge.Translator
                     this.TypeArguments[i] = new TypeParamExpression(typeParams[i].Name, list[i], null);
                 }
             }
-        }        
-        
+        }
+
         private void BuildTypedArguments(Expression expression)
         {
             AstNodeCollection<AstType> typedArguments = null;
 
-            var identifierExpression = expression as IdentifierExpression;            
+            var identifierExpression = expression as IdentifierExpression;
             if (identifierExpression != null)
             {
                 typedArguments = identifierExpression.TypeArguments;
@@ -230,16 +230,16 @@ namespace Bridge.Translator
             var method = this.ResolveResult.Member as IMethod;
 
             if (method != null)
-            {                
+            {
                 this.TypeArguments = new TypeParamExpression[method.TypeParameters.Count];
 
-                if (typedArguments != null && typedArguments.Count == method.TypeParameters.Count) 
+                if (typedArguments != null && typedArguments.Count == method.TypeParameters.Count)
                 {
                     var list = typedArguments.ToList();
                     for (int i = 0; i < list.Count; i++)
 			        {
                         this.TypeArguments[i] = new TypeParamExpression(method.TypeParameters[i].Name, list[i], null);
-			        }      
+			        }
                 }
                 else
                 {
@@ -322,7 +322,7 @@ namespace Bridge.Translator
                             {
                                 paramsArg = arg;
                             }
-                            
+
                             paramArgName = parameters[i + shift].Name;
                         }
 
@@ -361,7 +361,7 @@ namespace Bridge.Translator
                         }
                         names[i] = parameters[i + shift].Name;
                     }
-                }                
+                }
 
                 this.ArgumentsExpressions = result;
                 this.ArgumentsNames = names;
@@ -371,7 +371,7 @@ namespace Bridge.Translator
             else
             {
                 this.ArgumentsExpressions = arguments.ToArray();
-            }            
+            }
         }
 
         private void BuildOperatorArgumentsList(IList<Expression> arguments)
@@ -517,16 +517,16 @@ namespace Bridge.Translator
             this.Expression = expression;
         }
 
-        public string Name 
-        { 
-            get; 
-            private set; 
+        public string Name
+        {
+            get;
+            private set;
         }
 
-        public Expression Expression 
-        { 
-            get; 
-            private set; 
+        public Expression Expression
+        {
+            get;
+            private set;
         }
     }
 

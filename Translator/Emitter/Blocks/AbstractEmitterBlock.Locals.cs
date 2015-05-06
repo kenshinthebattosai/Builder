@@ -35,7 +35,7 @@ namespace Bridge.Translator
         {
             declarations.ToList().ForEach(item =>
             {
-                var vName = this.AddLocal(item.Name, item.Type);                
+                var vName = this.AddLocal(item.Name, item.Type);
 
                 if (item.ParameterModifier == ParameterModifier.Out || item.ParameterModifier == ParameterModifier.Ref)
                 {
@@ -68,7 +68,7 @@ namespace Bridge.Translator
 
         public string AddLocal(string name, AstType type)
         {
-            this.Emitter.Locals.Add(name, type);            
+            this.Emitter.Locals.Add(name, type);
 
             if (this.Emitter.IsAsync && !this.Emitter.AsyncVariables.Contains(name))
             {
@@ -108,7 +108,7 @@ namespace Bridge.Translator
         }
 
         public virtual Dictionary<string, string> BuildLocalsMap()
-        {            
+        {
             var prevMap = this.Emitter.LocalsMap;
 
             if (prevMap == null)
@@ -118,7 +118,7 @@ namespace Bridge.Translator
             else
             {
                 this.Emitter.LocalsMap = new Dictionary<string, string>(prevMap);
-            }            
+            }
 
             return prevMap;
         }
@@ -139,7 +139,7 @@ namespace Bridge.Translator
             else
             {
                 this.Emitter.LocalsNamesMap = new Dictionary<string, string>(prevMap);
-            }            
+            }
 
             return prevMap;
         }
@@ -154,7 +154,7 @@ namespace Bridge.Translator
             declarations.ToList().ForEach(item =>
             {
                 var isReferenceLocal = this.Emitter.LocalsMap.ContainsKey(item.Name) && this.Emitter.LocalsMap[item.Name].EndsWith(".v");
-                
+
                 if (isReferenceLocal && !(item.ParameterModifier == ParameterModifier.Out || item.ParameterModifier == ParameterModifier.Ref))
                 {
                     this.Write(string.Format("{0} = {{v:{0}}};", this.Emitter.LocalsNamesMap[item.Name]));
@@ -192,7 +192,7 @@ namespace Bridge.Translator
             string name = "$t";
             int i = 0;
 
-            while (this.Emitter.TempVariables.ContainsKey(name)) 
+            while (this.Emitter.TempVariables.ContainsKey(name))
             {
                 name += ++i;
             }

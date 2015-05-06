@@ -6,9 +6,9 @@ namespace Bridge.Translator
 {
     public class LambdaBlock : AbstractMethodBlock
     {
-        public LambdaBlock(IEmitter emitter, LambdaExpression lambdaExpression) 
+        public LambdaBlock(IEmitter emitter, LambdaExpression lambdaExpression)
             : this(emitter, lambdaExpression.Parameters, lambdaExpression.Body, lambdaExpression, lambdaExpression.IsAsync)
-        {            
+        {
         }
 
         public LambdaBlock(IEmitter emitter, AnonymousMethodExpression anonymousMethodExpression)
@@ -32,22 +32,22 @@ namespace Bridge.Translator
             set;
         }
 
-        public IEnumerable<ParameterDeclaration> Parameters 
-        { 
-            get; 
-            set; 
+        public IEnumerable<ParameterDeclaration> Parameters
+        {
+            get;
+            set;
         }
 
-        public AstNode Body 
-        { 
-            get; 
-            set; 
+        public AstNode Body
+        {
+            get;
+            set;
         }
 
-        public AstNode Context 
-        { 
-            get; 
-            set; 
+        public AstNode Context
+        {
+            get;
+            set;
         }
 
         protected bool PreviousIsAync
@@ -121,9 +121,9 @@ namespace Bridge.Translator
             var prevMap = this.BuildLocalsMap();
             var prevNamesMap = this.BuildLocalsNamesMap();
             this.AddLocals(parameters, body);
-            
 
-            bool block = body is BlockStatement;            
+
+            bool block = body is BlockStatement;
             this.Write("");
 
             var savedPos = this.Emitter.Output.Length;
@@ -136,7 +136,7 @@ namespace Bridge.Translator
             if (!block && !this.IsAsync)
             {
                 this.BeginBlock();
-            }            
+            }
 
             bool isSimpleLambda = body.Parent is LambdaExpression && !block && !this.IsAsync;
 
@@ -171,7 +171,7 @@ namespace Bridge.Translator
                 this.Emitter.Output.Insert(savedPos, Bridge.Translator.Emitter.ROOT + "." + Bridge.Translator.Emitter.DELEGATE_BIND + "(this, ");
                 this.WriteCloseParentheses();
             }
-            
+
 
             this.PopLocals();
             this.ClearLocalsMap(prevMap);

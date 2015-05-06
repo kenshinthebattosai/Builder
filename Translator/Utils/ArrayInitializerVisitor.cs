@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace Bridge.Translator
-{    
+{
     public class ArrayInitializerVisitor : Visitor
     {
         public override void VisitArrayCreateExpression(ArrayCreateExpression node)

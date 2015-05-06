@@ -32,7 +32,7 @@ namespace Bridge.Translator
             this.AddLocals(operatorDeclaration.Parameters, operatorDeclaration.Body);
 
             var typeDef = this.Emitter.GetTypeDefinition();
-            var overloads = OverloadsCollection.Create(this.Emitter, operatorDeclaration);            
+            var overloads = OverloadsCollection.Create(this.Emitter, operatorDeclaration);
 
             if (overloads.HasOverloads)
             {
@@ -74,6 +74,6 @@ namespace Bridge.Translator
             this.ClearLocalsMap(prevMap);
             this.ClearLocalsNamesMap(prevNamesMap);
             this.Emitter.Comma = true;
-        }                  
+        }
     }
 }

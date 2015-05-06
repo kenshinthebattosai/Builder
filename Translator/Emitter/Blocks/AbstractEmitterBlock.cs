@@ -82,7 +82,7 @@ namespace Bridge.Translator
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -129,7 +129,7 @@ namespace Bridge.Translator
             {
                 this.Write("$task" + index + ".continueWith($asyncBody, true);");
             }
-            
+
             this.WriteNewLine();
             this.Write("return;");
 

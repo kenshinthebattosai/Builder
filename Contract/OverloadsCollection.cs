@@ -183,10 +183,10 @@ namespace Bridge.Contract
             private set;
         }
 
-        public IMember Member 
-        { 
-            get; 
-            private set; 
+        public IMember Member
+        {
+            get;
+            private set;
         }
 
         private OverloadsCollection(IEmitter emitter, FieldDeclaration fieldDeclaration)
@@ -199,9 +199,9 @@ namespace Bridge.Contract
             this.Member = this.FindMember(fieldDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[fieldDeclaration.GetHashCode().ToString()] = this;
-        }        
+        }
 
         private OverloadsCollection(IEmitter emitter, EventDeclaration eventDeclaration)
         {
@@ -214,7 +214,7 @@ namespace Bridge.Contract
             this.Member = this.FindMember(eventDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[eventDeclaration.GetHashCode().ToString()] = this;
         }
 
@@ -245,9 +245,9 @@ namespace Bridge.Contract
             this.Member = this.FindMember(methodDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[methodDeclaration.GetHashCode().ToString()] = this;
-        }   
+        }
 
         private OverloadsCollection(IEmitter emitter, ConstructorDeclaration constructorDeclaration)
         {
@@ -260,9 +260,9 @@ namespace Bridge.Contract
             this.Member = this.FindMember(constructorDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[constructorDeclaration.GetHashCode().ToString()] = this;
-        }        
+        }
 
         private OverloadsCollection(IEmitter emitter, PropertyDeclaration propDeclaration, bool isSetter)
         {
@@ -277,7 +277,7 @@ namespace Bridge.Contract
             this.Member = this.FindMember(propDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[propDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString()] = this;
         }
 
@@ -296,7 +296,7 @@ namespace Bridge.Contract
             this.Type = this.Member.DeclaringType;
             this.InitMembers();
             this.Emitter.OverloadsCache[indexerDeclaration.GetHashCode().ToString() + isSetter.GetHashCode().ToString()] = this;
-        }       
+        }
 
         private OverloadsCollection(IEmitter emitter, OperatorDeclaration operatorDeclaration)
         {
@@ -308,9 +308,9 @@ namespace Bridge.Contract
             this.Member = this.FindMember(operatorDeclaration);
             this.TypeDefinition = this.Member.DeclaringTypeDefinition;
             this.Type = this.Member.DeclaringType;
-            this.InitMembers();            
+            this.InitMembers();
             this.Emitter.OverloadsCache[operatorDeclaration.GetHashCode().ToString()] = this;
-        }        
+        }
 
         private OverloadsCollection(IEmitter emitter, IMember member, bool isSetter = false)
         {
@@ -326,8 +326,8 @@ namespace Bridge.Contract
                 var entity = (IEntity)member;
                 this.Inherit = !entity.IsStatic;
                 this.Static = entity.IsStatic;
-            }            
-            
+            }
+
             this.Emitter = emitter;
             this.Name = member.Name;
 
@@ -344,7 +344,7 @@ namespace Bridge.Contract
                 this.AltJsName = Helpers.GetEventRef(member, emitter, !isSetter, true, true);
             }
             else
-            {                
+            {
                 this.JsName = this.Emitter.GetEntityName(member, false, true);
             }
 
@@ -393,7 +393,7 @@ namespace Bridge.Contract
         protected virtual int GetIndex(IMember member)
         {
             var originalMember = member;
-            
+
             while (member.IsOverride)
             {
                 member = InheritanceHelper.GetBaseMember(member);
@@ -457,7 +457,7 @@ namespace Bridge.Contract
                     return 1;
                 }
 
-                if (iCount1 > 0 && iCount2 > 0) 
+                if (iCount1 > 0 && iCount2 > 0)
                 {
                     foreach (var im1 in m1.ImplementedInterfaceMembers)
                     {
@@ -483,7 +483,7 @@ namespace Bridge.Contract
                 var method1 = m1 as IMethod;
                 var method2 = m2 as IMethod;
 
-                if ((method1 != null && method1.IsConstructor) && 
+                if ((method1 != null && method1.IsConstructor) &&
                     (method2 == null || !method2.IsConstructor))
                 {
                     return -1;
@@ -511,7 +511,7 @@ namespace Bridge.Contract
 
                 var name1 = this.MemberToString(m1);
                 var name2 = this.MemberToString(m2);
-                
+
                 if (name1.Length != name2.Length)
                 {
                    //return name1.Length.CompareTo(name2.Length);
@@ -551,7 +551,7 @@ namespace Bridge.Contract
         {
             List<IMethod> list = new List<IMethod>();
             var typeDef = this.TypeDefinition;
-            
+
             while (typeDef != null)
             {
                 var methods = typeDef.Methods.Where(m =>
@@ -865,7 +865,7 @@ namespace Bridge.Contract
                         throw new Exception(string.Format(message,definition.ToString(), definition.DeclaringType.ToString(), iMember.DeclaringType.ToString()));
                     }
                 }
-            }            
+            }
 
             return name;
         }

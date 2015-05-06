@@ -12,9 +12,9 @@ using ICSharpCode.NRefactory.TypeSystem;
 
 namespace Bridge.Translator
 {
-    public class Validator : IValidator 
+    public class Validator : IValidator
     {
-        public virtual bool CanIgnoreType(TypeDefinition type) 
+        public virtual bool CanIgnoreType(TypeDefinition type)
         {
             if (type.IsInterface)
             {
@@ -25,7 +25,7 @@ namespace Bridge.Translator
             {
                 return true;
             }
-            
+
             if (type.BaseType != null && type.BaseType.FullName == "System.MulticastDelegate")
             {
                 return true;
@@ -34,7 +34,7 @@ namespace Bridge.Translator
             return false;
         }
 
-        public virtual void CheckType(TypeDefinition type, ITranslator translator) 
+        public virtual void CheckType(TypeDefinition type, ITranslator translator)
         {
             if (this.CanIgnoreType(type) && !this.IsObjectLiteral(type))
             {
@@ -50,7 +50,7 @@ namespace Bridge.Translator
             this.CheckModuleDependenies(type, translator);
         }
 
-        public virtual bool IsIgnoreType(ICustomAttributeProvider type) 
+        public virtual bool IsIgnoreType(ICustomAttributeProvider type)
         {
             string ignoreAttr = Translator.Bridge_ASSEMBLY + ".IgnoreAttribute";
             string objectLiteralAttr = Translator.Bridge_ASSEMBLY + ".ObjectLiteralAttribute";
@@ -75,9 +75,9 @@ namespace Bridge.Translator
         {
             string ignoreAttr = Translator.Bridge_ASSEMBLY + ".IgnoreAttribute";
             string objectLiteralAttr = Translator.Bridge_ASSEMBLY + ".ObjectLiteralAttribute";
-            
+
             return typeDefinition.Attributes.Any(attr => attr.Constructor!= null && ((attr.Constructor.DeclaringType.FullName == ignoreAttr) || (attr.Constructor.DeclaringType.FullName == objectLiteralAttr)));
-        }        
+        }
 
         public virtual int EnumEmitMode(DefaultResolvedTypeDefinition type)
         {
@@ -86,7 +86,7 @@ namespace Bridge.Translator
             type.Attributes.Any(attr => {
                 if (attr.Constructor != null && attr.Constructor.DeclaringType.FullName == enumAttr && attr.PositionalArguments.Count > 0)
                 {
-                    result = (int)attr.PositionalArguments.First().ConstantValue;                    
+                    result = (int)attr.PositionalArguments.First().ConstantValue;
                     return true;
                 }
 
@@ -172,7 +172,7 @@ namespace Bridge.Translator
             return attr != null && !attr.HasConstructorArguments;
         }
 
-        public virtual string GetInlineCode(MethodDefinition method) 
+        public virtual string GetInlineCode(MethodDefinition method)
         {
             return this.GetAttributeValue(method.CustomAttributes, Translator.Bridge_ASSEMBLY + ".TemplateAttribute");
         }
@@ -192,7 +192,7 @@ namespace Bridge.Translator
             return this.HasAttribute(type.Attributes, Translator.Bridge_ASSEMBLY + ".ObjectLiteralAttribute");
         }
 
-        public virtual string GetCustomTypeName(TypeDefinition type) 
+        public virtual string GetCustomTypeName(TypeDefinition type)
         {
             var name = this.GetAttributeValue(type.CustomAttributes, Translator.Bridge_ASSEMBLY + ".NameAttribute");
 
@@ -211,8 +211,8 @@ namespace Bridge.Translator
                 {
                     return name;
                 }
-                
-                if (arg.Value is string) 
+
+                if (arg.Value is string)
                 {
                     string ns = arg.Value.ToString();
 
@@ -231,7 +231,7 @@ namespace Bridge.Translator
         public virtual string GetCustomTypeName(ICSharpCode.NRefactory.TypeSystem.IType type)
         {
             var attrs = type.GetDefinition().Attributes;
-            
+
             string name = null;
             var nameAttr = this.GetAttribute(attrs, Translator.Bridge_ASSEMBLY + ".NameAttribute");
             if (nameAttr != null)
@@ -271,7 +271,7 @@ namespace Bridge.Translator
             return null;
         }
 
-        public virtual string GetCustomConstructor(TypeDefinition type) 
+        public virtual string GetCustomConstructor(TypeDefinition type)
         {
             string ctor = this.GetAttributeValue(type.CustomAttributes, Translator.Bridge_ASSEMBLY + ".ConstructorAttribute");
 
@@ -288,20 +288,20 @@ namespace Bridge.Translator
             return null;
         }
 
-        public virtual void CheckConstructors(TypeDefinition type, ITranslator translator) 
+        public virtual void CheckConstructors(TypeDefinition type, ITranslator translator)
         {
-            if (type.HasMethods) 
+            if (type.HasMethods)
             {
                 var ctors = type.Methods.Where(method => method.IsConstructor);
 
-                foreach (MethodDefinition ctor in ctors) 
+                foreach (MethodDefinition ctor in ctors)
                 {
                     this.CheckMethodArguments(ctor);
                 }
-            }            
+            }
         }
 
-        public virtual void CheckFields(TypeDefinition type, ITranslator translator) 
+        public virtual void CheckFields(TypeDefinition type, ITranslator translator)
         {
             if (this.IsObjectLiteral(type) && type.HasFields)
             {
@@ -311,7 +311,7 @@ namespace Bridge.Translator
                     {
                         Exception.Throw("ObjectLiteral type doesn't support static members: {0}", type);
                     }
-                }                
+                }
             }
         }
 
@@ -329,10 +329,10 @@ namespace Bridge.Translator
             }
         }
 
-        public virtual void CheckMethods(TypeDefinition type, ITranslator translator) 
+        public virtual void CheckMethods(TypeDefinition type, ITranslator translator)
         {
             var methodsCount = 0;
-            foreach(MethodDefinition method in type.Methods) 
+            foreach(MethodDefinition method in type.Methods)
             {
                 if (method.HasCustomAttributes && method.CustomAttributes.Any(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute"))
                 {
@@ -353,16 +353,16 @@ namespace Bridge.Translator
             }
         }
 
-        public virtual void CheckMethodArguments(MethodDefinition method) 
+        public virtual void CheckMethodArguments(MethodDefinition method)
         {
         }
-        public virtual HashSet<string> GetParentTypes(IDictionary<string, TypeDefinition> allTypes) 
+        public virtual HashSet<string> GetParentTypes(IDictionary<string, TypeDefinition> allTypes)
         {
             var result = new HashSet<string>();
 
-            foreach(var type in allTypes.Values) 
+            foreach(var type in allTypes.Values)
             {
-                if(type.BaseType != null) 
+                if(type.BaseType != null)
                 {
                     string parentName = type.BaseType.FullName.LeftOf('<').Replace("`", "$");
 
@@ -389,7 +389,7 @@ namespace Bridge.Translator
                 if (attr != null)
                 {
                     var typeInfo = this.EnsureTypeInfo(type, translator);
-                    
+
                     var obj = this.GetAttributeArgumentValue(attr, 0);
 
                     if (obj is string)
@@ -398,7 +398,7 @@ namespace Bridge.Translator
                     }
                 }
             }
-        }        
+        }
 
         public virtual void CheckModule(TypeDefinition type, ITranslator translator)
         {
@@ -436,14 +436,14 @@ namespace Bridge.Translator
                     if (attr.ConstructorArguments.Count > 0)
                     {
                         ModuleDependency dependency = new ModuleDependency();
-                        var obj = this.GetAttributeArgumentValue(attr, 0);                        
+                        var obj = this.GetAttributeArgumentValue(attr, 0);
                         dependency.DependencyName = obj is string ? obj.ToString() : "";
 
                         if (attr.ConstructorArguments.Count > 1)
                         {
                             obj = this.GetAttributeArgumentValue(attr, 1);
                             dependency.VariableName = obj is string ? obj.ToString() : "";
-                        }                        
+                        }
 
                         typeInfo.Dependencies.Add(dependency);
                     }
@@ -472,7 +472,7 @@ namespace Bridge.Translator
             }
             return typeInfo;
         }
-        
+
         public virtual bool IsDelegateOrLambda(ResolveResult result)
         {
             return result.Type.Kind == ICSharpCode.NRefactory.TypeSystem.TypeKind.Delegate || result is LambdaResolveResult;

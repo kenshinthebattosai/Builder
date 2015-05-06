@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.ThisReferenceExpression = thisReferenceExpression;
         }
 
-        public ThisReferenceExpression ThisReferenceExpression 
-        { 
-            get; 
-            set; 
+        public ThisReferenceExpression ThisReferenceExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -26,6 +26,6 @@ namespace Bridge.Translator
         protected override void EmitConversionExpression()
         {
             this.WriteThis();
-        }  
+        }
     }
 }

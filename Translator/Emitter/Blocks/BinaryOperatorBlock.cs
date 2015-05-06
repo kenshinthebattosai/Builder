@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.BinaryOperatorExpression = binaryOperatorExpression;
         }
 
-        public BinaryOperatorExpression BinaryOperatorExpression 
-        { 
-            get; 
-            set; 
+        public BinaryOperatorExpression BinaryOperatorExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -27,7 +27,7 @@ namespace Bridge.Translator
         protected override void EmitConversionExpression()
         {
             this.VisitBinaryOperatorExpression();
-        }  
+        }
 
         protected bool ResolveOperator(BinaryOperatorExpression binaryOperatorExpression, OperatorResolveResult orr)
         {
@@ -61,7 +61,7 @@ namespace Bridge.Translator
                     {
                         this.WriteOpenParentheses();
                     }
-                    
+
                     new ExpressionListBlock(this.Emitter, new Expression[] { binaryOperatorExpression.Left, binaryOperatorExpression.Right }, null).Emit();
                     this.WriteCloseParentheses();
 
@@ -97,7 +97,7 @@ namespace Bridge.Translator
 
             if (binaryOperatorExpression.Operator == BinaryOperatorType.Divide &&
                 (
-                    (Helpers.IsIntegerType(leftResolverResult.Type, this.Emitter.Resolver) && 
+                    (Helpers.IsIntegerType(leftResolverResult.Type, this.Emitter.Resolver) &&
                     Helpers.IsIntegerType(rightResolverResult.Type, this.Emitter.Resolver)) ||
 
                     (Helpers.IsIntegerType(this.Emitter.Resolver.Resolver.GetExpectedType(binaryOperatorExpression.Left), this.Emitter.Resolver) &&
@@ -111,11 +111,11 @@ namespace Bridge.Translator
                 this.Write(")");
                 return;
             }
-            
+
             if (binaryOperatorExpression.Operator == BinaryOperatorType.Add ||
                 binaryOperatorExpression.Operator == BinaryOperatorType.Subtract)
             {
-                
+
                 var add = binaryOperatorExpression.Operator == BinaryOperatorType.Add;
 
                 if (this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult) && this.Emitter.Validator.IsDelegateOrLambda(rightResolverResult))
@@ -221,7 +221,7 @@ namespace Bridge.Translator
             {
                 this.WriteSpace();
             }
-            
+
             binaryOperatorExpression.Right.AcceptVisitor(this.Emitter);
 
             if (delegateOperator || nullable)

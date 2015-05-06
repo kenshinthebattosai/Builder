@@ -11,10 +11,10 @@ namespace Bridge.Translator
             this.NullNode = nullNode;
         }
 
-        public AstNode NullNode 
-        { 
-            get; 
-            set; 
+        public AstNode NullNode
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()

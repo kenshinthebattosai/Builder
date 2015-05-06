@@ -25,40 +25,40 @@ namespace Bridge.Contract
 
         }
 
-        bool IsStatic 
-        { 
-            get; 
-            set; 
+        bool IsStatic
+        {
+            get;
+            set;
         }
 
-        ClassType ClassType 
-        { 
-            get; 
-            set; 
-        }
-        
-        string Namespace 
-        { 
-            get; 
-            set; 
+        ClassType ClassType
+        {
+            get;
+            set;
         }
 
-        string Name 
-        { 
-            get; 
-            set; 
+        string Namespace
+        {
+            get;
+            set;
         }
 
-        HashSet<string> Usings 
-        { 
-            get; 
-            set; 
+        string Name
+        {
+            get;
+            set;
         }
-        
+
+        HashSet<string> Usings
+        {
+            get;
+            set;
+        }
+
         List<ConstructorDeclaration> Ctors
-        { 
-            get; 
-            set; 
+        {
+            get;
+            set;
         }
 
         ConstructorDeclaration StaticCtor
@@ -77,14 +77,14 @@ namespace Bridge.Contract
             get;
         }
 
-        Dictionary<string, List<MethodDeclaration>> StaticMethods 
-        { 
-            get; 
+        Dictionary<string, List<MethodDeclaration>> StaticMethods
+        {
+            get;
         }
 
-        Dictionary<string, List<MethodDeclaration>> InstanceMethods 
-        { 
-            get; 
+        Dictionary<string, List<MethodDeclaration>> InstanceMethods
+        {
+            get;
         }
 
         Dictionary<string, List<EntityDeclaration>> StaticProperties
@@ -112,10 +112,10 @@ namespace Bridge.Contract
             get;
         }
 
-        bool IsEnum 
-        { 
-            get; 
-            set; 
+        bool IsEnum
+        {
+            get;
+            set;
         }
 
         string FileName
@@ -135,7 +135,7 @@ namespace Bridge.Contract
             get;
             set;
         }
-        
+
         ITypeInfo ParentType
         {
             get;

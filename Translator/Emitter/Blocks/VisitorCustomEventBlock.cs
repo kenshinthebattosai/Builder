@@ -34,11 +34,11 @@ namespace Bridge.Translator
 
                 var prevMap = this.BuildLocalsMap();
                 var prevNamesMap = this.BuildLocalsNamesMap();
-                
+
                 this.AddLocals(new ParameterDeclaration[] { new ParameterDeclaration { Name = "value" } }, accessor.Body);
-                
+
                 var overloads = OverloadsCollection.Create(this.Emitter, customEventDeclaration, remover);
-                
+
                 this.Write((remover ? "remove" : "add") + overloads.GetOverloadName());
                 this.WriteColon();
                 this.WriteFunction();

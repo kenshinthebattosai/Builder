@@ -7,7 +7,7 @@ using Bridge.Contract;
 namespace Bridge.Build
 {
     public class GenerateScript : Task
-    {        
+    {
         [Required]
         public ITaskItem Assembly
         {

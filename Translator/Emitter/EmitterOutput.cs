@@ -14,7 +14,7 @@ namespace Bridge.Translator
             this.NonModuletOutput = new StringBuilder();
             this.ModuleDependencies = new Dictionary<string, List<IPluginDependency>>();
         }
-        
+
         public string FileName
         {
             get;

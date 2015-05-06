@@ -21,10 +21,10 @@ namespace Bridge.Translator
             this.YieldReturnStatement = yieldReturnStatement;
         }
 
-        public YieldBreakStatement YieldBreakStatement 
-        { 
-            get; 
-            set; 
+        public YieldBreakStatement YieldBreakStatement
+        {
+            get;
+            set;
         }
 
         public YieldReturnStatement YieldReturnStatement

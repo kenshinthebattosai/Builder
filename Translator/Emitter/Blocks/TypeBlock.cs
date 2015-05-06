@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.Type = type;
         }
 
-        public AstType Type 
-        { 
-            get; 
-            set; 
+        public AstType Type
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()

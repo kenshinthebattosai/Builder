@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.ForeachStatement = foreachStatement;
         }
 
-        public ForeachStatement ForeachStatement 
-        { 
-            get; 
-            set; 
+        public ForeachStatement ForeachStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -110,7 +110,7 @@ namespace Bridge.Translator
 
             this.PushLocals();
             var varName = this.AddLocal(foreachStatement.VariableName, foreachStatement.VariableType);
-            
+
             this.WriteVar();
             this.Write(varName, " = ", iteratorName);
 
@@ -224,10 +224,10 @@ namespace Bridge.Translator
 
             this.WriteOpenCloseParentheses();
             this.WriteSemiColon();
-            this.WriteNewLine();            
+            this.WriteNewLine();
 
             BlockStatement block = foreachStatement.EmbeddedStatement as BlockStatement;
-            
+
             if (replaceAwaiterByVar.HasValue)
             {
                 this.Emitter.ReplaceAwaiterByVar = replaceAwaiterByVar.Value;

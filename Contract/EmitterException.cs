@@ -27,7 +27,7 @@ namespace Bridge.Contract
 
         public AstNode Node
         {
-            get; 
+            get;
             private set;
         }
 

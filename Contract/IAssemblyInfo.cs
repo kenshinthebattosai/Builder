@@ -3,7 +3,7 @@
 namespace Bridge.Contract
 {
     /// <summary>
-    /// Format options for the generated JavaScript file name and folder name paths. 
+    /// Format options for the generated JavaScript file name and folder name paths.
     /// </summary>
     public enum OutputBy
     {
@@ -23,7 +23,7 @@ namespace Bridge.Contract
         Module = 3,
 
         /// <summary>
-        /// The full namespace is used as the file name. For example, if "Demo.Utilities" is the namespace, the file name will be "Demo.Utilities.js". 
+        /// The full namespace is used as the file name. For example, if "Demo.Utilities" is the namespace, the file name will be "Demo.Utilities.js".
         /// </summary>
         Namespace = 4,
 

@@ -29,10 +29,10 @@ namespace Bridge.Translator
             this.CaseLabel = caseLabel;
         }
 
-        public SwitchStatement SwitchStatement 
-        { 
-            get; 
-            set; 
+        public SwitchStatement SwitchStatement
+        {
+            get;
+            set;
         }
 
         public SwitchSection SwitchSection
@@ -54,7 +54,7 @@ namespace Bridge.Translator
         }
 
         protected override void DoEmit()
-        {            
+        {
             if (this.SwitchStatement != null)
             {
                 var awaiters = this.Emitter.IsAsync ? this.GetAwaiters(this.SwitchStatement) : null;
@@ -77,7 +77,7 @@ namespace Bridge.Translator
                 else
                 {
                     this.VisitSwitchSection();
-                }                
+                }
             }
             else
             {
@@ -88,7 +88,7 @@ namespace Bridge.Translator
                 else
                 {
                     this.VisitCaseLabel();
-                }                 
+                }
             }
         }
 
@@ -99,9 +99,9 @@ namespace Bridge.Translator
             this.Emitter.AsyncSwitch = switchStatement;
 
             this.WriteAwaiters(switchStatement.Expression);
-                        
+
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
-            this.Emitter.ReplaceAwaiterByVar = true;            
+            this.Emitter.ReplaceAwaiterByVar = true;
             string key = null;
 
             if (switchStatement.Expression is IdentifierExpression)
@@ -123,7 +123,7 @@ namespace Bridge.Translator
                 this.WriteSemiColon();
                 this.WriteNewLine();
             }
-            
+
             this.Emitter.ReplaceAwaiterByVar = oldValue;
 
             var list = switchStatement.SwitchSections.ToList();
@@ -219,7 +219,7 @@ namespace Bridge.Translator
                 var oldValue = this.Emitter.ReplaceAwaiterByVar;
                 this.Emitter.ReplaceAwaiterByVar = true;
                 bool writeOr = false;
-                
+
                 foreach (var label in list)
                 {
                     if (writeOr)

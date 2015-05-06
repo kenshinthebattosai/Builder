@@ -5,9 +5,9 @@ using Bridge.Contract;
 
 namespace Bridge.Translator
 {
-    public abstract partial class Visitor : IAstVisitor 
+    public abstract partial class Visitor : IAstVisitor
     {
-        public virtual IVisitorException CreateException(AstNode node, string message) 
+        public virtual IVisitorException CreateException(AstNode node, string message)
         {
             if (String.IsNullOrEmpty(message))
             {
@@ -17,7 +17,7 @@ namespace Bridge.Translator
             return new EmitterException(node, message);
         }
 
-        public virtual IVisitorException CreateException(AstNode node) 
+        public virtual IVisitorException CreateException(AstNode node)
         {
             return this.CreateException(node, null);
         }
@@ -26,7 +26,7 @@ namespace Bridge.Translator
         private bool throwException = true;
         public virtual bool ThrowException
         {
-            get 
+            get
             {
                 return this.throwException;
             }
@@ -463,7 +463,7 @@ namespace Bridge.Translator
 			{
 				throw (Exception)this.CreateException(memberReferenceExpression);
 			}
-        }        
+        }
 
         public virtual void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
         {
@@ -495,7 +495,7 @@ namespace Bridge.Translator
 			{
 				throw (Exception)this.CreateException(namespaceDeclaration);
 			}
-        }        
+        }
 
         public virtual void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
         {

@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.ContinueStatement = continueStatement;
         }
 
-        public ContinueStatement ContinueStatement 
-        { 
-            get; 
-            set; 
+        public ContinueStatement ContinueStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -44,7 +44,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                 }
             }
-            
+
             this.Write("continue");
             this.WriteSemiColon();
             this.WriteNewLine();

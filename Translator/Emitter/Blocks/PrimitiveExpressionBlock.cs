@@ -13,9 +13,9 @@ namespace Bridge.Translator
         }
 
         public PrimitiveExpression PrimitiveExpression
-        { 
-            get; 
-            set; 
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -31,6 +31,6 @@ namespace Bridge.Translator
             }
 
             this.WriteScript(this.PrimitiveExpression.Value);
-        }        
+        }
     }
 }

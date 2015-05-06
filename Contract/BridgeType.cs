@@ -22,10 +22,10 @@ namespace Bridge.Contract
             set;
         }
 
-        public string Key 
-        { 
-            get; 
-            private set; 
+        public string Key
+        {
+            get;
+            private set;
         }
 
         public TypeDefinition TypeDefinition
@@ -53,7 +53,7 @@ namespace Bridge.Contract
         {
             this.Emitter = emitter;
             foreach (var item in this)
-            {                
+            {
                 var type = item.Value;
                 var key = BridgeTypes.GetTypeDefinitionKey(type.TypeDefinition);
                 type.Emitter = emitter;
@@ -98,7 +98,7 @@ namespace Bridge.Contract
             {
                 /*try
                 {
-                    name = type.Resolve().FullName;                    
+                    name = type.Resolve().FullName;
                 }
                 catch
                 {
@@ -111,7 +111,7 @@ namespace Bridge.Contract
                     catch
                     {
                         name = type.FullName;
-                    }                    
+                    }
                 }*/
 
                 name = type.GetElementType().FullName;
@@ -178,7 +178,7 @@ namespace Bridge.Contract
         {
             var resolveResult = this.Emitter.Resolver.ResolveNode(type, this.Emitter);
             return resolveResult.Type;
-        }        
+        }
 
         public static string ToJsName(IType type, IEmitter emitter, bool asDefinition = false)
         {
@@ -197,7 +197,7 @@ namespace Bridge.Contract
                 return BridgeTypes.ToJsName(NullableType.GetUnderlyingType(type), emitter);
             }
 
-            BridgeType bridgeType = emitter.BridgeTypes.Get(type, true);            
+            BridgeType bridgeType = emitter.BridgeTypes.Get(type, true);
             string name = BridgeTypes.ConvertName(type.FullName);
             bool isCustomName = false;
             if (bridgeType != null)
@@ -208,7 +208,7 @@ namespace Bridge.Contract
             if (!isCustomName && type.TypeArguments.Count > 0)
             {
                 name += "$" + type.TypeArguments.Count;
-            }            
+            }
 
             if (!asDefinition && type.TypeArguments.Count > 0 && !Helpers.IsIgnoreGeneric(type, emitter))
             {
@@ -290,7 +290,7 @@ namespace Bridge.Contract
             {
                 isCustomName = true;
                 name = customName;
-            }            
+            }
 
             if (!String.IsNullOrEmpty(module) && currentTypeInfo.Key != type.Key && currentTypeInfo.Module != module)
             {

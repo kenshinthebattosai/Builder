@@ -18,7 +18,7 @@ namespace Bridge.Translator
         {
             if (lambdaExpression.Body.IsNull)
             {
-                this.Found = true;                
+                this.Found = true;
             }
 
             base.VisitLambdaExpression(lambdaExpression);
@@ -29,7 +29,7 @@ namespace Bridge.Translator
     public class EmptyLambdaFixer : DepthFirstAstVisitor<AstNode>
     {
         public EmptyLambdaFixer()
-        {            
+        {
         }
 
         protected override AstNode VisitChildren(AstNode node)
@@ -83,8 +83,8 @@ namespace Bridge.Translator
                 l.Body = new IdentifierExpression(lambdaExpression.Parameters.Last().Name);
 
                 return l;
-            }            
-            
+            }
+
             return lambdaExpression.Clone();
         }
     }

@@ -18,10 +18,10 @@ namespace Bridge.Translator
             this.ObjectCreateExpression = objectCreateExpression;
         }
 
-        public ObjectCreateExpression ObjectCreateExpression 
-        { 
-            get; 
-            set; 
+        public ObjectCreateExpression ObjectCreateExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -98,14 +98,14 @@ namespace Bridge.Translator
                 if (hasInitializer)
                 {
                     this.WriteObjectInitializer(objectCreateExpression.Initializer.Elements, this.Emitter.ChangeCase, type);
-                    this.WriteSpace();                    
+                    this.WriteSpace();
                 }
                 else if (this.Emitter.Validator.IsObjectLiteral(type))
                 {
                     this.WriteObjectInitializer(null, this.Emitter.ChangeCase, type);
-                    this.WriteSpace();                    
+                    this.WriteSpace();
                 }
-             
+
                 this.WriteCloseBrace();
             }
             else
@@ -153,10 +153,10 @@ namespace Bridge.Translator
 
                 if (hasInitializer)
                 {
-                    this.WriteComma();                    
-                    
+                    this.WriteComma();
+
                     bool needComma = false;
-                    
+
                     if (isCollectionInitializer)
                     {
                         this.Write("[");
@@ -218,10 +218,10 @@ namespace Bridge.Translator
                         this.Write("]");
                     }
                     else
-                    {                        
+                    {
                         this.EndBlock();
-                    }                   
- 
+                    }
+
                     this.WriteSpace();
                     this.WriteCloseParentheses();
                 }
@@ -249,7 +249,7 @@ namespace Bridge.Translator
 
                     needComma = true;
                     string name = namedExression != null ? namedExression.Name : namedArgumentExpression.Name;
-                    
+
                     if (changeCase)
                     {
                         name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);

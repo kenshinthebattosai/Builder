@@ -16,10 +16,10 @@ namespace Bridge.Translator
             this.IndexerExpression = indexerExpression;
         }
 
-        public IndexerExpression IndexerExpression 
-        { 
-            get; 
-            set; 
+        public IndexerExpression IndexerExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -123,15 +123,15 @@ namespace Bridge.Translator
                     }
                 }
 
-                if (writeTargetVar) 
+                if (writeTargetVar)
                 {
                     var targetrr = this.Emitter.Resolver.ResolveNode(indexerExpression.Target, this.Emitter);
                     var memberTargetrr = targetrr as MemberResolveResult;
                     bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
-                    
+
                     if (!(targetrr is ThisResolveResult || targetrr is LocalResolveResult || isField))
                     {
-                        targetVar = this.GetTempVarName();                        
+                        targetVar = this.GetTempVarName();
                         this.Write(targetVar);
                         this.Write(" = ");
                     }
@@ -170,7 +170,7 @@ namespace Bridge.Translator
                         this.WriteNewLine();
                         this.Write(targetVar);
                     }
-                }          
+                }
 
                 this.WriteDot();
                 var argsInfo = new ArgumentsInfo(this.Emitter, indexerExpression);
@@ -208,7 +208,7 @@ namespace Bridge.Translator
 
                             this.Write(Helpers.GetPropertyRef(member, this.Emitter, false));
                             this.WriteOpenParentheses();
-                            this.Write(paramsStr);                            
+                            this.Write(paramsStr);
                             this.WriteCloseParentheses();
 
                             if (this.Emitter.UnaryOperatorType == UnaryOperatorType.Increment || this.Emitter.UnaryOperatorType == UnaryOperatorType.PostIncrement)
@@ -227,7 +227,7 @@ namespace Bridge.Translator
                         {
                             this.Write(Helpers.GetPropertyRef(member, this.Emitter, false));
                             this.WriteOpenParentheses();
-                            this.Write(paramsStr);                            
+                            this.Write(paramsStr);
                             this.WriteCloseParentheses();
                             this.WriteComma();
 
@@ -417,7 +417,7 @@ namespace Bridge.Translator
                 var targetrr = this.Emitter.Resolver.ResolveNode(indexerExpression.Target, this.Emitter);
                 var memberTargetrr = targetrr as MemberResolveResult;
                 bool isField = memberTargetrr != null && memberTargetrr.Member is IField && (memberTargetrr.TargetResult is ThisResolveResult || memberTargetrr.TargetResult is LocalResolveResult);
-                
+
                 if (!(targetrr is ThisResolveResult || targetrr is LocalResolveResult || isField))
                 {
                     targetVar = this.GetTempVarName();
@@ -463,7 +463,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.Write(targetVar);
                 }
-            }   
+            }
 
             this.WriteDot();
 
@@ -612,7 +612,7 @@ namespace Bridge.Translator
                             targetVar,
                             ".get([",
                             paramsStr,
-                            "]){0})"), () => { this.RemoveTempVar(targetVar); });                        
+                            "]){0})"), () => { this.RemoveTempVar(targetVar); });
                     }
                     else
                     {

@@ -47,7 +47,7 @@ namespace Bridge.Translator
 
                                     string format = null;
                                     var formatField = resolveresult.Type.GetFields(f => f.Name == "Format", GetMemberOptions.IgnoreInheritedMembers);
-                                    
+
                                     if (formatField.Count() > 0)
                                     {
                                         format = formatField.First().ConstantValue.ToString();
@@ -62,13 +62,13 @@ namespace Bridge.Translator
                                             {
                                                 format = formatField.First().ConstantValue.ToString();
                                                 break;
-                                            }    
+                                            }
                                         }
                                     }
 
                                     bool isCommon = false;
                                     var commonField = resolveresult.Type.GetFields(f => f.Name == "IsCommonEvent");
-                                    
+
                                     if (commonField.Count() > 0)
                                     {
                                         isCommon = Convert.ToBoolean(commonField.First().ConstantValue);
@@ -78,7 +78,7 @@ namespace Bridge.Translator
                                     {
                                         var eventArg = attr.Arguments.First();
                                         var primitiveArg = eventArg  as ICSharpCode.NRefactory.CSharp.PrimitiveExpression;
-                                        
+
                                         if (primitiveArg != null)
                                         {
                                             eventName = primitiveArg.Value.ToString();
@@ -86,7 +86,7 @@ namespace Bridge.Translator
                                         else
                                         {
                                             var memberArg = eventArg as MemberReferenceExpression;
-                                            
+
                                             if (memberArg != null)
                                             {
                                                 var memberResolveResult = this.Emitter.Resolver.ResolveNode(memberArg, this.Emitter) as MemberResolveResult;
@@ -94,7 +94,7 @@ namespace Bridge.Translator
                                                 if (memberResolveResult != null)
                                                 {
                                                     eventName = this.Emitter.GetEntityName(memberResolveResult.Member);
-                                                }                                                
+                                                }
                                             }
                                         }
                                     }
@@ -119,7 +119,7 @@ namespace Bridge.Translator
                                     if (attr.Arguments.Count > (selectorIndex + 1))
                                     {
                                         var memberResolveResult = this.Emitter.Resolver.ResolveNode(attr.Arguments.ElementAt(selectorIndex + 1), this.Emitter) as MemberResolveResult;
-                                        
+
                                         if (memberResolveResult != null && memberResolveResult.Member.Attributes.Count > 0)
                                         {
                                             var template = this.Emitter.Validator.GetAttribute(memberResolveResult.Member.Attributes, "Bridge.TemplateAttribute");
@@ -138,8 +138,8 @@ namespace Bridge.Translator
                                         {
                                             var templateType = resolvedmethod.Parameters[selectorIndex + 1].Type;
                                             var templateValue = Convert.ToInt32(resolvedmethod.Parameters[selectorIndex + 1].ConstantValue);
-                                            
-                                            var fields = templateType.GetFields(f => 
+
+                                            var fields = templateType.GetFields(f =>
                                             {
                                                 var field = f as DefaultResolvedField;
 
@@ -177,7 +177,7 @@ namespace Bridge.Translator
                     }
                 }
             }
-            
+
             return list;
         }
     }

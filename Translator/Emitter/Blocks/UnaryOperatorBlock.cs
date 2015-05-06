@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.UnaryOperatorExpression = unaryOperatorExpression;
         }
 
-        public UnaryOperatorExpression UnaryOperatorExpression 
-        { 
-            get; 
-            set; 
+        public UnaryOperatorExpression UnaryOperatorExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -28,7 +28,7 @@ namespace Bridge.Translator
         protected override void EmitConversionExpression()
         {
             this.VisitUnaryOperatorExpression();
-        }  
+        }
 
         protected bool ResolveOperator(UnaryOperatorExpression unaryOperatorExpression, OperatorResolveResult orr)
         {
@@ -99,13 +99,13 @@ namespace Bridge.Translator
 
             if (nullable)
             {
-                if (op != UnaryOperatorType.Increment && 
+                if (op != UnaryOperatorType.Increment &&
                     op != UnaryOperatorType.Decrement &&
                     op != UnaryOperatorType.PostIncrement &&
                     op != UnaryOperatorType.PostDecrement)
                 {
                     this.Write(Bridge.Translator.Emitter.ROOT + ".Nullable.");
-                }                
+                }
             }
 
             bool isAccessor = false;
@@ -120,12 +120,12 @@ namespace Bridge.Translator
                 isAccessor = ((ArrayAccessResolveResult)argResolverResult).Indexes.Count > 1;
             }
 
-            this.Emitter.UnaryOperatorType = op;            
+            this.Emitter.UnaryOperatorType = op;
 
-            if (isAccessor && 
-                (op == UnaryOperatorType.Increment || 
-                 op == UnaryOperatorType.Decrement || 
-                 op == UnaryOperatorType.PostIncrement || 
+            if (isAccessor &&
+                (op == UnaryOperatorType.Increment ||
+                 op == UnaryOperatorType.Decrement ||
+                 op == UnaryOperatorType.PostIncrement ||
                  op == UnaryOperatorType.PostDecrement))
             {
                 this.Emitter.IsUnaryAccessor = true;
@@ -144,7 +144,7 @@ namespace Bridge.Translator
                 {
                     unaryOperatorExpression.Expression.AcceptVisitor(this.Emitter);
                 }
-                
+
                 this.Emitter.IsUnaryAccessor = oldAccessor;
             }
             else
@@ -293,6 +293,6 @@ namespace Bridge.Translator
             }
 
             this.Emitter.UnaryOperatorType = oldType;
-        }           
+        }
     }
 }

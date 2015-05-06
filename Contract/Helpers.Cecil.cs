@@ -10,7 +10,7 @@ using ICSharpCode.NRefactory.TypeSystem.Implementation;
 
 namespace Bridge.Contract
 {
-    public static partial class Helpers 
+    public static partial class Helpers
     {
         public static MethodDefinition GetBaseMethod(MethodDefinition method, IEmitter emitter)
         {

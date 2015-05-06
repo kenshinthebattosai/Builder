@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.WhileStatement = whileStatement;
         }
 
-        public WhileStatement WhileStatement 
-        { 
-            get; 
-            set; 
+        public WhileStatement WhileStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -38,8 +38,8 @@ namespace Bridge.Translator
         {
             var oldValue = this.Emitter.ReplaceAwaiterByVar;
             var jumpStatements = this.Emitter.JumpStatements;
-            this.Emitter.JumpStatements = new List<IJumpInfo>();            
-            
+            this.Emitter.JumpStatements = new List<IJumpInfo>();
+
             IAsyncStep conditionStep = null;
             var lastStep = this.Emitter.AsyncBlock.Steps.Last();
 
@@ -84,7 +84,7 @@ namespace Bridge.Translator
                 this.Write("$step = " + conditionStep.Step + ";");
                 this.WriteNewLine();
                 this.Write("continue;");
-            }     
+            }
 
             this.RestoreWriter(writer);
 
@@ -98,7 +98,7 @@ namespace Bridge.Translator
                 this.Write("$step = " + this.Emitter.AsyncBlock.Step + ";");
                 this.WriteNewLine();
                 this.Write("continue;");
-            }           
+            }
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
             conditionStep.JumpToStep = nextStep.Step;

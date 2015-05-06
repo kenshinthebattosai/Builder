@@ -18,10 +18,10 @@ namespace Bridge.Translator
             this.InvocationExpression = invocationExpression;
         }
 
-        public InvocationExpression InvocationExpression 
-        { 
-            get; 
-            set; 
+        public InvocationExpression InvocationExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -51,7 +51,7 @@ namespace Bridge.Translator
                     expression.AcceptVisitor(this.Emitter);
                 }
             }
-        }         
+        }
 
         protected void VisitInvocationExpression()
         {
@@ -64,11 +64,11 @@ namespace Bridge.Translator
                 this.WriteAwaiters(invocationExpression);
                 this.Emitter.ReplaceAwaiterByVar = true;
                 this.Emitter.AsyncExpressionHandling = true;
-            }            
+            }
 
             Tuple<bool, bool, string> inlineInfo = this.Emitter.GetInlineCode(invocationExpression);
             var argsInfo = new ArgumentsInfo(this.Emitter, invocationExpression);
-            
+
             var argsExpressions = argsInfo.ArgumentsExpressions;
             var paramsArg = argsInfo.ParamsExpression;
             var argsCount = argsExpressions.Count();
@@ -132,10 +132,10 @@ namespace Bridge.Translator
 
                     return;
                 }
-            }            
+            }
 
             MemberReferenceExpression targetMember = invocationExpression.Target as MemberReferenceExpression;
-            
+
             if (targetMember != null)
             {
                 var member = this.Emitter.Resolver.ResolveNode(targetMember.Target, this.Emitter);
@@ -241,7 +241,7 @@ namespace Bridge.Translator
             }
 
             if (targetMember != null && targetMember.Target is BaseReferenceExpression)
-            {                
+            {
                 var baseType = this.Emitter.GetBaseMethodOwnerTypeDefinition(targetMember.MemberName, targetMember.TypeArguments.Count);
                 var method = invocationExpression.GetParent<MethodDeclaration>();
 
@@ -251,7 +251,7 @@ namespace Bridge.Translator
                 {
                     throw (Exception)this.Emitter.CreateException(targetMember.Target, "Cannot call base method, because parent class code is ignored");
                 }
-                
+
                 bool needComma = false;
 
                 var resolveResult = this.Emitter.Resolver.ResolveNode(targetMember, this.Emitter);
@@ -352,7 +352,7 @@ namespace Bridge.Translator
                         this.WriteCloseParentheses();
                     }
 
-                    this.WriteOpenParentheses();                    
+                    this.WriteOpenParentheses();
                     new ExpressionListBlock(this.Emitter, argsExpressions, paramsArg).Emit();
                     this.WriteCloseParentheses();
                 }
@@ -360,6 +360,6 @@ namespace Bridge.Translator
 
             this.Emitter.ReplaceAwaiterByVar = oldValue;
             this.Emitter.AsyncExpressionHandling = oldAsyncExpressionHandling;
-        }        
+        }
     }
 }

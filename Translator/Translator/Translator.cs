@@ -9,7 +9,7 @@ namespace Bridge.Translator
     public partial class Translator : ITranslator
     {
         public const string Bridge_ASSEMBLY = "Bridge";
-        
+
         public Translator(string location)
         {
             this.Location = location;
@@ -27,7 +27,7 @@ namespace Bridge.Translator
         }
 
         public Dictionary<string, string> Translate()
-        {            
+        {
             var config = this.ReadConfig();
             this.Plugins = Bridge.Translator.Plugins.GetPlugins(this, config);
             this.Plugins.OnConfigRead(config);
@@ -57,19 +57,19 @@ namespace Bridge.Translator
                 {
                     this.BuildAssembly();
                 }
-            }            
+            }
 
-            var references = this.InspectReferences();            
+            var references = this.InspectReferences();
 
             this.BuildSyntaxTree();
             var resolver = new MemberResolver(this.ParsedSourceFiles, Emitter.ToAssemblyReferences(references));
 
             this.InspectTypes(resolver, config);
-            
+
             resolver.CanFreeze = true;
             var emitter = this.CreateEmitter(resolver);
             emitter.Translator = this;
-            emitter.AssemblyInfo = this.AssemblyInfo;            
+            emitter.AssemblyInfo = this.AssemblyInfo;
             emitter.ChangeCase = this.ChangeCase;
             emitter.References = references;
             emitter.SourceFiles = this.SourceFiles;
@@ -80,7 +80,7 @@ namespace Bridge.Translator
             this.Plugins.AfterEmit(emitter, this);
 
             return this.Outputs;
-        }        
+        }
 
         public virtual string GetCode()
         {

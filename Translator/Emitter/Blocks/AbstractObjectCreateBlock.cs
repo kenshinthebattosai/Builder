@@ -68,12 +68,12 @@ namespace Bridge.Translator
                     name = memberReferenceExpression.MemberName;
                     expression = memberReferenceExpression;
                 }
-                
+
                 if (changeCase)
                 {
                     name = Object.Net.Utilities.StringUtils.ToLowerCamelCase(name);
                 }
-                
+
                 this.Write(name, ": ");
                 expression.AcceptVisitor(this.Emitter);
             }

@@ -37,8 +37,8 @@ namespace Bridge.Translator
             this.EmitClassHeader();
             this.EmitStaticBlock();
             this.EmitInstantiableBlock();
-            this.EmitClassEnd();    
-        }        
+            this.EmitClassEnd();
+        }
 
         protected virtual void EmitClassHeader()
         {
@@ -74,16 +74,16 @@ namespace Bridge.Translator
                 this.Emitter.Comma = false;
                 this.WriteCloseParentheses();
 
-                this.Write(" { return ");                
-            }            
-            
+                this.Write(" { return ");
+            }
+
             this.BeginBlock();
 
             string extend = this.Emitter.GetTypeHierarchy();
 
             if (extend.IsNotEmpty() && !this.TypeInfo.IsEnum)
             {
-                var bridgeType = this.Emitter.BridgeTypes.Get(this.Emitter.TypeInfo);                
+                var bridgeType = this.Emitter.BridgeTypes.Get(this.Emitter.TypeInfo);
 
                 if (this.TypeInfo.InstanceMethods.Any(m => m.Value.Any(subm => this.Emitter.GetEntityName(subm) == "inherits")) ||
                     this.TypeInfo.InstanceConfig.Fields.Any(m => m.GetName(this.Emitter) == "inherits"))
@@ -107,7 +107,7 @@ namespace Bridge.Translator
                 {
                     this.Write(extend);
                 }
-                
+
                 this.Emitter.Comma = true;
             }
 
@@ -142,7 +142,7 @@ namespace Bridge.Translator
                 this.WriteColon();
                 this.BeginBlock();
 
-                new ConstructorBlock(this.Emitter, this.TypeInfo, true).Emit();                
+                new ConstructorBlock(this.Emitter, this.TypeInfo, true).Emit();
                 new MethodBlock(this.Emitter, this.TypeInfo, true).Emit();
 
                 this.WriteNewLine();
@@ -184,7 +184,7 @@ namespace Bridge.Translator
                 this.Write("; }");
             }
 
-            this.WriteCloseParentheses();            
+            this.WriteCloseParentheses();
             this.WriteSemiColon();
             this.WriteNewLine();
             this.WriteNewLine();

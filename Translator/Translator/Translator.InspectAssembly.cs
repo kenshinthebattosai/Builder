@@ -17,7 +17,7 @@ namespace Bridge.Translator
             string name;
             string path;
             AssemblyDefinition reference;
-            
+
             foreach (AssemblyNameReference r in assemblyDefinition.MainModule.AssemblyReferences)
             {
                 name = r.Name;
@@ -29,7 +29,7 @@ namespace Bridge.Translator
 
                 path = Path.Combine(Path.GetDirectoryName(location), name) + ".dll";
                 reference = this.LoadAssembly(path, references);
-                
+
                 if (!references.Any(a => a.Name.Name == reference.Name.Name))
                 {
                     references.Add(reference);
@@ -45,7 +45,7 @@ namespace Bridge.Translator
         }
 
         protected virtual void AddNestedTypes(IEnumerable<TypeDefinition> types)
-        {            
+        {
             foreach (TypeDefinition type in types)
             {
                 if (type.FullName.Contains("<"))
@@ -102,12 +102,12 @@ namespace Bridge.Translator
         {
             this.TypeInfoDefinitions = new Dictionary<string, ITypeInfo>();
 
-            var references = new List<AssemblyDefinition>();            
+            var references = new List<AssemblyDefinition>();
             var assembly = this.LoadAssembly(this.AssemblyLocation, references);
             this.TypeDefinitions = new Dictionary<string, TypeDefinition>();
             this.BridgeTypes = new BridgeTypes();
             this.AssemblyDefinition = assembly;
-            
+
             if (assembly.Name.Name != Translator.Bridge_ASSEMBLY)
             {
                 this.ReadTypes(assembly);
@@ -132,7 +132,7 @@ namespace Bridge.Translator
         }
 
         protected virtual void InspectTypes(MemberResolver resolver, IAssemblyInfo config)
-        {            
+        {
             Inspector inspector = this.CreateInspector();
             inspector.AssemblyInfo = config;
             inspector.Resolver = resolver;
@@ -187,7 +187,7 @@ namespace Bridge.Translator
                     this.ParsedSourceFiles.Add(f);
 
                     var tcv = new TypeSystemConvertVisitor(f.ParsedFile);
-                    f.SyntaxTree.AcceptVisitor(tcv);                    
+                    f.SyntaxTree.AcceptVisitor(tcv);
                 }
             }
         }

@@ -8,7 +8,7 @@ namespace Bridge.Translator
     public class YieldSearchVisitor : DepthFirstAstVisitor
     {
         public YieldSearchVisitor()
-        {            
+        {
         }
 
         public bool Found

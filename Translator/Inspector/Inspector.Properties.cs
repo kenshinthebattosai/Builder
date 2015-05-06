@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using Object.Net.Utilities;
 using Bridge.Contract;
 
-namespace Bridge.Translator 
+namespace Bridge.Translator
 {
-    public partial class Inspector : Visitor 
+    public partial class Inspector : Visitor
     {
-        protected string Namespace 
-        { 
-            get; 
-            set; 
+        protected string Namespace
+        {
+            get;
+            set;
         }
 
         public IAssemblyInfo AssemblyInfo
@@ -21,10 +21,10 @@ namespace Bridge.Translator
             set;
         }
 
-        protected ITypeInfo CurrentType 
-        { 
-            get; 
-            set; 
+        protected ITypeInfo CurrentType
+        {
+            get;
+            set;
         }
 
         protected ITypeInfo ParentType
@@ -39,10 +39,10 @@ namespace Bridge.Translator
             set;
         }
 
-        public List<ITypeInfo> Types 
-        { 
-            get; 
-            protected set; 
+        public List<ITypeInfo> Types
+        {
+            get;
+            protected set;
         }
 
         public IMemberResolver Resolver

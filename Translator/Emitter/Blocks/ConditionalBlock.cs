@@ -12,10 +12,10 @@ namespace Bridge.Translator
             this.ConditionalExpression = conditionalExpression;
         }
 
-        public ConditionalExpression ConditionalExpression 
-        { 
-            get; 
-            set; 
+        public ConditionalExpression ConditionalExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()

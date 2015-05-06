@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.ArrayCreateExpression = arrayCreateExpression;
         }
 
-        public ArrayCreateExpression ArrayCreateExpression 
-        { 
-            get; 
-            set; 
+        public ArrayCreateExpression ArrayCreateExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -45,7 +45,7 @@ namespace Bridge.Translator
             {
                 this.Write("Bridge.Array.create(");
                 var defaultInitializer = new PrimitiveExpression(Inspector.GetDefaultFieldValue(arrayCreateExpression.Type, this.Emitter.Resolver), "?");
-                
+
                 if (defaultInitializer == null)
                 {
                     this.Write("Bridge.getDefaultValue(" + BridgeTypes.ToJsName(arrayCreateExpression.Type, this.Emitter) + ")");

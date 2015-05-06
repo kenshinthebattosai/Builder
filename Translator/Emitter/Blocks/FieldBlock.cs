@@ -15,10 +15,10 @@ namespace Bridge.Translator
             this.Injectors = new List<string>();
         }
 
-        public ITypeInfo TypeInfo 
-        { 
-            get; 
-            set; 
+        public ITypeInfo TypeInfo
+        {
+            get;
+            set;
         }
 
         public bool StaticBlock
@@ -47,7 +47,7 @@ namespace Bridge.Translator
 
         protected override void DoEmit()
         {
-            this.EmitFields(this.StaticBlock ? this.TypeInfo.StaticConfig : this.TypeInfo.InstanceConfig);            
+            this.EmitFields(this.StaticBlock ? this.TypeInfo.StaticConfig : this.TypeInfo.InstanceConfig);
         }
 
         protected virtual void EmitFields(TypeConfigInfo info)
@@ -64,7 +64,7 @@ namespace Bridge.Translator
                     }
                 }
                 return;
-            }            
+            }
 
             if (info.Events.Count > 0)
             {
@@ -107,11 +107,11 @@ namespace Bridge.Translator
             }
 
             foreach (var member in members)
-            {                
+            {
                 var primitiveExpr = member.Initializer as PrimitiveExpression;
                 var isNull = member.Initializer.IsNull || member.Initializer is NullReferenceExpression;
 
-                if (!isNull && (primitiveExpr == null || (primitiveExpr.Value is AstType))) 
+                if (!isNull && (primitiveExpr == null || (primitiveExpr.Value is AstType)))
                 {
                     string value = null;
 
@@ -134,7 +134,7 @@ namespace Bridge.Translator
 
                 this.EnsureComma();
                 this.Write(member.GetName(this.Emitter));
-                this.WriteColon();                
+                this.WriteColon();
 
                 if (primitiveExpr != null && primitiveExpr.Value is AstType)
                 {
@@ -170,7 +170,7 @@ namespace Bridge.Translator
                 }
 
                 if (primitiveExpr == null || (primitiveExpr.Value is AstType))
-                {                    
+                {
                     continue;
                 }
 
@@ -203,6 +203,6 @@ namespace Bridge.Translator
 
             this.WriteNewLine();
             this.EndBlock();*/
-        }       
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Bridge.Translator
 {
     public class JumpInfo : IJumpInfo
     {
-        public JumpInfo(StringBuilder output, int position, bool @break) 
+        public JumpInfo(StringBuilder output, int position, bool @break)
         {
             this.Output = output;
             this.Position = position;

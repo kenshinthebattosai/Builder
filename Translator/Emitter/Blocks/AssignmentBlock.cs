@@ -14,10 +14,10 @@ namespace Bridge.Translator
             this.AssignmentExpression = assignmentExpression;
         }
 
-        public AssignmentExpression AssignmentExpression 
-        { 
-            get; 
-            set; 
+        public AssignmentExpression AssignmentExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -45,7 +45,7 @@ namespace Bridge.Translator
 
             if (assignmentExpression.Operator == AssignmentOperatorType.Add ||
                 assignmentExpression.Operator == AssignmentOperatorType.Subtract)
-            {                
+            {
                 var add = assignmentExpression.Operator == AssignmentOperatorType.Add;
 
                 if (this.Emitter.Validator.IsDelegateOrLambda(leftResolverResult))
@@ -66,11 +66,11 @@ namespace Bridge.Translator
                         this.Write(" = ");
                         this.Write(Bridge.Translator.Emitter.ROOT + "." + (add ? Bridge.Translator.Emitter.DELEGATE_COMBINE : Bridge.Translator.Emitter.DELEGATE_REMOVE));
                         this.WriteOpenParentheses();
-                    }                    
+                    }
                 }
             }
 
-            
+
             this.Emitter.IsAssignment = true;
             this.Emitter.AssignmentType = assignmentExpression.Operator;
             var oldValue = this.Emitter.ReplaceAwaiterByVar;

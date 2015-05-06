@@ -48,6 +48,6 @@ namespace Bridge.Translator
                     Bridge.Translator.Exception.Throw("Compilation was not successful, exit code - " + p.ExitCode);
                 }
             }
-        }        
+        }
     }
 }

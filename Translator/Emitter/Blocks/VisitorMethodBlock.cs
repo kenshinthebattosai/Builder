@@ -98,6 +98,6 @@ namespace Bridge.Translator
             this.ClearLocalsMap(prevMap);
             this.ClearLocalsNamesMap(prevNamesMap);
             this.Emitter.Comma = true;
-        }                  
+        }
     }
 }

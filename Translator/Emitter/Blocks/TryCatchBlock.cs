@@ -16,10 +16,10 @@ namespace Bridge.Translator
             this.TryCatchStatement = tryCatchStatement;
         }
 
-        public TryCatchStatement TryCatchStatement 
-        { 
-            get; 
-            set; 
+        public TryCatchStatement TryCatchStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -66,7 +66,7 @@ namespace Bridge.Translator
                     varName = this.AddLocal(varName, clause.Type);
                 }
 
-                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, clause.Type.IsNull ? "Bridge.Exception" : BridgeTypes.ToJsName(clause.Type, this.Emitter), catchStep.Step));                
+                tryInfo.CatchBlocks.Add(new Tuple<string, string, int>(varName, clause.Type.IsNull ? "Bridge.Exception" : BridgeTypes.ToJsName(clause.Type, this.Emitter), catchStep.Step));
 
                 this.Emitter.IgnoreBlock = clause.Body;
                 clause.Body.AcceptVisitor(this.Emitter);
@@ -87,7 +87,7 @@ namespace Bridge.Translator
                 tryCatchStatement.FinallyBlock.AcceptVisitor(this.Emitter);
 
                 var finallyNode = this.GetParentFinallyBlock(tryCatchStatement, false);
-                
+
                 this.WriteNewLine();
 
                 this.WriteIf();
@@ -110,7 +110,7 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.Write("$jumpFromFinally = null;");
                 }
-                
+
                 this.WriteNewLine();
                 this.EndBlock();
 
@@ -136,7 +136,7 @@ namespace Bridge.Translator
                 this.Write("Bridge.isDefined($returnValue)");
                 this.WriteCloseParentheses();
                 this.WriteSpace();
-                this.BeginBlock();                
+                this.BeginBlock();
 
                 if (finallyNode != null)
                 {
@@ -152,15 +152,15 @@ namespace Bridge.Translator
                     this.WriteNewLine();
                     this.WriteReturn(false);
                     this.WriteSemiColon();
-                }                
-                
+                }
+
                 this.WriteNewLine();
                 this.EndBlock();
 
                 if (!this.Emitter.Locals.ContainsKey("$e"))
                 {
                     this.AddLocal("$e", AstType.Null);
-                }                
+                }
             }
 
             var nextStep = this.Emitter.AsyncBlock.AddAsyncStep();
@@ -190,7 +190,7 @@ namespace Bridge.Translator
 
             var count = this.TryCatchStatement.CatchClauses.Count;
 
-            if(count > 0) 
+            if(count > 0)
             {
                 var firstClause = this.TryCatchStatement.CatchClauses.Count == 1 ? this.TryCatchStatement.CatchClauses.First() : null;
                 var exceptionType = (firstClause == null || firstClause.Type.IsNull) ? null : BridgeTypes.ToJsName(firstClause.Type, this.Emitter);
@@ -198,13 +198,13 @@ namespace Bridge.Translator
 
                 if (count == 1 && isBaseException)
                 {
-                    this.EmitSingleCatchBlock();                
+                    this.EmitSingleCatchBlock();
                 }
                 else
                 {
                     this.EmitMultipleCatchBlock();
                 }
-            }            
+            }
 
             this.EmitFinallyBlock();
         }
@@ -272,7 +272,7 @@ namespace Bridge.Translator
             this.BeginBlock();
             this.Write("$e = Bridge.Exception.create($e);");
             this.WriteNewLine();
-            
+
             var catchVars = new Dictionary<string, string>();
             var writeVar = false;
 
@@ -285,12 +285,12 @@ namespace Bridge.Translator
                         writeVar = true;
                         this.WriteVar(true);
                     }
-                    
+
                     this.EnsureComma(false);
                     catchVars.Add(clause.VariableName, clause.VariableName);
                     this.Write(clause.VariableName);
                     this.Emitter.Comma = true;
-                }                
+                }
             }
 
             this.Emitter.Comma = false;
@@ -323,15 +323,15 @@ namespace Bridge.Translator
                 }
 
                 firstClause = false;
-                
+
                 this.PushLocals();
                 this.BeginBlock();
 
                 if (clause.VariableName.IsNotEmpty())
-                {                    
+                {
                     this.Write(clause.VariableName + " = $e;");
                     this.WriteNewLine();
-                }                
+                }
 
                 this.Emitter.NoBraceBlock = clause.Body;
                 clause.Body.AcceptVisitor(this.Emitter);

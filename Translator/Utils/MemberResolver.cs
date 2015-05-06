@@ -41,7 +41,7 @@ namespace Bridge.Translator
         }
 
         public MemberResolver(IList<ParsedSourceFile> sourceFiles, IEnumerable<IAssemblyReference> assemblies)
-        {            
+        {
             this.project = null;
             this.lastFileName = null;
             this.sourceFiles = sourceFiles;
@@ -54,16 +54,16 @@ namespace Bridge.Translator
         private void AddOrUpdateFiles()
         {
             var unresolvedFiles = new IUnresolvedFile[this.sourceFiles.Count];
-            
+
             Parallel.For(0, unresolvedFiles.Length, i =>
             {
                 var syntaxTree = this.sourceFiles[i].SyntaxTree;
-                
+
                 if (this.CanFreeze)
                 {
                     //syntaxTree.Freeze();
                 }
-                
+
                 unresolvedFiles[i] = syntaxTree.ToTypeSystem();
             });
 
@@ -75,7 +75,7 @@ namespace Bridge.Translator
         {
             if (this.lastFileName != syntaxTree.FileName)
             {
-                this.lastFileName = syntaxTree.FileName;                
+                this.lastFileName = syntaxTree.FileName;
                 var unresolvedFile = syntaxTree.ToTypeSystem();
                 this.resolver = new CSharpAstResolver(compilation, syntaxTree, unresolvedFile);
             }
@@ -85,7 +85,7 @@ namespace Bridge.Translator
         {
             var syntaxTree = node.GetParent<SyntaxTree>();
             this.InitResolver(syntaxTree);
-            
+
             var result = this.resolver.Resolve(node);
 
             if (result is MethodGroupResolveResult && node.Parent != null)
@@ -101,7 +101,7 @@ namespace Bridge.Translator
                     var conversion = this.Resolver.GetConversion((Expression)node);
                     if (conversion != null && conversion.IsMethodGroupConversion)
                     {
-                        return new MemberResolveResult(new TypeResolveResult(conversion.Method.DeclaringType), conversion.Method);                        
+                        return new MemberResolveResult(new TypeResolveResult(conversion.Method.DeclaringType), conversion.Method);
                     }
                 }
 

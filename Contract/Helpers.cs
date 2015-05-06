@@ -11,7 +11,7 @@ using System.Globalization;
 
 namespace Bridge.Contract
 {
-    public static partial class Helpers 
+    public static partial class Helpers
     {
         public static void AcceptChildren(this AstNode node, IAstVisitor visitor)
         {
@@ -21,7 +21,7 @@ namespace Bridge.Contract
             }
         }
 
-        public static string ReplaceSpecialChars(string name) 
+        public static string ReplaceSpecialChars(string name)
         {
             return name.Replace('`', '$').Replace('/', '.').Replace("+", ".");
         }
@@ -31,8 +31,8 @@ namespace Bridge.Contract
             foreach (var gArg in type.GenericArguments)
             {
                 var orig = gArg;
-                
-                var gArgDef = gArg;                
+
+                var gArgDef = gArg;
                 if (gArgDef.IsGenericInstance)
                 {
                     gArgDef = gArgDef.GetElementType();
@@ -63,7 +63,7 @@ namespace Bridge.Contract
 
             return false;
         }
-        
+
         public static bool IsTypeArgInSubclass(TypeDefinition thisTypeDefinition, TypeDefinition typeArgDefinition, IEmitter emitter, bool deep = true)
         {
             foreach (TypeReference interfaceReference in thisTypeDefinition.Interfaces)
@@ -92,7 +92,7 @@ namespace Bridge.Contract
                 catch { }
 
                 if (baseTypeDefinition != null && deep)
-                {                    
+                {
                     return Helpers.IsTypeArgInSubclass(baseTypeDefinition, typeArgDefinition, emitter);
                 }
             }
@@ -135,8 +135,8 @@ namespace Bridge.Contract
                 }
 
                 TypeDefinition interfaceDefinition = null;
-                
-                try 
+
+                try
                 {
                     interfaceDefinition = Helpers.ToTypeDefinition(iref, emitter);
                 }
@@ -152,7 +152,7 @@ namespace Bridge.Contract
 
         public static bool IsAssignableFrom(TypeDefinition thisTypeDefinition, TypeDefinition typeDefinition, IEmitter emitter)
         {
-            return (thisTypeDefinition == typeDefinition 
+            return (thisTypeDefinition == typeDefinition
                     || (typeDefinition.IsClass && !typeDefinition.IsValueType && Helpers.IsSubclassOf(typeDefinition, thisTypeDefinition, emitter))
                     || (typeDefinition.IsInterface && Helpers.IsImplementationOf(typeDefinition, thisTypeDefinition, emitter)));
         }
@@ -256,9 +256,9 @@ namespace Bridge.Contract
                 if (expression == null ||
                     expression.Parent is NamedExpression ||
                     expression.Parent is ObjectCreateExpression ||
-                    expression.Parent is ArrayInitializerExpression || 
-                    expression.Parent is ReturnStatement || 
-                    expression.Parent is InvocationExpression || 
+                    expression.Parent is ArrayInitializerExpression ||
+                    expression.Parent is ReturnStatement ||
+                    expression.Parent is InvocationExpression ||
                     expression.Parent is AssignmentExpression ||
                     expression.Parent is VariableInitializer)
                 {
@@ -285,7 +285,7 @@ namespace Bridge.Contract
         }
         public static bool IsFieldProperty(IMember property, IEmitter emitter)
         {
-            bool isAuto = property.Attributes.Any(a => a.AttributeType.FullName == "Bridge.FieldPropertyAttribute");            
+            bool isAuto = property.Attributes.Any(a => a.AttributeType.FullName == "Bridge.FieldPropertyAttribute");
             if (!isAuto && emitter.AssemblyInfo.AutoPropertyToField)
             {
                 var typeDef = emitter.GetTypeDefinition(property.DeclaringType);
@@ -305,7 +305,7 @@ namespace Bridge.Contract
             return isAuto;
         }
         public static bool IsFieldProperty(PropertyDeclaration property, IEmitter emitter)
-        {            
+        {
             string name = "Bridge.FieldProperty";
             string name1 = name + "Attribute";
             foreach (var i in property.Attributes)
@@ -323,7 +323,7 @@ namespace Bridge.Contract
                     }
                 }
             }
-            if (!emitter.AssemblyInfo.AutoPropertyToField) 
+            if (!emitter.AssemblyInfo.AutoPropertyToField)
             {
                 return false;
             }
@@ -359,7 +359,7 @@ namespace Bridge.Contract
 
         public static string GetPropertyRef(PropertyDeclaration property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
         {
-            var name = emitter.GetEntityName(property, true, ignoreInterface);            
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
 
             if (!noOverload)
             {
@@ -406,8 +406,8 @@ namespace Bridge.Contract
 
         public static string GetPropertyRef(IMember property, IEmitter emitter, bool isSetter = false, bool noOverload = false, bool ignoreInterface = false)
         {
-            var name = emitter.GetEntityName(property, true, ignoreInterface);            
-            
+            var name = emitter.GetEntityName(property, true, ignoreInterface);
+
             if (!noOverload)
             {
                 var overloads = OverloadsCollection.Create(emitter, property, isSetter);
@@ -467,8 +467,8 @@ namespace Bridge.Contract
                 if (member == null)
                 {
                     return constantValue;
-                }                
-                
+                }
+
                 string enumStringName = member.Name;
                 var attr = emitter.GetAttribute(member.Attributes, "Bridge.NameAttribute");
 

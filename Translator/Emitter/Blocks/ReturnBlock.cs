@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.ReturnStatement = returnStatement;
         }
 
-        public ReturnStatement ReturnStatement 
-        { 
-            get; 
-            set; 
+        public ReturnStatement ReturnStatement
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -37,12 +37,12 @@ namespace Bridge.Translator
                     this.WriteAwaiters(returnStatement.Expression);
 
                     if (finallyNode != null)
-                    {                        
+                    {
                         this.Write("$returnValue = ");
                     }
                     else
                     {
-                        this.Write("$returnTask.setResult(");   
+                        this.Write("$returnTask.setResult(");
                     }
 
                     if (!returnStatement.Expression.IsNull)
@@ -65,12 +65,12 @@ namespace Bridge.Translator
                     {
                         this.Write(");");
                     }
-                    
+
 
                     this.WriteNewLine();
                 }
 
-                if (finallyNode != null) 
+                if (finallyNode != null)
                 {
                     var hashcode = finallyNode.GetHashCode();
                     this.Emitter.AsyncBlock.JumpLabels.Add(new AsyncJumpLabel { Node = finallyNode, Output = this.Emitter.Output });
@@ -83,7 +83,7 @@ namespace Bridge.Translator
                     this.WriteReturn(false);
                     this.WriteSemiColon();
                     this.WriteNewLine();
-                }                
+                }
             }
             else
             {
@@ -94,10 +94,10 @@ namespace Bridge.Translator
                     this.WriteSpace();
                     returnStatement.Expression.AcceptVisitor(this.Emitter);
                 }
-                
+
                 this.WriteSemiColon();
                 this.WriteNewLine();
-            }            
+            }
         }
     }
 }

@@ -13,10 +13,10 @@ namespace Bridge.Translator
             this.ArrayInitializerExpression = arrayInitializerExpression;
         }
 
-        public ArrayInitializerExpression ArrayInitializerExpression 
-        { 
-            get; 
-            set; 
+        public ArrayInitializerExpression ArrayInitializerExpression
+        {
+            get;
+            set;
         }
 
         protected override void DoEmit()
@@ -34,7 +34,7 @@ namespace Bridge.Translator
             {
                 this.BeginBlock();
             }
-            
+
             new ExpressionListBlock(this.Emitter, elements, null).Emit();
 
             if (!isObjectInitializer || this.ArrayInitializerExpression.IsSingleElement)

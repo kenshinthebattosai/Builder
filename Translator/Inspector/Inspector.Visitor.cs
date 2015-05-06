@@ -46,7 +46,7 @@ namespace Bridge.Translator
         }
 
         public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        {            
+        {
             if (this.CurrentType != null)
             {
                 this.NestedTypes = this.NestedTypes ?? new List<Tuple<TypeDeclaration, ITypeInfo>>();
@@ -62,7 +62,7 @@ namespace Bridge.Translator
             }
 
             var rr = this.Resolver.ResolveNode(typeDeclaration, null);
-            var fullName = rr.Type.ReflectionName;            
+            var fullName = rr.Type.ReflectionName;
             var partialType = this.Types.FirstOrDefault(t => t.Key == fullName);
             var add = true;
 
@@ -75,7 +75,7 @@ namespace Bridge.Translator
                     var rr1 = this.Resolver.ResolveNode(parentTypeDeclaration, null);
                     var parentName = rr1.Type.ReflectionName;
                     parentTypeInfo = this.Types.FirstOrDefault(t => t.Key == parentName);
-                }                
+                }
 
                 this.CurrentType = new TypeInfo()
                 {
@@ -101,7 +101,7 @@ namespace Bridge.Translator
             {
                 this.CurrentType = partialType;
                 add = false;
-            }            
+            }
 
             if (typeDeclaration.ClassType != ClassType.Interface)
             {
@@ -129,7 +129,7 @@ namespace Bridge.Translator
         public override void VisitFieldDeclaration(FieldDeclaration fieldDeclaration)
         {
             bool isStatic = this.CurrentType.ClassType == ClassType.Enum
-                || fieldDeclaration.HasModifier(Modifiers.Static) 
+                || fieldDeclaration.HasModifier(Modifiers.Static)
                 || fieldDeclaration.HasModifier(Modifiers.Const);
 
             foreach (var item in fieldDeclaration.Variables)
@@ -150,7 +150,7 @@ namespace Bridge.Translator
 
                 if (isStatic)
                 {
-                    this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem 
+                    this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem
                     {
                         Name = item.Name,
                         Entity = fieldDeclaration,
@@ -187,7 +187,7 @@ namespace Bridge.Translator
                 this.CurrentType.Ctors.Add(constructorDeclaration);
             }
         }
-        
+
         public override void VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration)
         {
             if (this.HasInline(operatorDeclaration))
@@ -234,14 +234,14 @@ namespace Bridge.Translator
         }
 
         public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
-        {           
+        {
             if (methodDeclaration.HasModifier(Modifiers.Abstract) || this.HasInline(methodDeclaration))
             {
                 return;
             }
 
             this.FixMethodParameters(methodDeclaration.Parameters, methodDeclaration.Body);
-            
+
             bool isStatic = methodDeclaration.HasModifier(Modifiers.Static);
 
             Dictionary<string, List<MethodDeclaration>> dict = isStatic
@@ -251,10 +251,10 @@ namespace Bridge.Translator
             var key = methodDeclaration.Name;
 
             if (dict.ContainsKey(key))
-            {                
+            {
                 dict[key].Add(methodDeclaration);
             }
-            else 
+            else
             {
                 dict.Add(key, new List<MethodDeclaration>(new []{methodDeclaration}));
             }
@@ -352,8 +352,8 @@ namespace Bridge.Translator
                 initializer = new PrimitiveExpression(this.CurrentType.LastEnumValue);
             }
 
-            this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem 
-            { 
+            this.CurrentType.StaticConfig.Fields.Add(new TypeConfigItem
+            {
                 Name = enumMemberDeclaration.Name,
                 Entity = enumMemberDeclaration,
                 Initializer = initializer
@@ -369,7 +369,7 @@ namespace Bridge.Translator
                 this.CurrentType.EventsDeclarations.Add(item.Name, eventDeclaration);
                 if (isStatic)
                 {
-                    this.CurrentType.StaticConfig.Events.Add(new TypeConfigItem 
+                    this.CurrentType.StaticConfig.Events.Add(new TypeConfigItem
                     {
                         Name = item.Name,
                         Entity = eventDeclaration,
@@ -387,7 +387,7 @@ namespace Bridge.Translator
                         VarInitializer = item
                     });
                 }
-            }            
+            }
         }
 
         public override void VisitAttributeSection(AttributeSection attributeSection)
@@ -396,7 +396,7 @@ namespace Bridge.Translator
             {
                 return;
             }
-            
+
             foreach (var attr in attributeSection.Attributes)
             {
                 var name = attr.Type.ToString();
@@ -444,7 +444,7 @@ namespace Bridge.Translator
                     if (nameObj is string)
                     {
                         this.AssemblyInfo.FileName = nameObj.ToString();
-                    }                        
+                    }
                 }
 
                 return true;

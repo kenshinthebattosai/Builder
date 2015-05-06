@@ -19,10 +19,10 @@ namespace Bridge.Translator
             this.IdentifierExpression = identifierExpression;
         }
 
-        public IdentifierExpression IdentifierExpression 
-        { 
-            get; 
-            set; 
+        public IdentifierExpression IdentifierExpression
+        {
+            get;
+            set;
         }
 
         protected override Expression GetExpression()
@@ -183,7 +183,7 @@ namespace Bridge.Translator
                          )
                     )
                     {
-                        var resolvedMethod = (IMethod)memberResult.Member;                        
+                        var resolvedMethod = (IMethod)memberResult.Member;
 
                         if (!isStatic)
                         {
@@ -225,7 +225,7 @@ namespace Bridge.Translator
                         else
                         {
                             this.Write(OverloadsCollection.Create(this.Emitter, invocationResult.Member).GetOverloadName());
-                        }    
+                        }
                     }
                     else if (resolveResult is MemberResolveResult)
                     {
@@ -297,7 +297,7 @@ namespace Bridge.Translator
             string inlineCode = memberResult != null ? this.Emitter.GetInline(memberResult.Member) : null;
             bool hasInline = !string.IsNullOrEmpty(inlineCode);
             bool hasThis = hasInline && inlineCode.Contains("{this}");
-            
+
             if (hasThis)
             {
                 this.Write("");
@@ -338,7 +338,7 @@ namespace Bridge.Translator
                 {
                     this.Write(inlineCode);
                 }
-            }            
+            }
             else if (memberResult != null && memberResult.Member.SymbolKind == SymbolKind.Property && memberResult.TargetResult.Type.Kind != TypeKind.Anonymous)
             {
                 bool isStatement = false;
@@ -361,9 +361,9 @@ namespace Bridge.Translator
 
                         this.Write(valueVar);
                         this.Write(" = ");
-                    }                    
+                    }
                 }
-                
+
                 this.WriteTarget(memberResult);
 
                 if (!string.IsNullOrWhiteSpace(inlineCode))
