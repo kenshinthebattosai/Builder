@@ -16,11 +16,6 @@ namespace Bridge.Translator
     {
         public virtual bool CanIgnoreType(TypeDefinition type)
         {
-            if (type.IsInterface)
-            {
-                return true;
-            }
-
             if (this.IsIgnoreType(type))
             {
                 return true;
