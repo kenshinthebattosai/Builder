@@ -312,6 +312,38 @@ namespace Bridge.Translator
             return null;
         }
 
+        public virtual string GetEntityName(ParameterDeclaration entity, bool cancelChangeCase = false)
+        {
+            var rr = this.Resolver.ResolveNode(entity, this) as LocalResolveResult;
+            var name = entity.Name;
+
+            if (rr != null)
+            {
+                var iparam = rr.Variable as IParameter;
+
+                if(iparam != null) {
+                    var attr = iparam.Attributes.FirstOrDefault(a => a.AttributeType.FullName == Bridge.Translator.Translator.Bridge_ASSEMBLY + ".NameAttribute");
+
+                    if (attr != null)
+                    {
+                        var value = attr.PositionalArguments.First().ConstantValue;
+                        if (value is string)
+                        {
+                            name = value.ToString();
+                        }
+                    }
+                }
+                
+            }
+
+            if (Helpers.IsReservedWord(name))
+            {
+                name = "$" + name;
+            }
+
+            return name;
+        }
+
         public virtual string GetFieldName(FieldDeclaration field)
         {
             if (!string.IsNullOrEmpty(field.Name))

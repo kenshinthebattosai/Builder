@@ -44,15 +44,16 @@ namespace Bridge.Translator
         {
             declarations.ToList().ForEach(item =>
             {
+                var name = this.Emitter.GetEntityName(item);
                 var vName = this.AddLocal(item.Name, item.Type);
 
                 if (item.ParameterModifier == ParameterModifier.Out || item.ParameterModifier == ParameterModifier.Ref)
                 {
-                    this.Emitter.LocalsMap[item.Name] = vName + ".v";
+                    this.Emitter.LocalsMap[item.Name] = name + ".v";
                 }
                 else
                 {
-                    this.Emitter.LocalsMap[item.Name] = vName;
+                    this.Emitter.LocalsMap[item.Name] = name;
                 }
             });
 
