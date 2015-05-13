@@ -135,19 +135,19 @@ namespace Bridge.Translator
                 // output beautified if not minified only == (output beautified or output both)
                 if (this.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Minified)
                 {
-                file = new System.IO.FileInfo(filePath);
-                file.Directory.Create();
-                File.WriteAllText(file.FullName, "/* global Bridge */\n\n" + code, System.Text.UTF8Encoding.UTF8);
+                    file = new System.IO.FileInfo(filePath);
+                    file.Directory.Create();
+                    File.WriteAllText(file.FullName, "/* global Bridge */\n\n" + code, System.Text.UTF8Encoding.UTF8);
                 }
 
                 // Like above test: output minified if not beautified only == (out minified or out both)
                 if (this.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Beautified)
                 {
-                fileName = Path.GetFileNameWithoutExtension(filePath) + ".min" + Path.GetExtension(filePath);
-                filePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
-                file = new System.IO.FileInfo(filePath);
-                file.Directory.Create();
-                File.WriteAllText(file.FullName, minifier.MinifyJavaScript(code), System.Text.UTF8Encoding.UTF8);
+                    fileName = Path.GetFileNameWithoutExtension(filePath) + ".min" + Path.GetExtension(filePath);
+                    filePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
+                    file = new System.IO.FileInfo(filePath);
+                    file.Directory.Create();
+                    File.WriteAllText(file.FullName, minifier.MinifyJavaScript(code), System.Text.UTF8Encoding.UTF8);
                 }
             }
 
@@ -185,32 +185,32 @@ namespace Bridge.Translator
             // output beautified if not minified only == (output beautified or output both)
             if (translatorInstance.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Minified)
             {
-            resourceName = "Bridge.Resources.bridge.js";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    File.WriteAllText(Path.Combine(outputPath, "bridge.js"), reader.ReadToEnd());
-                }
-            }
-            }
-
-            // Like above test: output minified if not beautified only == (out minified or out both)
-            if (translatorInstance.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Beautified)
-            {
-            if (!nodebug)
-            {
-                resourceName = "Bridge.Resources.bridge.min.js";
+                resourceName = "Bridge.Resources.bridge.js";
 
                 using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     using (StreamReader reader = new StreamReader(stream))
                     {
-                        File.WriteAllText(Path.Combine(outputPath, "bridge.min.js"), reader.ReadToEnd());
+                        File.WriteAllText(Path.Combine(outputPath, "bridge.js"), reader.ReadToEnd());
                     }
                 }
             }
+
+            // Like above test: output minified if not beautified only == (out minified or out both)
+            if (translatorInstance.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Beautified)
+            {
+                if (!nodebug)
+                {
+                    resourceName = "Bridge.Resources.bridge.min.js";
+
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            File.WriteAllText(Path.Combine(outputPath, "bridge.min.js"), reader.ReadToEnd());
+                        }
+                    }
+                }
             }
         }
 
