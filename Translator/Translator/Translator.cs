@@ -133,7 +133,7 @@ namespace Bridge.Translator
 
                 // We can only have Beautified, Minified or Both, so this test has inverted logic:
                 // output beautified if not minified only == (output beautified or output both)
-                if (this.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Minified)
+                if (this.AssemblyInfo.OutputFormatting != JavaScriptOutputType.Minified)
                 {
                     file = new System.IO.FileInfo(filePath);
                     file.Directory.Create();
@@ -141,7 +141,7 @@ namespace Bridge.Translator
                 }
 
                 // Like above test: output minified if not beautified only == (out minified or out both)
-                if (this.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Beautified)
+                if (this.AssemblyInfo.OutputFormatting != JavaScriptOutputType.Formatted)
                 {
                     fileName = Path.GetFileNameWithoutExtension(filePath) + ".min" + Path.GetExtension(filePath);
                     filePath = Path.Combine(Path.GetDirectoryName(filePath), fileName);
@@ -183,7 +183,7 @@ namespace Bridge.Translator
 
             // We can only have Beautified, Minified or Both, so this test has inverted logic:
             // output beautified if not minified only == (output beautified or output both)
-            if (translatorInstance.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Minified)
+            if (translatorInstance.AssemblyInfo.OutputFormatting != JavaScriptOutputType.Minified)
             {
                 resourceName = "Bridge.Resources.bridge.js";
 
@@ -197,7 +197,7 @@ namespace Bridge.Translator
             }
 
             // Like above test: output minified if not beautified only == (out minified or out both)
-            if (translatorInstance.AssemblyInfo.JavaScriptOutputType != JavaScriptOutputType.Beautified)
+            if (translatorInstance.AssemblyInfo.OutputFormatting != JavaScriptOutputType.Formatted)
             {
                 if (!nodebug)
                 {

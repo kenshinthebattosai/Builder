@@ -77,7 +77,7 @@ namespace Bridge.Translator
         /// The option to select JavaScript file output for only beautified, only minified or both versions.
         /// See the JavaScriptOutputType enum for more details.
         /// </summary>
-        public JavaScriptOutputType JavaScriptOutputType
+        public JavaScriptOutputType OutputFormatting
         {
             get
             {

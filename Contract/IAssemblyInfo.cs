@@ -63,9 +63,9 @@ namespace Bridge.Contract
     public enum JavaScriptOutputType
     {
         /// <summary>
-        /// Output only the beautified (formatted) version of the JavaScript files. Good for debugging.
+        /// Output only the formatted (beautified) version of the JavaScript files. Good for debugging.
         /// </summary>
-        Beautified = 1,
+        Formatted = 1,
 
         /// <summary>
         /// Output only the minified (condensed) version of the JavaScript files. Good for production deploying.
@@ -85,7 +85,7 @@ namespace Bridge.Contract
         string FileName { get; set; }
         OutputBy OutputBy { get; set; }
         FileNameCaseConvert FileNameCasing { get; set; }
-        JavaScriptOutputType JavaScriptOutputType { get; set; }
+        JavaScriptOutputType OutputFormatting { get; set; }
         string Module { get; set; }
         string Output { get; set; }
         int StartIndexInName { get; set; }
